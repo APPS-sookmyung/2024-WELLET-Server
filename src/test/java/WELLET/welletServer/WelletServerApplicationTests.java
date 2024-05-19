@@ -1,10 +1,10 @@
-package weletserver.welet;
+package WELLET.welletServer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WeletApplicationTests {
+class WelletServerApplicationTests {
 
 	@Test
 	void contextLoads() {
