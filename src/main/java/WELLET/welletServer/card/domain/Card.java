@@ -1,5 +1,6 @@
 package WELLET.welletServer.card.domain;
 
+import WELLET.welletServer.card.dto.CardUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -48,5 +49,9 @@ public class Card {
         this.company = company;
         this.address = address;
         this.memo = memo;
+    }
+
+    public void updateCard(CardUpdateDto dto) {
+//        this.
     }
 }

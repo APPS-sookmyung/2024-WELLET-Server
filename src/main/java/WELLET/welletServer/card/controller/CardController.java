@@ -19,7 +19,7 @@ public class CardController {
 
     @PostMapping("/card")
     public BasicResponse<String> create(@Valid @RequestBody CardSaveDto cardSaveDto) {
-        long cardId = cardService.save(cardSaveDto);
+        long cardId = cardService.saveCard(cardSaveDto);
         return ResponseUtil.success("명함 저장에 성공하였습니다. 명함 id : " + cardId);
     }
 }
