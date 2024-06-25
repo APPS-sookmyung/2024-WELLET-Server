@@ -52,6 +52,14 @@ public class Card {
     }
 
     public void updateCard(CardUpdateDto dto) {
-//        this.
+        this.name = dto.getName();
+        this.position = dto.getPosition();
+        this.email = dto.getEmail();
+        this.phone = dto.getPhone();
+        this.tel = dto.getTel();
+        this.department = dto.getDepartment();
+        this.company = dto.getCompany();
+        this.address = dto.getAddress();
+        this.memo = dto.getMemo();
     }
 }

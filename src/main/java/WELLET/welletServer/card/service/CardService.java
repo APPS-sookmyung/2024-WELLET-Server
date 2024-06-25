@@ -39,5 +39,6 @@ public class CardService {
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
 
         card.updateCard(dto);
+        return card.getId();
     }
 }
