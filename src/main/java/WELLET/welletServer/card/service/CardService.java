@@ -34,11 +34,20 @@ public class CardService {
         return cardRepository.save(card).getId();
     }
 
-    public long updateCard(Long cardId, CardUpdateDto dto) {
+    @Transactional
+    public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
 
         card.updateCard(dto);
-        return card.getId();
+        return CardUpdateDto.toCardUpdateDto(card);
+    }
+
+    @Transactional
+    public long deleteCard(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
+        cardRepository.delete(card);
+        return cardId;
     }
 }

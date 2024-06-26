@@ -22,8 +22,14 @@ public class CardController {
     }
 
     @PatchMapping("/card/{card_id}")
-    public BasicResponse<String> updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
-        long cardId = cardService.updateCard(card_id, dto);
-        return ResponseUtil.success("명함 수정에 성공하였습니다. 명함 id : " + cardId);
+    public BasicResponse<CardUpdateDto> updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
+        CardUpdateDto cardUpdateDto = cardService.updateCard(card_id, dto);
+        return ResponseUtil.success(cardUpdateDto);
+    }
+
+    @DeleteMapping("/card/{card_id}")
+    public BasicResponse<String> deleteCard(@PathVariable Long card_id) {
+        long cardId = cardService.deleteCard(card_id);
+        return ResponseUtil.success("명함 삭제에 성공하였습니다. 명함 id : " + cardId);
     }
 }
