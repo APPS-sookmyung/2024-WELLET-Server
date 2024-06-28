@@ -21,7 +21,7 @@ public class CardController {
         return ResponseUtil.success("명함 저장에 성공하였습니다. 명함 id : " + cardId);
     }
 
-    @PatchMapping("/card/{card_id}")
+    @PutMapping("/card/{card_id}")
     public BasicResponse<CardUpdateDto> updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
         CardUpdateDto cardUpdateDto = cardService.updateCard(card_id, dto);
         return ResponseUtil.success(cardUpdateDto);
