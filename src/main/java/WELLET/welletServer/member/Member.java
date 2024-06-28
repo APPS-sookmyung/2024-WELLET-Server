@@ -1,4 +1,4 @@
-package WELLET.welletServer.common.Member;
+package WELLET.welletServer.member;
 
 import WELLET.welletServer.common.BaseTimeEntity;
 import jakarta.persistence.*;
