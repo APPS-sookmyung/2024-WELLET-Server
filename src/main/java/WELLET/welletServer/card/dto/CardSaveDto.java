@@ -1,6 +1,6 @@
 package WELLET.welletServer.card.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardSaveDto {
     // 이름, 직책, 이메일, 휴대폰, 유선 전화, 부서, 회사, 주소, 메모
-    @NotNull
+    @NotBlank
     private String name;
     private String position;
 
-    @NotNull
+    @NotBlank
     private String email;
     private String phone;
     private String tel;
     private String department;
 
-    @NotNull
+    @NotBlank
     private String company;
     private String address;
     private String memo;

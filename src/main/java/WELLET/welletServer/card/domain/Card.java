@@ -2,7 +2,7 @@ package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,18 +18,18 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String name;
 
     private String position;
 
-    @NotNull
+    @NotBlank
     private String email;
     private String phone;
     private String tel;
     private String department;
 
-    @NotNull
+    @NotBlank
     private String company;
     private String address;
     private String memo;
@@ -52,6 +52,14 @@ public class Card {
     }
 
     public void updateCard(CardUpdateDto dto) {
-//        this.
+        this.name = dto.getName();
+        this.position = dto.getPosition();
+        this.email = dto.getEmail();
+        this.phone = dto.getPhone();
+        this.tel = dto.getTel();
+        this.department = dto.getDepartment();
+        this.company = dto.getCompany();
+        this.address = dto.getAddress();
+        this.memo = dto.getMemo();
     }
 }

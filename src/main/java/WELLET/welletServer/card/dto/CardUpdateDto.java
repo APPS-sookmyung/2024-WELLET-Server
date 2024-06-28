@@ -1,5 +1,6 @@
 package WELLET.welletServer.card.dto;
 
+import WELLET.welletServer.card.domain.Card;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,21 @@ public class CardUpdateDto {
 
     private String qr;
     private String profile_image;
+
+    public static CardUpdateDto toCardUpdateDto(Card card) {
+        return CardUpdateDto.builder()
+                .name(card.getName())
+                .position(card.getPosition())
+                .email(card.getEmail())
+                .phone(card.getPhone())
+                .tel(card.getTel())
+                .department(card.getDepartment())
+                .company(card.getCompany())
+                .address(card.getAddress())
+                .memo(card.getMemo())
+                .qr(card.getQr())
+                .profile_image(card.getProfile_image())
+                .build();
+
+    }
 }
