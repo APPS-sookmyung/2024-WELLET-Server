@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.dto.CardListResponse;
+import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.card.service.CardService;
@@ -27,6 +28,11 @@ public class CardController {
     @GetMapping
     public BasicResponse<List<CardListResponse>> findAllCards() {
         return ResponseUtil.success(cardService.findAllCard());
+    }
+
+    @GetMapping("/{card_id}")
+    public BasicResponse<CardResponse> findCard(@PathVariable(name = "card_id") Long cardId) {
+        return ResponseUtil.success(cardService.findOne(cardId));
     }
 
     @PutMapping("/{card_id}")

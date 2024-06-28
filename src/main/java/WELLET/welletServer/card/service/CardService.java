@@ -3,6 +3,7 @@ package WELLET.welletServer.card.service;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardListResponse;
+import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.card.exception.CardErrorCode;
@@ -44,6 +45,15 @@ public class CardService {
                 .map(CardListResponse::toCardList)
                 .toList();
     }
+
+    public CardResponse findOne(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
+
+        return CardResponse.toCardDto(card);
+    }
+
+
 
     @Transactional
     public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
