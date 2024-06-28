@@ -33,9 +33,17 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation "io.jsonwebtoken:jjwt:0.9.1" //JWT 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //OAuth 2.0 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' //WebClient 관련 의존성
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+repositories {
+	mavenCentral()
+	jcenter() // 필요한 경우 다른 저장소
 }
