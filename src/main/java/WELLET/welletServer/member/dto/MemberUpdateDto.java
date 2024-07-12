@@ -20,7 +20,9 @@ public class MemberUpdateDto {
                 .username(member.getUsername())
                 .nickname(member.getNickname())
                 .password(member.getPassword())
+                // TODO: 패스워드 바디에서 꺼내야 함.
 //                .profile_image(member.getProfile_image())
                 .build();
     }
 }
+

@@ -30,11 +30,11 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
-//    @Transactional
-//    public MemberUpdateDto updateDto(Long memberId, MemberUpdateDto dto) {
-//        Member member = memberRepository.findById(memberId)
-//                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-//        member.updateMember(dto);
-//        return MemberUpdateDto.toMemberUpdateDto(member);
-//    }
+    @Transactional
+    public MemberUpdateDto updateMember(Long memberId, MemberUpdateDto dto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        member.updateMember(dto);
+        return MemberUpdateDto.toMemberUpdateDto(member);
+    }
 }

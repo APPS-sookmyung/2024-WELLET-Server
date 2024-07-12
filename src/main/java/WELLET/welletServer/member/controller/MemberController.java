@@ -23,11 +23,11 @@ public class MemberController {
         return ResponseUtil.success("회원 저장에 성공하였습니다. 화원 id: " + memberId);
     }
 
-//    @PatchMapping("/profile")
-//    public BasicResponse<MemberUpdateDto> updateMember(@RequestParam Long member_id, @Valid @RequestBody MemberUpdateDto dto) {
-//        MemberUpdateDto memberUpdateDto = memberService.updateMember(member_id, dto);
-//        return ResponseUtil.success(memberUpdateDto);
-//    }
+    @PutMapping ("/{member_id}")
+    public BasicResponse<MemberUpdateDto> updateMember(@PathVariable(name = "member_id") Long member_id, @Valid @RequestBody MemberUpdateDto dto) {
+        MemberUpdateDto memberUpdateDto = memberService.updateMember(member_id, dto);
+        return ResponseUtil.success(memberUpdateDto);
+    }
 
 //    @PutMapping("/profile/image")
 //    public BasicResponse<MemberUpdateDto> updateMemberImage(@RequestParam Long Member_id, @Valid @RequestBody MemberUpdateDto dto) {

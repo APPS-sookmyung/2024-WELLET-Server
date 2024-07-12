@@ -1,6 +1,7 @@
 package WELLET.welletServer.member.domain;
 
 import WELLET.welletServer.common.BaseTimeEntity;
+import WELLET.welletServer.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -34,11 +35,17 @@ public class Member extends BaseTimeEntity {
 //    private String profile_image;
 
     @Builder
-    public Member(Long id, String username, String nickname, String password) {
-        this.id = id;
+    public Member(String username, String nickname, String password) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
 //        this.profile_image = profile_image;
+    }
+
+    public void updateMember(MemberUpdateDto dto) {
+        this.username = dto.getUsername();
+        this.nickname = dto.getNickname();
+        this.password = dto.getPassword();
+        // TODO: 패스워드 바디에서 꺼내야 함.
     }
 }
