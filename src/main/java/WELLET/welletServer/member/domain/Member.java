@@ -1,4 +1,4 @@
-package WELLET.welletServer.member;
+package WELLET.welletServer.member.domain;
 
 import WELLET.welletServer.common.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -9,32 +9,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class Member extends BaseTimeEntity {
+
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
+    @Column(name = "username", nullable = false)
     private String username;
 
     @NotNull
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @NotNull
+    @Column(name = "password", nullable = false)
     private String password;
 
-    private String profile_image;
+//    private String profile_image;
 
     @Builder
-    public Member(Long id, String username, String nickname, String password, String profile_image) {
+    public Member(Long id, String username, String nickname, String password) {
         this.id = id;
         this.username = username;
         this.nickname = nickname;
         this.password = password;
-        this.profile_image = profile_image;
+//        this.profile_image = profile_image;
     }
 }

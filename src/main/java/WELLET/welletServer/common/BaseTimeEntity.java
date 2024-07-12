@@ -1,6 +1,7 @@
 package WELLET.welletServer.common;
 
 
+import WELLET.welletServer.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
