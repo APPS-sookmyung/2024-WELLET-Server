@@ -4,6 +4,7 @@ import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ErrorEntity;
 import WELLET.welletServer.common.response.ResponseUtil;
+import WELLET.welletServer.group.exception.CategoryException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -33,6 +34,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BasicResponse<ErrorEntity> cardNotFoundException(CardException e) {
         log.error("Card Not Found({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(CategoryException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BasicResponse<ErrorEntity> categoryNotFoundException(CategoryException e) {
+        log.error("Category Not Found({})={}", e.getCode(), e.getMessage());
         return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
     }
 }

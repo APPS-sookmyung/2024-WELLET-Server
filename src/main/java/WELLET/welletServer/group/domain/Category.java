@@ -1,5 +1,6 @@
 package WELLET.welletServer.group.domain;
 
+import WELLET.welletServer.group.dto.CategoryUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -36,4 +37,8 @@ public class Category {
         categoryCards.add(categoryCard);
         categoryCard.setCategory(this);
     }
+
+//    public void updateCategory(CategoryUpdateDto dto) {
+//        this.name = dto.getName();  // Here you should use dto.getName()
+//    }
 }
