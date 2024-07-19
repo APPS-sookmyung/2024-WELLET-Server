@@ -29,11 +29,5 @@ public class CategoryCard {
         this.cardId = cardId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-        if(!category.getCategoryCards().contains(this)) {
-            category.getCategoryCards().add(this);
-        }
-    }
 
 }

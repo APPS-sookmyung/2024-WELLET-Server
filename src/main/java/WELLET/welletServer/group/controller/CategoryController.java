@@ -21,11 +21,11 @@ public class CategoryController {
         return ResponseUtil.success("그룹 생성에 성공하였습니다. 그룹 id : " + CategoryId);
     }
 
-//    @PutMapping("/{group_id}")
-//    public BasicResponse<CategoryUpdateDto> updateCategory(@PathVariable(name = "group_id") Long group_id, @Valid @RequestBody CategoryUpdateDto dto) {
-//        CategoryUpdateDto categoryUpdateDto = categoryService.updateCategory(group_id, dto);
-//        return ResponseUtil.success(categoryUpdateDto);
-//    }
+    @PutMapping("/{group_id}")
+    public BasicResponse<CategoryUpdateDto> updateCategory(@PathVariable(name = "group_id") Long group_id, @Valid @RequestBody CategoryUpdateDto dto) {
+        CategoryUpdateDto categoryUpdateDto = categoryService.updateCategory(group_id, dto);
+        return ResponseUtil.success(categoryUpdateDto);
+    }
 
     @DeleteMapping("/{group_id}")
     public BasicResponse<String> deleteCategory(@PathVariable(name = "group_id") Long group_id) {

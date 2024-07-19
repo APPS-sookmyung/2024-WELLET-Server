@@ -35,10 +35,9 @@ public class Category {
 
     public void addCategoryCard(CategoryCard categoryCard) {
         categoryCards.add(categoryCard);
-        categoryCard.setCategory(this);
     }
 
-//    public void updateCategory(CategoryUpdateDto dto) {
-//        this.name = dto.getName();  // Here you should use dto.getName()
-//    }
+    public void updateCategory(CategoryUpdateDto dto) {
+        this.name = dto.getName();
+    }
 }

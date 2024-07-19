@@ -27,14 +27,14 @@ public class CategoryService {
         return categoryRepository.save(category).getId();
     }
 
-//    @Transactional
-//    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
-//        Category category = categoryRepository.findById(categoryId)
-//                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-//
-//        category.updateCategory(dto);
-//        return CategoryUpdateDto.toCategoryUpdateDto(category);
-//    }
+    @Transactional
+    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+
+        category.updateCategory(dto);
+        return CategoryUpdateDto.toCategoryUpdateDto(category);
+    }
 
     @Transactional
     public long deleteCategory(Long categoryId) {
