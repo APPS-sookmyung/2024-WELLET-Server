@@ -2,6 +2,7 @@ package WELLET.welletServer.group.service;
 
 import WELLET.welletServer.group.domain.Category;
 import WELLET.welletServer.group.domain.CategoryCard;
+import WELLET.welletServer.group.dto.CategoryListName;
 import WELLET.welletServer.group.dto.CategoryListResponse;
 import WELLET.welletServer.group.dto.CategorySaveDto;
 import WELLET.welletServer.group.dto.CategoryUpdateDto;
@@ -57,6 +58,13 @@ public class CategoryService {
         }
         return categoryCards.stream()
                 .map(CategoryListResponse::toCategoryList)
+                .collect(Collectors.toList());
+    }
+
+    public List<CategoryListName> findAllName() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(CategoryListName::fromCategory)
                 .collect(Collectors.toList());
     }
 }

@@ -37,5 +37,4 @@ public class CategoryCard {
         this.cardCompany = cardCompany;
     }
 
-
 }

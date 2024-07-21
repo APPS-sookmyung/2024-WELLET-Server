@@ -2,6 +2,7 @@ package WELLET.welletServer.group.controller;
 
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
+import WELLET.welletServer.group.dto.CategoryListName;
 import WELLET.welletServer.group.dto.CategoryListResponse;
 import WELLET.welletServer.group.dto.CategorySaveDto;
 import WELLET.welletServer.group.dto.CategoryUpdateDto;
@@ -46,5 +47,11 @@ public class CategoryController {
     public BasicResponse<List<CategoryListResponse>> findAllCards() {
         List<CategoryListResponse> categoryListResponses = categoryService.findCategoryList(null);
         return ResponseUtil.success(categoryListResponses);
+    }
+
+    @GetMapping("/name")
+    public BasicResponse<List<CategoryListName>> findAllNames() {
+        List<CategoryListName> categoryListNames = categoryService.findAllName();
+        return ResponseUtil.success(categoryListNames);
     }
 }
