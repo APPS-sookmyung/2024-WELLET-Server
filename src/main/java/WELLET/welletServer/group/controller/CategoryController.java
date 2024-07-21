@@ -2,12 +2,15 @@ package WELLET.welletServer.group.controller;
 
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
+import WELLET.welletServer.group.dto.CategoryListResponse;
 import WELLET.welletServer.group.dto.CategorySaveDto;
 import WELLET.welletServer.group.dto.CategoryUpdateDto;
 import WELLET.welletServer.group.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/groups")
@@ -31,5 +34,17 @@ public class CategoryController {
     public BasicResponse<String> deleteCategory(@PathVariable(name = "group_id") Long group_id) {
         long categoryId = categoryService.deleteCategory(group_id);
         return ResponseUtil.success("그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId);
+    }
+
+    @GetMapping("/{group_id}")
+    public BasicResponse<List<CategoryListResponse>> findCards(@PathVariable(name = "group_id") Long groupId) {
+        List<CategoryListResponse> categoryListResponses = categoryService.findCategoryList(groupId);
+        return ResponseUtil.success(categoryListResponses);
+    }
+
+    @GetMapping
+    public BasicResponse<List<CategoryListResponse>> findAllCards() {
+        List<CategoryListResponse> categoryListResponses = categoryService.findCategoryList(null);
+        return ResponseUtil.success(categoryListResponses);
     }
 }
