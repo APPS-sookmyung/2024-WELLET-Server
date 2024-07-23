@@ -45,7 +45,5 @@ public class Member extends BaseTimeEntity {
     public void updateMember(MemberUpdateDto dto) {
         this.username = dto.getUsername();
         this.nickname = dto.getNickname();
-        this.password = dto.getPassword();
-        // TODO: 패스워드 바디에서 꺼내야 함.
     }
 }
