@@ -1,4 +1,4 @@
-package WELLET.welletServer.group.exception;
+package WELLET.welletServer.category.exception;
 
 import lombok.Getter;
 

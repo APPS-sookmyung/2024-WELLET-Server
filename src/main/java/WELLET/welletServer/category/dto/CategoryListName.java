@@ -1,6 +1,6 @@
-package WELLET.welletServer.group.dto;
+package WELLET.welletServer.category.dto;
 
-import WELLET.welletServer.group.domain.Category;
+import WELLET.welletServer.category.domain.Category;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 

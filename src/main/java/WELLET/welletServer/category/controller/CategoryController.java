@@ -1,12 +1,12 @@
-package WELLET.welletServer.group.controller;
+package WELLET.welletServer.category.controller;
 
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
-import WELLET.welletServer.group.dto.CategoryListName;
-import WELLET.welletServer.group.dto.CategoryListResponse;
-import WELLET.welletServer.group.dto.CategorySaveDto;
-import WELLET.welletServer.group.dto.CategoryUpdateDto;
-import WELLET.welletServer.group.service.CategoryService;
+import WELLET.welletServer.category.dto.CategoryListName;
+import WELLET.welletServer.category.dto.CardListResponse;
+import WELLET.welletServer.category.dto.CategorySaveDto;
+import WELLET.welletServer.category.dto.CategoryUpdateDto;
+import WELLET.welletServer.category.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,15 +38,15 @@ public class CategoryController {
     }
 
     @GetMapping("/{category_id}")
-    public BasicResponse<List<CategoryListResponse>> findCards(@PathVariable(name = "category_id") Long categoryId) {
-        List<CategoryListResponse> categoryListResponses = categoryService.findCategoryList(categoryId);
-        return ResponseUtil.success(categoryListResponses);
+    public BasicResponse<List<CardListResponse>> findCardsByCategoryId(@PathVariable(name = "category_id") Long categoryId) {
+        List<CardListResponse> cardListResponses = categoryService.findCardsByCategoryId(categoryId);
+        return ResponseUtil.success(cardListResponses);
     }
 
     @GetMapping
-    public BasicResponse<List<CategoryListResponse>> findAllCards() {
-        List<CategoryListResponse> categoryListResponses = categoryService.findCategoryList(null);
-        return ResponseUtil.success(categoryListResponses);
+    public BasicResponse<List<CardListResponse>> findAllCards() {
+        List<CardListResponse> cardListResponses = categoryService.findAllCards();
+        return ResponseUtil.success(cardListResponses);
     }
 
     @GetMapping("/name")

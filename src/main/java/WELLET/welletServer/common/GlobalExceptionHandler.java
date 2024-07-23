@@ -5,7 +5,7 @@ import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ErrorEntity;
 import WELLET.welletServer.common.response.ResponseUtil;
 
-import WELLET.welletServer.group.exception.CategoryException;
+import WELLET.welletServer.category.exception.CategoryException;
 
 import WELLET.welletServer.member.exception.MemberException;
 

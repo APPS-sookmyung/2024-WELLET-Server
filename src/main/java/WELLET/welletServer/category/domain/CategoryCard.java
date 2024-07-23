@@ -1,5 +1,6 @@
-package WELLET.welletServer.group.domain;
+package WELLET.welletServer.category.domain;
 
+import WELLET.welletServer.card.domain.Card;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,8 +18,9 @@ public class CategoryCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "card_id", nullable = false)
-    private Long cardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card card;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -32,7 +34,6 @@ public class CategoryCard {
 
     @Builder
     public CategoryCard(Long cardId) {
-        this.cardId = cardId;
         this.cardName = cardName;
         this.cardCompany = cardCompany;
     }

@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.dto;
 
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.category.domain.CategoryCard;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -13,4 +14,5 @@ public record CardListResponse(@NotBlank String name, @NotBlank String company) 
                 .company(card.getCompany())
                 .build();
     }
+
 }

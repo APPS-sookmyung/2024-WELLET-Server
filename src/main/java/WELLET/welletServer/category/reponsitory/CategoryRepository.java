@@ -1,8 +1,7 @@
-package WELLET.welletServer.group.reponsitory;
+package WELLET.welletServer.category.reponsitory;
 
-import WELLET.welletServer.group.domain.Category;
-import WELLET.welletServer.group.domain.CategoryCard;
-import WELLET.welletServer.group.dto.CategoryListResponse;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.domain.CategoryCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

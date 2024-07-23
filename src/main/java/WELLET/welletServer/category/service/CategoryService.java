@@ -1,14 +1,14 @@
-package WELLET.welletServer.group.service;
+package WELLET.welletServer.category.service;
 
-import WELLET.welletServer.group.domain.Category;
-import WELLET.welletServer.group.domain.CategoryCard;
-import WELLET.welletServer.group.dto.CategoryListName;
-import WELLET.welletServer.group.dto.CategoryListResponse;
-import WELLET.welletServer.group.dto.CategorySaveDto;
-import WELLET.welletServer.group.dto.CategoryUpdateDto;
-import WELLET.welletServer.group.exception.CategoryErrorCode;
-import WELLET.welletServer.group.exception.CategoryException;
-import WELLET.welletServer.group.reponsitory.CategoryRepository;
+import WELLET.welletServer.category.dto.CardListResponse;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.category.dto.CategoryListName;
+import WELLET.welletServer.category.dto.CategorySaveDto;
+import WELLET.welletServer.category.dto.CategoryUpdateDto;
+import WELLET.welletServer.category.exception.CategoryErrorCode;
+import WELLET.welletServer.category.exception.CategoryException;
+import WELLET.welletServer.category.reponsitory.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,15 +49,17 @@ public class CategoryService {
         return categoryId;
     }
 
-    public List<CategoryListResponse> findCategoryList(Long groupId) {
-        List<CategoryCard> categoryCards;
-        if(groupId == null) {
-            categoryCards = categoryRepository.findAllCards();
-        } else {
-            categoryCards = categoryRepository.findCardsByCategoryId(groupId);
-        }
+    public List<WELLET.welletServer.category.dto.CardListResponse> findAllCards() {
+        List<CategoryCard> categoryCards = categoryRepository.findAllCards();
         return categoryCards.stream()
-                .map(CategoryListResponse::toCategoryList)
+                .map(CardListResponse::toCategoryList)
+                .collect(Collectors.toList());
+    }
+
+    public List<WELLET.welletServer.category.dto.CardListResponse> findCardsByCategoryId(Long categoryId) {
+        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
+        return categoryCards.stream()
+                .map(CardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package WELLET.welletServer.group.dto;
+package WELLET.welletServer.category.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

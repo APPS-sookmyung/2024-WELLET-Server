@@ -1,6 +1,6 @@
-package WELLET.welletServer.group.domain;
+package WELLET.welletServer.category.domain;
 
-import WELLET.welletServer.group.dto.CategoryUpdateDto;
+import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -25,7 +25,7 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category")
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @Builder
