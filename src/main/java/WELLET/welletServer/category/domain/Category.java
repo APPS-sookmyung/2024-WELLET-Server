@@ -1,6 +1,8 @@
 package WELLET.welletServer.category.domain;
 
+import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
+import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -27,6 +29,10 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<CategoryCard> categoryCards = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Builder
     public Category(String name) {

@@ -1,5 +1,8 @@
 package WELLET.welletServer.member.domain;
 
+import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.domain.CategoryCard;
 import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
@@ -8,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +37,12 @@ public class Member extends BaseTimeEntity {
     @NotNull
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<Category> categorys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Card> Cards = new ArrayList<>();
 
 //    private String profile_image;
 
