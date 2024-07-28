@@ -38,12 +38,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "member")
-    private List<Category> categorys = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Card> Cards = new ArrayList<>();
-
 //    private String profile_image;
 
     @Builder
