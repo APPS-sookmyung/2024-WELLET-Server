@@ -1,5 +1,8 @@
 package WELLET.welletServer.member.domain;
 
+import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.domain.CategoryCard;
 import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
@@ -8,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

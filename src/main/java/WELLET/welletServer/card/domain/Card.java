@@ -1,12 +1,17 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +38,13 @@ public class Card {
     private String company;
     private String address;
     private String memo;
+
+    @OneToMany(mappedBy = "card")
+    private List<CategoryCard> categoryCards = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
 //    @NotNull
     private String qr;
