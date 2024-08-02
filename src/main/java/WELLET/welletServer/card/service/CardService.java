@@ -2,10 +2,7 @@ package WELLET.welletServer.card.service;
 
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.dto.CardListResponse;
-import WELLET.welletServer.card.dto.CardResponse;
-import WELLET.welletServer.card.dto.CardSaveDto;
-import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.member.domain.Member;
@@ -43,12 +40,14 @@ public class CardService {
         return CardResponse.toCardDto(card);
     }
 
-    public List<CardListResponse> findAllCard() {
+    public CardCountResponseDto findAllCard() {
         List<Card> cardList = cardRepository.findAll();
         // Entity -> DTO
-        return cardList.stream()
+        List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
+
+        return new CardCountResponseDto(cardRepository.count(), cards);
     }
 
     public CardResponse findOne(Long cardId) {

@@ -1,9 +1,6 @@
 package WELLET.welletServer.card.controller;
 
-import WELLET.welletServer.card.dto.CardListResponse;
-import WELLET.welletServer.card.dto.CardResponse;
-import WELLET.welletServer.card.dto.CardSaveDto;
-import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
@@ -12,8 +9,6 @@ import WELLET.welletServer.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cards")
@@ -29,7 +24,7 @@ public class CardController {
     }
 
     @GetMapping
-    public BasicResponse<List<CardListResponse>> findAllCards() {
+    public BasicResponse<CardCountResponseDto> findAllCards() {
         return ResponseUtil.success(cardService.findAllCard());
     }
 
