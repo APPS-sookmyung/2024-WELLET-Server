@@ -7,6 +7,8 @@ import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
+import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
+    private final MemberService memberService;
 
-    @PostMapping
-    public BasicResponse<String> create(@Valid @RequestBody CardSaveDto cardSaveDto) {
-        long cardId = cardService.saveCard(cardSaveDto);
+    @PostMapping("/{member_id}")
+    public BasicResponse<String> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto cardSaveDto) {
+        Member member = memberService.findMember(memberId);
+        long cardId = cardService.saveCard(member, cardSaveDto);
         return ResponseUtil.success("명함 저장에 성공하였습니다. 명함 id : " + cardId);
     }
 

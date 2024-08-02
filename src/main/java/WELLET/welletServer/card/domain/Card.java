@@ -51,7 +51,7 @@ public class Card {
     private String profile_image;
 
     @Builder
-    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo) {
+    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -61,6 +61,7 @@ public class Card {
         this.company = company;
         this.address = address;
         this.memo = memo;
+        this.member = member;
     }
 
     public void updateCard(CardUpdateDto dto) {

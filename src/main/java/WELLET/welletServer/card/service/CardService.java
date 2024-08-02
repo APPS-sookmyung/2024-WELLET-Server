@@ -8,6 +8,7 @@ import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
+import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public long saveCard (CardSaveDto dto) {
+    public long saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
                 .position(dto.getPosition())
@@ -34,7 +35,9 @@ public class CardService {
                 .company(dto.getCompany())
                 .address(dto.getAddress())
                 .address(dto.getMemo())
+                .member(member)
                 .build();
+
         return cardRepository.save(card).getId();
     }
 
