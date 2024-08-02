@@ -39,7 +39,6 @@ public class CardController {
         }
         Card card = cardService.saveCard(member, dto);
         return ResponseUtil.success(CardResponse.toCardDto(card, dto.getCategoryNames()));
-//        return null;
     }
 
     @GetMapping

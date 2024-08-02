@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,14 +42,9 @@ public class CardService {
 
 
         return card;
-//        return CardResponse.toCardDto(card);
     }
 
     public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories) {
-//        Card card = Card.builder()
-//                .categoryCardList(categoryCards)
-//                .build();
-
         card.addCardCategory(categoryCards);
         Card cardResponse = cardRepository.save(card);
         return CardResponse.toCardDto(cardResponse, categories);
@@ -67,18 +63,13 @@ public class CardService {
     public CardResponse findCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
-
-        return CardResponse.toCardDto(card, findCategoryCardName(card));
+        return CardResponse.toCardDto(card, findCategoryCardNames(card));
     }
 
-    private List<String> findCategoryCardName(Card card) {
-        List<String> categoryCards = new ArrayList<>();
-
-        for (CategoryCard categoryCard : card.getCategoryCards()) {
-            categoryCards.add(categoryCard.getCategory().getName());
-        }
-
-        return categoryCards;
+    private List<String> findCategoryCardNames(Card card) {
+        return card.getCategoryCards().stream()
+                .map(categoryCard -> categoryCard.getCategory().getName())
+                .collect(Collectors.toList());
     }
 
 
