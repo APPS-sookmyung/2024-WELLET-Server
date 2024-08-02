@@ -1,6 +1,6 @@
 package WELLET.welletServer.category.dto;
 
-import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 

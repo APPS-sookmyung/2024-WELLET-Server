@@ -1,7 +1,7 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
-import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
@@ -52,7 +52,7 @@ public class Card extends BaseTimeEntity {
     private String profile_image;
 
     @Builder
-    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member) {
+    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -63,6 +63,7 @@ public class Card extends BaseTimeEntity {
         this.address = address;
         this.memo = memo;
         this.member = member;
+        this.categoryCards = categoryCardList;
     }
 
     public void updateCard(CardUpdateDto dto) {

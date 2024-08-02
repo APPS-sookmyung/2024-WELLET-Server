@@ -5,6 +5,8 @@ import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public CardResponse saveCard (Member member, CardSaveDto dto) {
+    public CardResponse saveCard (Member member, CardSaveDto dto, List<CategoryCard> categoryCards) {
         Card card = Card.builder()
                 .name(dto.getName())
                 .position(dto.getPosition())
@@ -33,6 +35,7 @@ public class CardService {
                 .address(dto.getAddress())
                 .address(dto.getMemo())
                 .member(member)
+                .categoryCardList(categoryCards)
                 .build();
 
         cardRepository.save(card);

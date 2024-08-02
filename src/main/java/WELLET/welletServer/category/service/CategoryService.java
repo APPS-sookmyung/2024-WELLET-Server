@@ -2,7 +2,7 @@ package WELLET.welletServer.category.service;
 
 import WELLET.welletServer.category.dto.CardListResponse;
 import WELLET.welletServer.category.domain.Category;
-import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;

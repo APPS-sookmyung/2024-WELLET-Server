@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record CardResponse(@NotNull Long id, @NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo, @NotBlank String createdAt) {
 
@@ -21,6 +23,7 @@ public record CardResponse(@NotNull Long id, @NotBlank String name, String posit
                 .address(card.getAddress())
                 .memo(card.getMemo())
                 .createdAt(card.getCreatedAt())
+
                 .build();
     }
 }
