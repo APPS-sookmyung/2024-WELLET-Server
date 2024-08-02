@@ -2,6 +2,7 @@ package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Table(name = "card")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card {
+public class Card extends BaseTimeEntity {
     @Id
     @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
