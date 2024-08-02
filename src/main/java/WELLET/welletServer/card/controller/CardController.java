@@ -53,8 +53,9 @@ public class CardController {
 
     @DeleteMapping("/{card_id}")
     public BasicResponse<String> deleteCard(@PathVariable Long card_id) {
-        long cardId = cardService.deleteCard(card_id);
-        return ResponseUtil.success("명함 삭제에 성공하였습니다. 명함 id : " + cardId);
+        Card card = cardService.findOne(card_id);
+        categoryCardService.delete(card);
+        return ResponseUtil.success("명함 삭제에 성공하였습니다. 명함 id : " + card_id);
     }
 
     @PostMapping

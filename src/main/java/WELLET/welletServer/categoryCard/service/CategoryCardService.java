@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,5 +44,11 @@ public class CategoryCardService {
 
         categoryCardRepository.saveAll(categoryCardList);
         return categoryCardList;
+    }
+
+    @Transactional
+    public void delete(Card card) {
+        categoryCardRepository.deleteByAllCardId(card);
+        cardService.deleteCard(card);
     }
 }

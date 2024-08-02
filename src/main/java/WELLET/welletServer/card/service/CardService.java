@@ -59,8 +59,7 @@ public class CardService {
     }
 
     public CardResponse findCard(Long cardId) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+        Card card = findOne(cardId);
         return CardResponse.toCardDto(card, findCategoryCardNames(card));
     }
 
@@ -74,19 +73,20 @@ public class CardService {
 
     @Transactional
     public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+        Card card = findOne(cardId);
 
         card.updateCard(dto);
         return CardUpdateDto.toCardUpdateDto(card);
     }
 
     @Transactional
-    public long deleteCard(Long cardId) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+    public void deleteCard(Card card) {
         cardRepository.delete(card);
-        return cardId;
+    }
+
+    public Card findOne(Long cardId) {
+        return cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
 
     @Transactional
