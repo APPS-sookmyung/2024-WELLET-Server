@@ -8,6 +8,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
+//public record CardResponse(@NotNull Long id, @NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo, @NotBlank String createdAt, List<String> categories) {
 public record CardResponse(@NotNull Long id, @NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo, @NotBlank String createdAt, List<String> categories) {
 
     public static CardResponse toCardDto(Card card, List<String> categories) {

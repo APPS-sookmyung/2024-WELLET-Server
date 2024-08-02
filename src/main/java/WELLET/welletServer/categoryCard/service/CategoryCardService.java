@@ -42,4 +42,13 @@ public class CategoryCardService {
 
         return categoryCards;
     }
+
+    public List<String> categoryNames(List<CategoryCard> categoryCards) {
+        List<String> categoryNames = new ArrayList<>();
+        for (CategoryCard categoryCard : categoryCards) {
+            String name = categoryCard.getCategory().getName();
+            categoryNames.add(name);
+        }
+        return categoryNames;
+    }
 }

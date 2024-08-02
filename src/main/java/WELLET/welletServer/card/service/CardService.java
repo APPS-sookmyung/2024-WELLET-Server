@@ -5,7 +5,6 @@ import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
-import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -64,11 +64,21 @@ public class CardService {
         return new CardCountResponseDto(cardRepository.count(), cards);
     }
 
-    public CardResponse findOne(Long cardId) {
+    public CardResponse findCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        return CardResponse.toCardDto(card, null);
+        return CardResponse.toCardDto(card, findCategoryCardName(card));
+    }
+
+    private List<String> findCategoryCardName(Card card) {
+        List<String> categoryCards = new ArrayList<>();
+
+        for (CategoryCard categoryCard : card.getCategoryCards()) {
+            categoryCards.add(categoryCard.getCategory().getName());
+        }
+
+        return categoryCards;
     }
 
 

@@ -49,7 +49,7 @@ public class CardController {
 
     @GetMapping("/{card_id}")
     public BasicResponse<CardResponse> findCard(@PathVariable(name = "card_id") Long cardId) {
-        return ResponseUtil.success(cardService.findOne(cardId));
+        return ResponseUtil.success(cardService.findCard(cardId));
     }
 
     @PutMapping("/{card_id}")
