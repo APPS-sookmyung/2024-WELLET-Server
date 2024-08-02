@@ -50,14 +50,14 @@ public class CategoryService {
         return categoryId;
     }
 
-    public List<WELLET.welletServer.category.dto.CardListResponse> findAllCards() {
+    public List<CardListResponse> findAllCards() {
         List<CategoryCard> categoryCards = categoryRepository.findAllCards();
         return categoryCards.stream()
                 .map(CardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<WELLET.welletServer.category.dto.CardListResponse> findCardsByCategoryId(Long categoryId) {
+    public List<CardListResponse> findCardsByCategoryId(Long categoryId) {
         List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
         return categoryCards.stream()
                 .map(CardListResponse::toCategoryList)
@@ -72,13 +72,10 @@ public class CategoryService {
     }
 
     public List<Category> findCategoryNames(List<String> categoryNames) {
-        List<Category> categories = new ArrayList<>();
-        for (String name : categoryNames) {
-            Category category = categoryRepository.findByName(name).orElseThrow(
-                    () -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-            categories.add(category);
-        }
+        return categoryNames.stream()
+                .map(name -> categoryRepository.findByName(name)
+                        .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
+                .collect(Collectors.toList());
 
-        return categories;
     }
 }

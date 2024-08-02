@@ -38,16 +38,14 @@ public class CardService {
                 .member(member)
                 .build();
 
-        cardRepository.save(card);
-
-
-        return card;
+        return cardRepository.save(card);
     }
 
+    @Transactional
     public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories) {
         card.addCardCategory(categoryCards);
-        Card cardResponse = cardRepository.save(card);
-        return CardResponse.toCardDto(cardResponse, categories);
+        card = cardRepository.save(card);
+        return CardResponse.toCardDto(card, categories);
     }
 
     public CardCountResponseDto findAllCard() {
