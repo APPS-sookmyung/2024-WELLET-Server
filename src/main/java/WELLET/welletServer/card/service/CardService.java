@@ -75,4 +75,9 @@ public class CardService {
         cardRepository.delete(card);
         return cardId;
     }
+
+    @Transactional
+    public void deleteCardList(List<Long> cardIdList) {
+        cardRepository.deleteAllByIdInBatch(cardIdList);
+    }
 }

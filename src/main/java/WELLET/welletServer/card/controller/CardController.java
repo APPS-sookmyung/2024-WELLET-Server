@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cards")
 @RequiredArgsConstructor
@@ -43,5 +45,11 @@ public class CardController {
     public BasicResponse<String> deleteCard(@PathVariable Long card_id) {
         long cardId = cardService.deleteCard(card_id);
         return ResponseUtil.success("명함 삭제에 성공하였습니다. 명함 id : " + cardId);
+    }
+
+    @PostMapping
+    public BasicResponse<String> deleteCardList(@RequestBody List<Long> cards_id) {
+        cardService.deleteCardList(cards_id);
+        return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
     }
 }
