@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT cc FROM CategoryCard cc WHERE cc.category.id = :categoryId")
@@ -15,5 +16,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT cc FROM CategoryCard cc  WHERE cc.category.id IS NOT NULL")
     List<CategoryCard> findAllCards();
 
-    Category findByName(String name);
+    Optional<Category> findByName(String name);
 }

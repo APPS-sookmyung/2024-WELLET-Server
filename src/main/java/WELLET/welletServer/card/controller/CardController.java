@@ -1,7 +1,10 @@
 package WELLET.welletServer.card.controller;
 
+import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.service.CardService;
+import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.service.CategoryService;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.categoryCard.service.CategoryCardService;
 import WELLET.welletServer.common.response.BasicResponse;
@@ -21,12 +24,22 @@ public class CardController {
     private final CardService cardService;
     private final MemberService memberService;
     private final CategoryCardService categoryCardService;
+    private final CategoryService categoryService;
 
     @PostMapping("/{member_id}")
     public BasicResponse<CardResponse> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto dto) {
         Member member = memberService.findMember(memberId);
-        List<CategoryCard> categoryList = categoryCardService.nameToCategoryCardList(dto.getCategoryNames());
-        return ResponseUtil.success(cardService.saveCard(member, dto, categoryList));
+        List<Category> categories = null;
+        if (dto.getCategoryNames() != null) {
+            categories = categoryService.findCategoryNames(dto.getCategoryNames());
+            Card card = cardService.saveCard(member, dto);
+            List<CategoryCard> categoryList = categoryCardService.categoryToCategoryCardList(card, categories);
+            CardResponse cardResponse = cardService.addCategory(card, categoryList, dto.getCategoryNames());
+            return ResponseUtil.success(cardResponse);
+        }
+        Card card = cardService.saveCard(member, dto);
+        return ResponseUtil.success(CardResponse.toCardDto(card, dto.getCategoryNames()));
+//        return null;
     }
 
     @GetMapping

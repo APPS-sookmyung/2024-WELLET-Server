@@ -23,7 +23,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public CardResponse saveCard (Member member, CardSaveDto dto, List<CategoryCard> categoryCards) {
+    public Card saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
                 .position(dto.getPosition())
@@ -35,12 +35,23 @@ public class CardService {
                 .address(dto.getAddress())
                 .address(dto.getMemo())
                 .member(member)
-                .categoryCardList(categoryCards)
                 .build();
 
         cardRepository.save(card);
 
-        return CardResponse.toCardDto(card);
+
+        return card;
+//        return CardResponse.toCardDto(card);
+    }
+
+    public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories) {
+//        Card card = Card.builder()
+//                .categoryCardList(categoryCards)
+//                .build();
+
+        card.addCardCategory(categoryCards);
+        Card cardResponse = cardRepository.save(card);
+        return CardResponse.toCardDto(cardResponse, categories);
     }
 
     public CardCountResponseDto findAllCard() {
@@ -57,7 +68,7 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        return CardResponse.toCardDto(card);
+        return CardResponse.toCardDto(card, null);
     }
 
 

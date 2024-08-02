@@ -20,11 +20,11 @@ public class CategoryCard {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false, unique = true)
+    @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false, unique = true)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(name = "card_name")

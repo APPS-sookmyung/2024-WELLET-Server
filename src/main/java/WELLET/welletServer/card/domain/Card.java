@@ -77,4 +77,8 @@ public class Card extends BaseTimeEntity {
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
     }
+
+    public void addCardCategory(List<CategoryCard> categoryCards) {
+        this.categoryCards = categoryCards;
+    }
 }
