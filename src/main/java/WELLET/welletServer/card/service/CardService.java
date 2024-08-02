@@ -24,7 +24,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public long saveCard (Member member, CardSaveDto dto) {
+    public CardResponse saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
                 .position(dto.getPosition())
@@ -38,7 +38,9 @@ public class CardService {
                 .member(member)
                 .build();
 
-        return cardRepository.save(card).getId();
+        cardRepository.save(card);
+
+        return CardResponse.toCardDto(card);
     }
 
     public List<CardListResponse> findAllCard() {

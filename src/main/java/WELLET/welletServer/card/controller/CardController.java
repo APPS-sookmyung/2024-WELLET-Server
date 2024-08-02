@@ -23,10 +23,9 @@ public class CardController {
     private final MemberService memberService;
 
     @PostMapping("/{member_id}")
-    public BasicResponse<String> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto cardSaveDto) {
+    public BasicResponse<CardResponse> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto cardSaveDto) {
         Member member = memberService.findMember(memberId);
-        long cardId = cardService.saveCard(member, cardSaveDto);
-        return ResponseUtil.success("명함 저장에 성공하였습니다. 명함 id : " + cardId);
+        return ResponseUtil.success(cardService.saveCard(member, cardSaveDto));
     }
 
     @GetMapping
