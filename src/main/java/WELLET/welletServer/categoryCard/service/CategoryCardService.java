@@ -26,7 +26,7 @@ public class CategoryCardService {
     private final CardService cardService;
 
     @Transactional
-    public CardResponse createCardWithCategoryNameNotNull(CardSaveDto dto, Member member) {
+    public CardResponse createCardWithCategory(CardSaveDto dto, Member member) {
         List<Category> categories = categoryService.findCategoryNames(dto.getCategoryNames());
         Card card = cardService.saveCard(member, dto);
         List<CategoryCard> categoryList = save(card, categories);

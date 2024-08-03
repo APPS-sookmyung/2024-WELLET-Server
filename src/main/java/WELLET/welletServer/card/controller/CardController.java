@@ -38,7 +38,7 @@ public class CardController {
     public BasicResponse<CardResponse> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto dto) {
         Member member = memberService.findMember(memberId);
         if (dto.getCategoryNames() != null) {
-            return ResponseUtil.success(categoryCardService.createCardWithCategoryNameNotNull(dto, member));
+            return ResponseUtil.success(categoryCardService.createCardWithCategory(dto, member));
         }
         Card card = cardService.saveCard(member, dto);
         return ResponseUtil.success(CardResponse.toCardDto(card, dto.getCategoryNames()));
