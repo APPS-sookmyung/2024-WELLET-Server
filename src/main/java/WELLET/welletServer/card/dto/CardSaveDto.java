@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardSaveDto {
@@ -25,8 +27,10 @@ public class CardSaveDto {
     private String address;
     private String memo;
 
+    private List<String> categoryNames;
+
     @Builder
-    public CardSaveDto(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo) {
+    public CardSaveDto(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, List<String> categoryNames) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -36,5 +40,6 @@ public class CardSaveDto {
         this.company = company;
         this.address = address;
         this.memo = memo;
+        this.categoryNames = categoryNames;
     }
 }

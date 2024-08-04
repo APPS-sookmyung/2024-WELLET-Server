@@ -2,7 +2,7 @@ package WELLET.welletServer.category.service;
 
 import WELLET.welletServer.category.dto.CardListResponse;
 import WELLET.welletServer.category.domain.Category;
-import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,14 +50,14 @@ public class CategoryService {
         return categoryId;
     }
 
-    public List<WELLET.welletServer.category.dto.CardListResponse> findAllCards() {
+    public List<CardListResponse> findAllCards() {
         List<CategoryCard> categoryCards = categoryRepository.findAllCards();
         return categoryCards.stream()
                 .map(CardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<WELLET.welletServer.category.dto.CardListResponse> findCardsByCategoryId(Long categoryId) {
+    public List<CardListResponse> findCardsByCategoryId(Long categoryId) {
         List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
         return categoryCards.stream()
                 .map(CardListResponse::toCategoryList)
@@ -68,5 +69,13 @@ public class CategoryService {
         return categories.stream()
                 .map(CategoryListName::fromCategory)
                 .collect(Collectors.toList());
+    }
+
+    public List<Category> findCategoryNames(List<String> categoryNames) {
+        return categoryNames.stream()
+                .map(name -> categoryRepository.findByName(name)
+                        .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
+                .collect(Collectors.toList());
+
     }
 }

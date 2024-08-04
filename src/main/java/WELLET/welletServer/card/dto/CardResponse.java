@@ -2,13 +2,18 @@ package WELLET.welletServer.card.dto;
 
 import WELLET.welletServer.card.domain.Card;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record CardResponse(@NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo) {
+import java.util.List;
 
-    public static CardResponse toCardDto(Card card) {
+@Builder
+//public record CardResponse(@NotNull Long id, @NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo, @NotBlank String createdAt, List<String> categories) {
+public record CardResponse(@NotNull Long id, @NotBlank String name, String position, @NotBlank String email, String phone, String tel, String department, @NotBlank String company, String address, String memo, @NotBlank String createdAt, List<String> categories) {
+
+    public static CardResponse toCardDto(Card card, List<String> categories) {
         return CardResponse.builder()
+                .id(card.getId())
                 .name(card.getName())
                 .position(card.getPosition())
                 .email(card.getEmail())
@@ -18,6 +23,8 @@ public record CardResponse(@NotBlank String name, String position, @NotBlank Str
                 .company(card.getCompany())
                 .address(card.getAddress())
                 .memo(card.getMemo())
+                .createdAt(card.getCreatedAt())
+                .categories(categories)
                 .build();
     }
 }

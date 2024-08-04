@@ -1,7 +1,7 @@
 package WELLET.welletServer.category.domain;
 
-import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,14 +24,15 @@ public class Category {
     private Long id;
 
     @NotBlank
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+//    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder

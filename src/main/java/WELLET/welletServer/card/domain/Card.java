@@ -1,7 +1,8 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
-import WELLET.welletServer.category.domain.CategoryCard;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
+import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Table(name = "card")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card {
+public class Card extends BaseTimeEntity {
     @Id
     @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +52,7 @@ public class Card {
     private String profile_image;
 
     @Builder
-    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo) {
+    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -61,6 +62,8 @@ public class Card {
         this.company = company;
         this.address = address;
         this.memo = memo;
+        this.member = member;
+        this.categoryCards = categoryCardList;
     }
 
     public void updateCard(CardUpdateDto dto) {
@@ -73,5 +76,9 @@ public class Card {
         this.company = dto.getCompany();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
+    }
+
+    public void addCardCategory(List<CategoryCard> categoryCards) {
+        this.categoryCards = categoryCards;
     }
 }
