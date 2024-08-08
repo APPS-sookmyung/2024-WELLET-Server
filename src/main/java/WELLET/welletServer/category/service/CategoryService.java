@@ -1,6 +1,6 @@
 package WELLET.welletServer.category.service;
 
-import WELLET.welletServer.category.dto.CardListResponse;
+import WELLET.welletServer.category.dto.CategoryCardListResponse;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.category.dto.CategoryListName;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,17 +49,17 @@ public class CategoryService {
         return categoryId;
     }
 
-    public List<CardListResponse> findAllCards() {
+    public List<CategoryCardListResponse> findAllCards() {
         List<CategoryCard> categoryCards = categoryRepository.findAllCards();
         return categoryCards.stream()
-                .map(CardListResponse::toCategoryList)
+                .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<CardListResponse> findCardsByCategoryId(Long categoryId) {
+    public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
         List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
         return categoryCards.stream()
-                .map(CardListResponse::toCategoryList)
+                .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 

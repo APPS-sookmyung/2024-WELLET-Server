@@ -6,11 +6,11 @@ import lombok.Builder;
 
 
 @Builder
-public record CardListResponse(@NotBlank String cardName, @NotBlank String cardCompany) {
+public record CategoryCardListResponse(@NotBlank String cardName, @NotBlank String cardCompany) {
 
-    public static CardListResponse toCategoryList(CategoryCard categoryCard) {
+    public static CategoryCardListResponse toCategoryList(CategoryCard categoryCard) {
 
-        return CardListResponse.builder()
+        return CategoryCardListResponse.builder()
                 .cardName(categoryCard.getCardName())
                 .cardCompany(categoryCard.getCardCompany())
                 .build();

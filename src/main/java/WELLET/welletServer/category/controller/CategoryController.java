@@ -3,7 +3,7 @@ package WELLET.welletServer.category.controller;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.category.dto.CategoryListName;
-import WELLET.welletServer.category.dto.CardListResponse;
+import WELLET.welletServer.category.dto.CategoryCardListResponse;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.service.CategoryService;
@@ -38,14 +38,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{category_id}")
-    public BasicResponse<List<CardListResponse>> findCardsByCategoryId(@PathVariable(name = "category_id") Long categoryId) {
-        List<CardListResponse> cardListResponses = categoryService.findCardsByCategoryId(categoryId);
+    public BasicResponse<List<CategoryCardListResponse>> findCardsByCategoryId(@PathVariable(name = "category_id") Long categoryId) {
+        List<CategoryCardListResponse> cardListResponses = categoryService.findCardsByCategoryId(categoryId);
         return ResponseUtil.success(cardListResponses);
     }
 
     @GetMapping
-    public BasicResponse<List<CardListResponse>> findAllCards() {
-        List<CardListResponse> cardListResponses = categoryService.findAllCards();
+    public BasicResponse<List<CategoryCardListResponse>> findAllCards() {
+        List<CategoryCardListResponse> cardListResponses = categoryService.findAllCards();
         return ResponseUtil.success(cardListResponses);
     }
 
