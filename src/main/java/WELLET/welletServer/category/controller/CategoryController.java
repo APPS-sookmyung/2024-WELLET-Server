@@ -50,8 +50,8 @@ public class CategoryController {
     }
 
     @GetMapping("/name")
-    public BasicResponse<List<CategoryListName>> findAllNames() {
-        List<CategoryListName> categoryListNames = categoryService.findAllName();
-        return ResponseUtil.success(categoryListNames);
+    public BasicResponse<List<String>> findAllNames() {
+        List<String> categoryNames = categoryService.findAllName();
+        return ResponseUtil.success(categoryNames);
     }
 }

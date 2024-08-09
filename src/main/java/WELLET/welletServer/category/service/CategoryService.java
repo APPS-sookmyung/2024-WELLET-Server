@@ -63,10 +63,10 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryListName> findAllName() {
+    public List<String> findAllName() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
-                .map(CategoryListName::fromCategory)
+                .map(Category::getName)
                 .collect(Collectors.toList());
     }
 
