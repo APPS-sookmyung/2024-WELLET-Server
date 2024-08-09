@@ -1,5 +1,6 @@
 package WELLET.welletServer.category.controller;
 
+import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.category.dto.CategoryListName;
@@ -26,14 +27,16 @@ public class CategoryController {
     }
 
     @PutMapping("/{category_id}")
-    public BasicResponse<CategoryUpdateDto> updateCategory(@PathVariable(name = "category_id") Long category_id, @Valid @RequestBody CategoryUpdateDto dto) {
-        CategoryUpdateDto categoryUpdateDto = categoryService.updateCategory(category_id, dto);
-        return ResponseUtil.success(categoryUpdateDto);
+    public BasicResponse<CategoryUpdateDto> updateCategory(@PathVariable(name = "category_id") Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
+        Category category = categoryService.findById(categoryId);
+        CategoryUpdateDto updatedCategory = categoryService.updateCategory(category, dto);
+        return ResponseUtil.success(updatedCategory);
     }
 
     @DeleteMapping("/{category_id}")
-    public BasicResponse<String> deleteCategory(@PathVariable(name = "category_id") Long category_id) {
-        long categoryId = categoryService.deleteCategory(category_id);
+    public BasicResponse<String> deleteCategory(@PathVariable(name = "category_id") Long categoryId) {
+        Category category = categoryService.findById(categoryId);
+        categoryService.deleteCategory(category);
         return ResponseUtil.success("그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId);
     }
 

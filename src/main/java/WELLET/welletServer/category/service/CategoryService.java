@@ -34,22 +34,15 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-
+    public CategoryUpdateDto updateCategory(Category category, CategoryUpdateDto dto) {
         category.updateCategory(dto);
         return CategoryUpdateDto.toCategoryUpdateDto(category);
     }
 
     @Transactional
-    public long deleteCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-
+    public void deleteCategory(Category category) {
         categoryCardRepository.deleteByCategory(category);
         categoryRepository.delete(category);
-        return categoryId;
     }
 
     public List<CategoryCardListResponse> findAllCards() {
@@ -79,5 +72,10 @@ public class CategoryService {
                         .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
                 .collect(Collectors.toList());
 
+    }
+
+    public Category findById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 }
