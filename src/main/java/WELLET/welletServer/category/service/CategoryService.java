@@ -3,12 +3,12 @@ package WELLET.welletServer.category.service;
 import WELLET.welletServer.category.dto.CategoryCardListResponse;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
-import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
+import WELLET.welletServer.categoryCard.repository.CategoryCardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryCardRepository categoryCardRepository;
 
     @Transactional
     public long saveCategory (CategorySaveDto dto) {
@@ -45,6 +46,8 @@ public class CategoryService {
     public long deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+
+        categoryCardRepository.deleteByCategory(category);
         categoryRepository.delete(category);
         return categoryId;
     }

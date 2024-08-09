@@ -27,7 +27,7 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
