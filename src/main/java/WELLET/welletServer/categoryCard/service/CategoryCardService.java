@@ -51,11 +51,5 @@ public class CategoryCardService {
         categoryCardRepository.deleteByAllCardId(card);
         cardService.deleteCard(card);
     }
-
-    @Transactional
-    public void addCategoryCard(Category category, CategoryCard categoryCard) {
-        List<CategoryCard> categoryCards = category.getCategoryCards();
-        categoryCards.add(categoryCard);
-        categoryCardRepository.save(categoryCard);
-    }
+    
 }
