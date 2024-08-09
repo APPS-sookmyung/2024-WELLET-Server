@@ -53,7 +53,8 @@ public class CategoryService {
     }
 
     public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
-        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
+        Category category = findById(categoryId);
+        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategory(category);
         return categoryCards.stream()
                 .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
@@ -71,7 +72,6 @@ public class CategoryService {
                 .map(name -> categoryRepository.findByName(name)
                         .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
                 .collect(Collectors.toList());
-
     }
 
     public Category findById(Long categoryId) {

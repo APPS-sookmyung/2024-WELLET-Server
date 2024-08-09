@@ -41,8 +41,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{category_id}")
-    public BasicResponse<List<CategoryCardListResponse>> findCardsByCategoryId(@PathVariable(name = "category_id") Long categoryId) {
-        List<CategoryCardListResponse> cardListResponses = categoryService.findCardsByCategoryId(categoryId);
+    public BasicResponse<List<CategoryCardListResponse>> findCardsByCategoryId(@PathVariable(name = "category_id") Category category) {
+        List<CategoryCardListResponse> cardListResponses = categoryService.findCardsByCategoryId(category.getId());
         return ResponseUtil.success(cardListResponses);
     }
 
