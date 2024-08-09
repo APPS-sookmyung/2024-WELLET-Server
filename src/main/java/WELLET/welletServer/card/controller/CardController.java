@@ -89,4 +89,10 @@ public class CardController {
         cardService.deleteCardList(cards_id);
         return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
     }
+
+    @GetMapping("/search")
+    @Operation(summary = "이름으로 명함 검색")
+    public BasicResponse<CardCountResponseDto> searchCardsByName(@RequestParam(value="keyword") String keyword) {
+        return ResponseUtil.success(cardService.searchCardsByName(keyword));
+    }
 }
