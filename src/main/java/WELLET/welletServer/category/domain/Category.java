@@ -39,11 +39,6 @@ public class Category {
     public Category(String name) {
         this.name = name;
     }
-
-    public void addCategoryCard(CategoryCard categoryCard) {
-        categoryCards.add(categoryCard);
-    }
-
     public void updateCategory(CategoryUpdateDto dto) {
         this.name = dto.getName();
     }
