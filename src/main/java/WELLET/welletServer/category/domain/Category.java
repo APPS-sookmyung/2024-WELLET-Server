@@ -27,7 +27,7 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,11 +39,6 @@ public class Category {
     public Category(String name) {
         this.name = name;
     }
-
-    public void addCategoryCard(CategoryCard categoryCard) {
-        categoryCards.add(categoryCard);
-    }
-
     public void updateCategory(CategoryUpdateDto dto) {
         this.name = dto.getName();
     }

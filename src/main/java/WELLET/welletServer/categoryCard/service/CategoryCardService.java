@@ -51,4 +51,5 @@ public class CategoryCardService {
         categoryCardRepository.deleteByAllCardId(card);
         cardService.deleteCard(card);
     }
+    
 }

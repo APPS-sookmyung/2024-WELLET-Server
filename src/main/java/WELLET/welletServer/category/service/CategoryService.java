@@ -1,20 +1,19 @@
 package WELLET.welletServer.category.service;
 
-import WELLET.welletServer.category.dto.CardListResponse;
+import WELLET.welletServer.category.dto.CategoryCardListResponse;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
-import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
+import WELLET.welletServer.categoryCard.repository.CategoryCardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryCardRepository categoryCardRepository;
 
     @Transactional
     public long saveCategory (CategorySaveDto dto) {
@@ -34,40 +34,35 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-
+    public CategoryUpdateDto updateCategory(Category category, CategoryUpdateDto dto) {
         category.updateCategory(dto);
         return CategoryUpdateDto.toCategoryUpdateDto(category);
     }
 
     @Transactional
-    public long deleteCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+    public void deleteCategory(Category category) {
+        categoryCardRepository.deleteByCategory(category);
         categoryRepository.delete(category);
-        return categoryId;
     }
 
-    public List<CardListResponse> findAllCards() {
+    public List<CategoryCardListResponse> findAllCards() {
         List<CategoryCard> categoryCards = categoryRepository.findAllCards();
         return categoryCards.stream()
-                .map(CardListResponse::toCategoryList)
+                .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<CardListResponse> findCardsByCategoryId(Long categoryId) {
+    public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
         List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
         return categoryCards.stream()
-                .map(CardListResponse::toCategoryList)
+                .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryListName> findAllName() {
+    public List<String> findAllName() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
-                .map(CategoryListName::fromCategory)
+                .map(Category::getName)
                 .collect(Collectors.toList());
     }
 
@@ -77,5 +72,10 @@ public class CategoryService {
                         .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
                 .collect(Collectors.toList());
 
+    }
+
+    public Category findById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 }
