@@ -11,7 +11,7 @@ public record CategoryCardListResponse(@NotBlank String cardName, @NotBlank Stri
     public static CategoryCardListResponse toCategoryList(CategoryCard categoryCard) {
 
         return CategoryCardListResponse.builder()
-                .cardName(categoryCard.getCategory().getName())
+                .cardName(categoryCard.getCard().getName())
                 .cardCompany(categoryCard.getCard().getCompany())
                 .build();
     }
