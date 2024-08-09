@@ -69,8 +69,6 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-
-
     @Transactional
     public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
         Card card = findOne(cardId);
@@ -93,4 +91,25 @@ public class CardService {
     public void deleteCardList(List<Long> cardIdList) {
         cardRepository.deleteAllByIdInBatch(cardIdList);
     }
+
+//  이 아래 코드를 마저 작성해야함 !!!!
+    public CardCountResponseDto searchCardsByName(String keyword) {
+        List<Card> cardList = cardRepository.searchCardsByName(keyword);
+        // Entity -> DTO
+        List<CardListResponse> cards = cardList.stream()
+                .map(CardListResponse::toCardList)
+                .toList();
+
+        return new CardCountResponseDto((long) cards.size(), cards);
+    }
+// 이 아래코드는 위에 전체 명함 조회 코드 가져온거임 위의 코드 작성할 때 편히 보기 위해서
+//    public CardCountResponseDto findAllCard() {
+//        List<Card> cardList = cardRepository.findAll();
+//        // Entity -> DTO
+//        List<CardListResponse> cards = cardList.stream()
+//                .map(CardListResponse::toCardList)
+//                .toList();
+//
+//        return new CardCountResponseDto(cardRepository.count(), cards);
+//    }
 }
