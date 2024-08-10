@@ -54,7 +54,7 @@ public class CategoryService {
 
     public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
         Category category = findById(categoryId);
-        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategory(category);
+        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(category);
         return categoryCards.stream()
                 .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
