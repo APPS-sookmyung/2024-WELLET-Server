@@ -92,7 +92,6 @@ public class CardService {
         cardRepository.deleteAllByIdInBatch(cardIdList);
     }
 
-//  이 아래 코드를 마저 작성해야함 !!!!
     public CardCountResponseDto searchCardsByName(String keyword) {
         List<Card> cardList = cardRepository.searchCardsByName(keyword);
         // Entity -> DTO

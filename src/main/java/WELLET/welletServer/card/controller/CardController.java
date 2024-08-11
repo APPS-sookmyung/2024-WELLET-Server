@@ -115,15 +115,24 @@ public class CardController {
         return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
     }
 
+//    @GetMapping("/search")
+//    @Operation(summary = "이름으로 명함 검색")
+//    public BasicResponse<CardCountResponseDto> searchCardsByName(@RequestParam(value="keyword") String keyword) {
+//        return ResponseUtil.success(cardService.searchCardsByName(keyword));
+//    }
     @GetMapping("/search")
     @Operation(summary = "이름으로 명함 검색")
     @Parameters({
-            @Parameter(name = "keyword", example = "주아정"),
-    })
+              @Parameter(name = "keyword", example = "주아정"),
+      })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
-    })
-    public BasicResponse<CardCountResponseDto> searchCardsByName(@RequestParam(value="keyword") String keyword) {
-        return ResponseUtil.success(cardService.searchCardsByName(keyword));
-    }
+              @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
+      })
+    public BasicResponse<CardCountResponseDto> searchCardsByName(
+        @RequestParam(value = "keyword", required = false) String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return ResponseUtil.success(cardService.findAllCard());
+        } else {
+            return ResponseUtil.success(cardService.searchCardsByName(keyword));
+    }}
 }
