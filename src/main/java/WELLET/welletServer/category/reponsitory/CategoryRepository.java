@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query("SELECT cc FROM CategoryCard cc WHERE cc.category = :category")
-    List<CategoryCard> findCardsByCategoryId(@Param("category") Category category);
+    @Query("SELECT cc FROM CategoryCard cc WHERE cc.category.id = :categoryId")
+    List<CategoryCard> findCardsByCategoryId(@Param("categoryId") Long categoryId);
 
     @Query("SELECT cc FROM CategoryCard cc  WHERE cc.category.id IS NOT NULL")
     List<CategoryCard> findAllCards();
