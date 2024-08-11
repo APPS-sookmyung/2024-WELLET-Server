@@ -27,6 +27,11 @@ public class CategoryService {
 
     @Transactional
     public long saveCategory (CategorySaveDto dto) {
+
+        categoryRepository.findByName(dto.getName()).ifPresent(e -> {
+            throw new CategoryException(CategoryErrorCode.CATEGORY_DUPLICATE);
+        });
+
         Category category = Category.builder()
                 .name(dto.getName())
                 .build();
