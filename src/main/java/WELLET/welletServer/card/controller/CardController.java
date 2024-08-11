@@ -37,6 +37,7 @@ public class CardController {
     @ApiResponses(value = {
          @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
          @ApiResponse(responseCode = "400", description = "카테고리가 존재하지 않습니다."),
+         @ApiResponse(responseCode = "400", description = "멤버가 존재하지 않습니다."),
     })
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
