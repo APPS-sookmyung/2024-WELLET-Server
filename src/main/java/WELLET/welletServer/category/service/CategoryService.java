@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -58,8 +59,13 @@ public class CategoryService {
     }
 
     public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
-        List<CategoryCard> categoryCards = categoryRepository.findCardsByCategoryId(categoryId);
-        return categoryCards.stream()
+
+        Category category = Optional.ofNullable(categoryId)
+                .filter(id -> id != null && id > 0)
+                .flatMap(categoryRepository::findById)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+
+        return categoryRepository.findCardsByCategoryId(category.getId()).stream()
                 .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
@@ -76,10 +82,12 @@ public class CategoryService {
                 .map(name -> categoryRepository.findByName(name)
                         .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
                 .collect(Collectors.toList());
-
     }
 
     public Category findById(Long categoryId) {
+        if (categoryId == null || categoryId <= 0) {
+            throw new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND);
+        }
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
