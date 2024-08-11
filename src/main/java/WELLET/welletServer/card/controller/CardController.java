@@ -14,6 +14,8 @@ import WELLET.welletServer.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,11 @@ public class CardController {
 
     @PostMapping("/{member_id}")
     @Operation(summary = "명함 생성")
+    @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
+         @ApiResponse(responseCode = "400", description = "카테고리가 존재하지 않습니다."),
+         @ApiResponse(responseCode = "400", description = "멤버가 존재하지 않습니다."),
+    })
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
     })
@@ -46,6 +53,9 @@ public class CardController {
 
     @GetMapping
     @Operation(summary = "전체 명함 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 전체 조회에 성공하였습니다."),
+    })
     public BasicResponse<CardCountResponseDto> findAllCards() {
         return ResponseUtil.success(cardService.findAllCard());
     }
@@ -55,6 +65,10 @@ public class CardController {
     @Parameters({
             @Parameter(name = "card_id", example = "1"),
     })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 단건 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+    })
     public BasicResponse<CardResponse> findCard(@PathVariable(name = "card_id") Long cardId) {
         return ResponseUtil.success(cardService.findCard(cardId));
     }
@@ -63,6 +77,10 @@ public class CardController {
     @Operation(summary = "명함 수정")
     @Parameters({
             @Parameter(name = "card_id", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
     })
     public BasicResponse<CardUpdateDto> updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
         CardUpdateDto cardUpdateDto = cardService.updateCard(card_id, dto);
@@ -74,6 +92,10 @@ public class CardController {
     @Parameters({
             @Parameter(name = "card_id", example = "1"),
     })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 삭제 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+    })
     public BasicResponse<String> deleteCard(@PathVariable Long card_id) {
         Card card = cardService.findOne(card_id);
         categoryCardService.delete(card);
@@ -84,6 +106,9 @@ public class CardController {
     @Operation(summary = "명함 동시 삭제")
     @Parameters({
             @Parameter(name = "cards_id", example = "[1, 2]"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
     })
     public BasicResponse<String> deleteCardList(@RequestBody List<Long> cards_id) {
         cardService.deleteCardList(cards_id);
@@ -97,6 +122,12 @@ public class CardController {
 //    }
     @GetMapping("/search")
     @Operation(summary = "이름으로 명함 검색")
+    @Parameters({
+              @Parameter(name = "keyword", example = "주아정"),
+      })
+    @ApiResponses(value = {
+              @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
+      })
     public BasicResponse<CardCountResponseDto> searchCardsByName(
         @RequestParam(value = "keyword", required = false) String keyword) {
         if (keyword == null || keyword.isEmpty()) {
