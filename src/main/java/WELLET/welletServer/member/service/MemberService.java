@@ -23,12 +23,19 @@ public class MemberService {
 
     @Transactional
     public long saveMember (MemberSaveDto dto) {
+        // Username 중복 체크
+        if (memberRepository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new MemberException(MemberErrorCode.DUPLICATE_USERNAME);
+        }
+
         Member member = Member.builder()
                 .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .build();
+
         return memberRepository.save(member).getId();
+
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package WELLET.welletServer.member.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,11 +10,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSaveDto {
-
-    @NotBlank
-    private String username;
-    private String nickname;
-    private String password;
+    @Schema(description = "사용자 이름", example = "홍길동") @NotBlank private String username;
+    @Schema(description = "닉네임", example = "홍홍길길") @NotBlank private String nickname;
+    @Schema(description = "비밀번호", example = "password") @NotBlank private String password;
 //    private String profile_image;
 
     @Builder
