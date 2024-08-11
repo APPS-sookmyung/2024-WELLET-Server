@@ -27,7 +27,9 @@ public class MemberController {
     @PostMapping
     @Operation(summary = "회원 저장 및 생성")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다.")
+            @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "공백이 포함되어 있습니다."),
+            @ApiResponse(responseCode = "400", description = "중복회원입니다.")
     })
 
     public BasicResponse<String> create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
@@ -38,7 +40,7 @@ public class MemberController {
     @Operation(summary = "회원 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 수정에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "모든 정보를 입력하지 않았습니다"),
+            @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
     @Parameters(
             @Parameter(name = "member_id", description = "공백 X", example = "1")
