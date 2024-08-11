@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter @Builder
 public class CardUpdateDto {
 
-    @Schema(description = "이름", example = "주아정") private String name;
+    @Schema(description = "이름", example = "수정") private String name;
 
     @Schema(description = "직책", example = "팀장") private String position;
 
