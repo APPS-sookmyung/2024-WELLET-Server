@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategorySaveDto {
 
-    @NotBlank
+    @NotBlank @Schema(description = "그룹명", example = "음식점")
     private String name;
 
     @Builder
-    public CategorySaveDto(@Schema(description = "그룹명", example = "음식점") String name) {
+    public CategorySaveDto(String name) {
         this.name = name;
     }
 }

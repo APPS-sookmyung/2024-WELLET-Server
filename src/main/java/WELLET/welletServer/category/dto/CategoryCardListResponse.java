@@ -9,7 +9,7 @@ import lombok.Builder;
 @Builder
 public record CategoryCardListResponse(
         @Schema(description = "성명", example = "김은지")@NotBlank String cardName,
-        @Schema(description = "직무", example = "개발팀") @NotBlank String cardCompany) {
+        @Schema(description = "소속", example = "개발팀") @NotBlank String cardCompany) {
 
     public static CategoryCardListResponse toCategoryList(CategoryCard categoryCard) {
 

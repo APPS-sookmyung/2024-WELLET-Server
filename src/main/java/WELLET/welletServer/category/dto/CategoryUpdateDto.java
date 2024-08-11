@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "그룹명", example = "학교")
 public class CategoryUpdateDto {
 
+    @Schema(description = "그룹명", example = "학교")
     private  String name;
 
     public static CategoryUpdateDto toCategoryUpdateDto(Category category) {
