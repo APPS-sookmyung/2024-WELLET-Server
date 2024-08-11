@@ -6,6 +6,8 @@ import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.exception.MemberErrorCode;
 import WELLET.welletServer.member.exception.MemberException;
 import WELLET.welletServer.member.repository.MemberRepository;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,15 +22,21 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
-
     @Transactional
     public long saveMember (MemberSaveDto dto) {
+        // Username 중복 체크
+        if (memberRepository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new MemberException(MemberErrorCode.DUPLICATE_USERNAME);
+        }
+
         Member member = Member.builder()
                 .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .build();
+
         return memberRepository.save(member).getId();
+
     }
 
     @Transactional
