@@ -1,6 +1,7 @@
 package WELLET.welletServer.category.dto;
 
 import WELLET.welletServer.category.domain.Category;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "그룹명", example = "학교")
 public class CategoryUpdateDto {
 
     private  String name;

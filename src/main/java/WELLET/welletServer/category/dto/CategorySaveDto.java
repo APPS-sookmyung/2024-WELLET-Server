@@ -1,5 +1,6 @@
 package WELLET.welletServer.category.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class CategorySaveDto {
     private String name;
 
     @Builder
-    public CategorySaveDto(String name) {
+    public CategorySaveDto(@Schema(description = "그룹명", example = "음식점") String name) {
         this.name = name;
     }
 }
