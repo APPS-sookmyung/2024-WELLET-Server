@@ -1,0 +1,66 @@
+# github repository actions 페이지에 나타날 이름
+name: OUTFOOT CI/CD (Docker Image)
+
+# event trigger
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+    steps:
+
+      # JDK setting - github actions에서 사용할 JDK 설정 (프로젝트나 AWS의 java 버전과 달라도 무방)
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      # gradle caching - 빌드 시간 향상
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 환경별 yml 파일 생성 - application.yml
+      - name: make application.yml
+        run: |
+          mkdir ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.YML }}" > ./application.yml
+        shell: bash
+
+      # gradle build
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # docker build & push to production
+      - name: Docker build & push
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/wellet . 
+          docker push ${{ secrets.DOCKER_USERNAME }}/wellet
+
+      ## deploy to production
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy-main
+        with:
+          host: ${{ secrets.HOST }} # EC2 퍼블릭 IPv4 DNS
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY }} # .pem 키
+          envs: GITHUB_SHA
+          script: |
+            sudo docker ps
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wellet
+            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/wellet
+            sudo docker image prune -f
