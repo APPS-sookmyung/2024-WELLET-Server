@@ -34,7 +34,8 @@ out/
 /.nb-gradle/
 
 .DS_Store
+.env
 
 ### VS Code ###
 .vscode/
-*.yml
+application.yml
