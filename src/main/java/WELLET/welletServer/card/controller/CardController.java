@@ -117,9 +117,12 @@ public class CardController {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
     })
-    public BasicResponse<String> deleteCardList(@PathVariable Long member_id, @RequestBody List<Long> cards_id) {
-        cardService.deleteCardList(cards_id);
+    public BasicResponse<String> deleteCardList(@RequestBody List<Long> cards_id) {
+//        cardService.deleteCardList(cards_id);
+        List<Card> cardList = cardService.findCardList(cards_id);
+        categoryCardService.deleteCardList(cardList);
         return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
     }
 

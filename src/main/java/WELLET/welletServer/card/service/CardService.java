@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -86,9 +88,14 @@ public class CardService {
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
 
-    @Transactional
-    public void deleteCardList(List<Long> cardIdList) {
-        cardRepository.deleteAllByIdInBatch(cardIdList);
+    public List<Card> findCardList(List<Long> cardIdList) {
+        List<Card> cardList = new ArrayList<>();
+        cardIdList.forEach(cardId -> {
+            Card card = cardRepository.findById(cardId)
+                    .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND, cardId + "번 명함이 존재하지 않습니다."));
+            cardList.add(card);
+        });
+        return cardList;
     }
 
     public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {

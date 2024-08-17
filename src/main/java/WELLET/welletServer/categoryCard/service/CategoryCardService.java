@@ -3,6 +3,8 @@ package WELLET.welletServer.categoryCard.service;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.CardSaveDto;
+import WELLET.welletServer.card.exception.CardErrorCode;
+import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.category.service.CategoryService;
@@ -51,5 +53,9 @@ public class CategoryCardService {
         categoryCardRepository.deleteByAllCardId(card);
         cardService.deleteCard(card);
     }
-    
+
+    @Transactional
+    public void deleteCardList(List<Card> cardList) {
+        cardList.forEach(this::delete);
+    }
 }

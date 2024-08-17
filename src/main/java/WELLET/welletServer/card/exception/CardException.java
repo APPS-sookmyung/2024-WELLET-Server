@@ -12,4 +12,10 @@ public class CardException extends RuntimeException {
         this.code = code;
         this.message = code.getMessage();
     }
+
+    public CardException(CardErrorCode code, String message) {
+        super();
+        this.code = code;
+        this.message = message;
+    }
 }
