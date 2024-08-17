@@ -127,7 +127,11 @@ public class CardService {
 
     public CardResponse findMyCard(Long memberId) {
         Card card = cardRepository.findByOwnerId(memberId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+                .orElse(null);
+
+        if (card == null) {
+            return null;
+        }
 
         return CardResponse.toCardDto(card);
     }
