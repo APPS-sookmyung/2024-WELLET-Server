@@ -44,15 +44,17 @@ public class Card extends BaseTimeEntity {
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
+
+    private Long ownerId;
 
 //    @NotNull
     private String qr;
     private String profile_image;
 
     @Builder
-    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList) {
+    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList, Long ownerId) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -64,6 +66,7 @@ public class Card extends BaseTimeEntity {
         this.memo = memo;
         this.member = member;
         this.categoryCards = categoryCardList;
+        this.ownerId = ownerId;
     }
 
     public void updateCard(CardUpdateDto dto) {

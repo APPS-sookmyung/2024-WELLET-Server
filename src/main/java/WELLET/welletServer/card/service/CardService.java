@@ -7,6 +7,7 @@ import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.dto.SaveMyCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,7 +36,7 @@ public class CardService {
                 .department(dto.getDepartment())
                 .company(dto.getCompany())
                 .address(dto.getAddress())
-                .address(dto.getMemo())
+                .memo(dto.getMemo())
                 .member(member)
                 .build();
 
@@ -100,5 +102,33 @@ public class CardService {
                 .toList();
 
         return new CardCountResponseDto((long) cards.size(), cards);
+    }
+
+    @Transactional
+    public Card saveCard (Long memberId, SaveMyCard dto) {
+        cardRepository.findByOwnerId(memberId).ifPresent(e -> {
+            throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
+        });
+
+        Card card = Card.builder()
+                .name(dto.getName())
+                .position(dto.getPosition())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .tel(dto.getTel())
+                .department(dto.getDepartment())
+                .company(dto.getCompany())
+                .address(dto.getAddress())
+                .ownerId(memberId)
+                .build();
+
+        return cardRepository.save(card);
+    }
+
+    public CardResponse findMyCard(Long memberId) {
+        Card card = cardRepository.findByOwnerId(memberId)
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+
+        return CardResponse.toCardDto(card);
     }
 }

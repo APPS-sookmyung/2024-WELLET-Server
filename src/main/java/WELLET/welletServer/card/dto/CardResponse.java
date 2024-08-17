@@ -39,4 +39,19 @@ public record CardResponse(
                 .categories(categories)
                 .build();
     }
+
+    public static CardResponse toCardDto(Card card) {
+        return CardResponse.builder()
+                .id(card.getId())
+                .name(card.getName())
+                .position(card.getPosition())
+                .email(card.getEmail())
+                .phone(card.getPhone())
+                .tel(card.getTel())
+                .department(card.getDepartment())
+                .company(card.getCompany())
+                .address(card.getAddress())
+                .createdAt(card.getCreatedAt())
+                .build();
+    }
 }

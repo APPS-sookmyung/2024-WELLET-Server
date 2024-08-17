@@ -1,5 +1,6 @@
 package WELLET.welletServer.member.controller;
 
+import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.member.dto.MemberSaveDto;
@@ -14,8 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/members")
