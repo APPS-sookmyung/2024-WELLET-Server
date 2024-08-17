@@ -47,8 +47,8 @@ public class CardService {
         return CardResponse.toCardDto(card, categories);
     }
 
-    public CardCountResponseDto findAllCard() {
-        List<Card> cardList = cardRepository.findAll();
+    public CardCountResponseDto findAllCard(Member member) {
+        List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
@@ -91,8 +91,8 @@ public class CardService {
         cardRepository.deleteAllByIdInBatch(cardIdList);
     }
 
-    public CardCountResponseDto searchCardsByName(String keyword) {
-        List<Card> cardList = cardRepository.searchCardsByName(keyword);
+    public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {
+        List<Card> cardList = cardRepository.searchCardsByName(memberId, keyword);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
