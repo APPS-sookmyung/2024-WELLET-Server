@@ -1,4 +1,4 @@
-package WELLET.welletServer.member.dto;
+package WELLET.welletServer.card.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SaveMyCard {
+public class MyCardSaveDto {
     // 이름, 직책, 이메일, 휴대폰, 유선 전화, 부서, 회사, 주소, 메모
     @NotBlank @Schema(description = "이름", example = "주아정")
     private String name;
@@ -28,7 +28,7 @@ public class SaveMyCard {
     @Schema(description = "주소", example = "서울시 00동 00구") private String address;
 
     @Builder
-    public SaveMyCard(String name, String position, String email, String phone, String tel, String department, String company, String address) {
+    public MyCardSaveDto(String name, String position, String email, String phone, String tel, String department, String company, String address) {
         this.name = name;
         this.position = position;
         this.email = email;
