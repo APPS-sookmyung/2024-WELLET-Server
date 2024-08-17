@@ -2,10 +2,11 @@ package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardResponse;
-import WELLET.welletServer.card.service.CardService;
+import WELLET.welletServer.card.service.MyCardService;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.member.dto.SaveMyCard;
+import WELLET.welletServer.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -22,7 +23,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "명함", description = "My Card API")
 public class MyCardController {
 
-    private final CardService cardService;
+    private final MyCardService myCardService;
+    private final MemberService memberService;
 
     @PostMapping("/{member_id}")
     @Operation(summary = "내 명함 추가")
@@ -35,7 +37,8 @@ public class MyCardController {
             @Parameter(name = "member_id", example = "1"),
     })
     public BasicResponse<CardResponse> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody SaveMyCard dto) {
-        Card card = cardService.saveCard(memberId, dto);
+        memberService.findMember(memberId);
+        Card card = myCardService.saveCard(memberId, dto);
         return ResponseUtil.success(CardResponse.toCardDto(card));
     }
 
@@ -49,6 +52,6 @@ public class MyCardController {
             @Parameter(name = "member_id", example = "1"),
     })
     public BasicResponse<CardResponse> findMyCard(@PathVariable(name = "member_id") Long memberId) {
-        return ResponseUtil.success(cardService.findMyCard(memberId));
+        return ResponseUtil.success(myCardService.findMyCard(memberId));
     }
 }
