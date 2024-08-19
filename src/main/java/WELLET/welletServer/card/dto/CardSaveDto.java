@@ -17,10 +17,10 @@ public class CardSaveDto {
     private String name;
     @Schema(description = "직책", example = "팀장") private String position;
 
-    @NotBlank @Schema(description = "이메일", example = "ajung7038@naver.com")
+    @Schema(description = "이메일", example = "ajung7038@naver.com")
     private String email;
 
-    @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
+    @NotBlank @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
     @Schema(description = "유선전화", example = "02-111-1111") private String tel;
     @Schema(description = "부서", example = "1") private String department;
 
