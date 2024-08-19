@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.MyCardUpdateDto;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.domain.Member;
@@ -43,15 +44,17 @@ public class Card extends BaseTimeEntity {
     private List<CategoryCard> categoryCards = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
+
+    private Long ownerId;
 
 //    @NotNull
     private String qr;
     private String profile_image;
 
     @Builder
-    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList) {
+    public Card(String name, String position, String email, String phone, String tel, String department, String company, String address, String memo, Member member, List<CategoryCard> categoryCardList, Long ownerId) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -63,6 +66,7 @@ public class Card extends BaseTimeEntity {
         this.memo = memo;
         this.member = member;
         this.categoryCards = categoryCardList;
+        this.ownerId = ownerId;
     }
 
     public void updateCard(CardUpdateDto dto) {
@@ -75,6 +79,17 @@ public class Card extends BaseTimeEntity {
         this.company = dto.getCompany();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
+    }
+
+    public void updateCard(MyCardUpdateDto dto) {
+        this.name = dto.getName();
+        this.position = dto.getPosition();
+        this.email = dto.getEmail();
+        this.phone = dto.getPhone();
+        this.tel = dto.getTel();
+        this.department = dto.getDepartment();
+        this.company = dto.getCompany();
+        this.address = dto.getAddress();
     }
 
     public void addCardCategory(List<CategoryCard> categoryCards) {

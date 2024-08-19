@@ -51,18 +51,23 @@ public class CardController {
         return ResponseUtil.success(CardResponse.toCardDto(card, dto.getCategoryNames()));
     }
 
-    @GetMapping
+    @GetMapping("/{member_id}")
     @Operation(summary = "전체 명함 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 전체 조회에 성공하였습니다."),
     })
-    public BasicResponse<CardCountResponseDto> findAllCards() {
-        return ResponseUtil.success(cardService.findAllCard());
+    @Parameters({
+            @Parameter(name = "member_id", example = "1"),
+    })
+    public BasicResponse<CardCountResponseDto> findAllCards(@PathVariable Long member_id) {
+        Member member = memberService.findMember(member_id);
+        return ResponseUtil.success(cardService.findAllCard(member));
     }
 
-    @GetMapping("/{card_id}")
+    @GetMapping("/{member_id}/{card_id}")
     @Operation(summary = "명함 단건 조회")
     @Parameters({
+            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "card_id", example = "1"),
     })
     @ApiResponses(value = {
@@ -76,6 +81,7 @@ public class CardController {
     @PutMapping("/{card_id}")
     @Operation(summary = "명함 수정")
     @Parameters({
+            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "card_id", example = "1"),
     })
     @ApiResponses(value = {
@@ -90,6 +96,7 @@ public class CardController {
     @DeleteMapping("/{card_id}")
     @Operation(summary = "명함 삭제")
     @Parameters({
+            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "card_id", example = "1"),
     })
     @ApiResponses(value = {
@@ -105,34 +112,36 @@ public class CardController {
     @PostMapping
     @Operation(summary = "명함 동시 삭제")
     @Parameters({
+            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "cards_id", example = "[1, 2]"),
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
     })
     public BasicResponse<String> deleteCardList(@RequestBody List<Long> cards_id) {
-        cardService.deleteCardList(cards_id);
+//        cardService.deleteCardList(cards_id);
+        List<Card> cardList = cardService.findCardList(cards_id);
+        categoryCardService.deleteCardList(cardList);
         return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
     }
 
-//    @GetMapping("/search")
-//    @Operation(summary = "이름으로 명함 검색")
-//    public BasicResponse<CardCountResponseDto> searchCardsByName(@RequestParam(value="keyword") String keyword) {
-//        return ResponseUtil.success(cardService.searchCardsByName(keyword));
-//    }
-    @GetMapping("/search")
+    @GetMapping("/{member_id}/search")
     @Operation(summary = "이름으로 명함 검색")
     @Parameters({
-              @Parameter(name = "keyword", example = "주아정"),
+            @Parameter(name = "member_id", example = "1"),
+            @Parameter(name = "keyword", example = "주아정"),
       })
     @ApiResponses(value = {
               @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
       })
-    public BasicResponse<CardCountResponseDto> searchCardsByName(
-        @RequestParam(value = "keyword", required = false) String keyword) {
+    public BasicResponse<CardCountResponseDto> searchCardsByName (
+            @PathVariable Long member_id, @RequestParam(value = "keyword", required = false) String keyword) {
+
         if (keyword == null || keyword.isEmpty()) {
-            return ResponseUtil.success(cardService.findAllCard());
+            Member member = memberService.findMember(member_id);
+            return ResponseUtil.success(cardService.findAllCard(member));
         } else {
-            return ResponseUtil.success(cardService.searchCardsByName(keyword));
+            return ResponseUtil.success(cardService.searchCardsByName(member_id, keyword));
     }}
 }
