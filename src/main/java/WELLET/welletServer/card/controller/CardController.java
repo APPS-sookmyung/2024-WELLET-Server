@@ -36,8 +36,8 @@ public class CardController {
     @Operation(summary = "명함 생성")
     @ApiResponses(value = {
          @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
-         @ApiResponse(responseCode = "400", description = "카테고리가 존재하지 않습니다."),
-         @ApiResponse(responseCode = "400", description = "멤버가 존재하지 않습니다."),
+         @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
+         @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
@@ -72,7 +72,7 @@ public class CardController {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 단건 조회에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
     public BasicResponse<CardResponse> findCard(@PathVariable(name = "card_id") Long cardId) {
         return ResponseUtil.success(cardService.findCard(cardId));
@@ -81,12 +81,11 @@ public class CardController {
     @PutMapping("/{card_id}")
     @Operation(summary = "명함 수정")
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "card_id", example = "1"),
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
     public BasicResponse<CardUpdateDto> updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
         CardUpdateDto cardUpdateDto = cardService.updateCard(card_id, dto);
@@ -96,12 +95,11 @@ public class CardController {
     @DeleteMapping("/{card_id}")
     @Operation(summary = "명함 삭제")
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "card_id", example = "1"),
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 삭제 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "200", description = "명함 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
     public BasicResponse<String> deleteCard(@PathVariable Long card_id) {
         Card card = cardService.findOne(card_id);
@@ -113,14 +111,12 @@ public class CardController {
     @Operation(summary = "명함 동시 삭제")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
-            @Parameter(name = "cards_id", example = "[1, 2]"),
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "X번 명함이 존재하지 않습니다."),
     })
     public BasicResponse<String> deleteCardList(@RequestBody List<Long> cards_id) {
-//        cardService.deleteCardList(cards_id);
         List<Card> cardList = cardService.findCardList(cards_id);
         categoryCardService.deleteCardList(cardList);
         return ResponseUtil.success("명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id);
@@ -130,10 +126,11 @@ public class CardController {
     @Operation(summary = "이름으로 명함 검색")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
-            @Parameter(name = "keyword", example = "주아정"),
+            @Parameter(name = "keyword", example = "ajeong"),
       })
     @ApiResponses(value = {
-              @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
+            @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
       })
     public BasicResponse<CardCountResponseDto> searchCardsByName (
             @PathVariable Long member_id, @RequestParam(value = "keyword", required = false) String keyword) {
@@ -142,6 +139,7 @@ public class CardController {
             Member member = memberService.findMember(member_id);
             return ResponseUtil.success(cardService.findAllCard(member));
         } else {
+            memberService.findMember(member_id);
             return ResponseUtil.success(cardService.searchCardsByName(member_id, keyword));
     }}
 }

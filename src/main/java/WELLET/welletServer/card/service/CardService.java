@@ -28,12 +28,11 @@ public class CardService {
     public Card saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
-                .position(dto.getPosition())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .tel(dto.getTel())
-                .department(dto.getDepartment())
                 .company(dto.getCompany())
+                .role(dto.getRole())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .tel(dto.getTel())
                 .address(dto.getAddress())
                 .memo(dto.getMemo())
                 .member(member)
@@ -56,7 +55,7 @@ public class CardService {
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto(cardRepository.count(), cards);
+        return new CardCountResponseDto(cardList.size(), cards);
     }
 
     public CardResponse findCard(Long cardId) {
@@ -105,6 +104,6 @@ public class CardService {
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto((long) cards.size(), cards);
+        return new CardCountResponseDto(cards.size(), cards);
     }
 }
