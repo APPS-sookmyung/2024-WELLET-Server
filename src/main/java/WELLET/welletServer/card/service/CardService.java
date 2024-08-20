@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,14 +28,13 @@ public class CardService {
     public Card saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
-                .position(dto.getPosition())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .tel(dto.getTel())
-                .department(dto.getDepartment())
                 .company(dto.getCompany())
+                .role(dto.getRole())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .tel(dto.getTel())
                 .address(dto.getAddress())
-                .address(dto.getMemo())
+                .memo(dto.getMemo())
                 .member(member)
                 .build();
 
@@ -48,14 +48,14 @@ public class CardService {
         return CardResponse.toCardDto(card, categories);
     }
 
-    public CardCountResponseDto findAllCard() {
-        List<Card> cardList = cardRepository.findAll();
+    public CardCountResponseDto findAllCard(Member member) {
+        List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto(cardRepository.count(), cards);
+        return new CardCountResponseDto(cardList.size(), cards);
     }
 
     public CardResponse findCard(Long cardId) {
@@ -87,18 +87,23 @@ public class CardService {
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
 
-    @Transactional
-    public void deleteCardList(List<Long> cardIdList) {
-        cardRepository.deleteAllByIdInBatch(cardIdList);
+    public List<Card> findCardList(List<Long> cardIdList) {
+        List<Card> cardList = new ArrayList<>();
+        cardIdList.forEach(cardId -> {
+            Card card = cardRepository.findById(cardId)
+                    .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND, cardId + "번 명함이 존재하지 않습니다."));
+            cardList.add(card);
+        });
+        return cardList;
     }
 
-    public CardCountResponseDto searchCardsByName(String keyword) {
-        List<Card> cardList = cardRepository.searchCardsByName(keyword);
+    public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {
+        List<Card> cardList = cardRepository.searchCardsByName(memberId, keyword);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto((long) cards.size(), cards);
+        return new CardCountResponseDto(cards.size(), cards);
     }
 }

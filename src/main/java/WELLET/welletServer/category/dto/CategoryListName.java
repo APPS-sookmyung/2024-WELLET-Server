@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record CategoryListName(
-        @Schema(description = "그룹명", example = "음식점")@NotBlank String name) {
+        @Schema(description = "그룹명", example = "[\"음식점\"]")@NotBlank String name) {
 
     public static CategoryListName fromCategory(Category category) {
         return CategoryListName.builder()
