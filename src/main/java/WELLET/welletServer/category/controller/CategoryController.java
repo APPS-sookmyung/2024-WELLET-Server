@@ -48,7 +48,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "그룹 수정에 성공하였습니다"),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "그룹이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
@@ -66,7 +66,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "그룹 삭제에 성공하였습니다"),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "그룹이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
@@ -82,9 +82,9 @@ public class CategoryController {
     @GetMapping("/{category_id}")
     @Operation(summary = "그룹별 명함 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 조회에 성공하였습니다"),
+            @ApiResponse(responseCode = "200", description = "명함 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않은 그룹입니다"),
+            @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
@@ -97,15 +97,13 @@ public class CategoryController {
     }
 
     @GetMapping("/name")
-    @Operation(summary = "그룹명 조회")
+    @Operation(summary = "전체 그룹명 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "그룹명 조회에 성공하였습니다"),
+            @ApiResponse(responseCode = "200", description = "전체 그룹명 조회에 성공하였습니다"),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않은 그룹입니다"),
     })
     @Parameters({
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
     })
     public BasicResponse<List<String>> findAllNames(@PathVariable Long member_id) {
         Member member = memberService.findMember(member_id);
