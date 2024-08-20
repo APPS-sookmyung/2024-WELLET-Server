@@ -30,12 +30,11 @@ public class MyCardService {
 
         Card card = Card.builder()
                 .name(dto.getName())
-                .position(dto.getPosition())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .tel(dto.getTel())
-                .department(dto.getDepartment())
                 .company(dto.getCompany())
+                .role(dto.getRole())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .tel(dto.getTel())
                 .address(dto.getAddress())
                 .ownerId(memberId)
                 .build();
