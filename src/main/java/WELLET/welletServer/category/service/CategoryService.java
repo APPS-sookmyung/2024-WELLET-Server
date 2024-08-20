@@ -9,13 +9,13 @@ import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
 import WELLET.welletServer.categoryCard.repository.CategoryCardRepository;
+import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,13 +27,13 @@ public class CategoryService {
     private final CategoryCardRepository categoryCardRepository;
 
     @Transactional
-    public long saveCategory (CategorySaveDto dto) {
-
+    public long saveCategory (Member member, CategorySaveDto dto) {
         categoryRepository.findByName(dto.getName()).ifPresent(e -> {
             throw new CategoryException(CategoryErrorCode.CATEGORY_DUPLICATE);
         });
 
         Category category = Category.builder()
+                .member(member)
                 .name(dto.getName())
                 .build();
         return categoryRepository.save(category).getId();
@@ -51,27 +51,24 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public List<CategoryCardListResponse> findAllCards() {
-        List<CategoryCard> categoryCards = categoryRepository.findAllCards();
+    public List<CategoryCardListResponse> findAllCards(Long member_id) {
+        List<CategoryCard> categoryCards = categoryRepository.findAllCards(member_id);
         return categoryCards.stream()
                 .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryCardListResponse> findCardsByCategoryId(Long categoryId) {
-
-        Category category = Optional.ofNullable(categoryId)
-                .filter(id -> id != null && id > 0)
-                .flatMap(categoryRepository::findById)
+    public List<CategoryCardListResponse> findCardsByCategoryId(Long memberId, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
 
-        return categoryRepository.findCardsByCategoryId(category.getId()).stream()
+        return categoryRepository.findCardsByIds(memberId, category.getId()).stream()
                 .map(CategoryCardListResponse::toCategoryList)
                 .collect(Collectors.toList());
     }
 
-    public List<String> findAllName() {
-        List<Category> categories = categoryRepository.findAll();
+    public List<String> findAllName(Member member) {
+        List<Category> categories = categoryRepository.findByMember(member);
         return categories.stream()
                 .map(Category::getName)
                 .collect(Collectors.toList());

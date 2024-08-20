@@ -36,7 +36,8 @@ public class Category {
     private Member member;
 
     @Builder
-    public Category(String name) {
+    public Category(Member member, String name) {
+        this.member = member;
         this.name = name;
     }
     public void updateCategory(CategoryUpdateDto dto) {
