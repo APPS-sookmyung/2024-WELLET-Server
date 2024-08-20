@@ -3,10 +3,11 @@ package WELLET.welletServer.card.service;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardResponse;
+import WELLET.welletServer.card.dto.MyCardResponse;
+import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
-import WELLET.welletServer.card.dto.MyCardSaveDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class MyCardService {
         return cardRepository.save(card);
     }
 
-    public CardResponse findMyCard(Long memberId) {
+    public MyCardResponse findMyCard(Long memberId) {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElse(null);
 
@@ -50,7 +51,7 @@ public class MyCardService {
             return null;
         }
 
-        return CardResponse.toCardDto(card);
+        return MyCardResponse.toCardDto(card);
     }
 
     @Transactional
