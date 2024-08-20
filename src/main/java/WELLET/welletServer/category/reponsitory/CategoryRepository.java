@@ -20,5 +20,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<CategoryCard> findAllCards(@Param("memberId") Long memberId);
 
     List<Category> findByMember(Member member);
-    Optional<Category> findByName(String name);
+    Optional<Category> findByMemberAndName(Member member, String name);
 }

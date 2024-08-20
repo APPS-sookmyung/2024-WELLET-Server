@@ -2,6 +2,7 @@ package WELLET.welletServer.category.service;
 
 import WELLET.welletServer.category.dto.CategoryCardListResponse;
 import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.dto.CategoryCountResponse;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
@@ -28,7 +29,7 @@ public class CategoryService {
 
     @Transactional
     public long saveCategory (Member member, CategorySaveDto dto) {
-        categoryRepository.findByName(dto.getName()).ifPresent(e -> {
+        categoryRepository.findByMemberAndName(member, dto.getName()).ifPresent(e -> {
             throw new CategoryException(CategoryErrorCode.CATEGORY_DUPLICATE);
         });
 
@@ -51,20 +52,15 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public List<CategoryCardListResponse> findAllCards(Long member_id) {
-        List<CategoryCard> categoryCards = categoryRepository.findAllCards(member_id);
-        return categoryCards.stream()
-                .map(CategoryCardListResponse::toCategoryList)
-                .collect(Collectors.toList());
-    }
-
-    public List<CategoryCardListResponse> findCardsByCategoryId(Long memberId, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
+    public CategoryCountResponse findCardsByIds(Long memberId, Long categoryId) {
+        categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
 
-        return categoryRepository.findCardsByIds(memberId, category.getId()).stream()
+        List<CategoryCardListResponse> responses = categoryRepository.findCardsByIds(memberId, categoryId).stream()
                 .map(CategoryCardListResponse::toCategoryList)
-                .collect(Collectors.toList());
+                .toList();
+
+        return new CategoryCountResponse(responses.size(), responses);
     }
 
     public List<String> findAllName(Member member) {
@@ -74,9 +70,9 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Category> findCategoryNames(List<String> categoryNames) {
+    public List<Category> findCategoryNames(Member member, List<String> categoryNames) {
         return categoryNames.stream()
-                .map(name -> categoryRepository.findByName(name)
+                .map(name -> categoryRepository.findByMemberAndName(member, name)
                         .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
                 .collect(Collectors.toList());
     }

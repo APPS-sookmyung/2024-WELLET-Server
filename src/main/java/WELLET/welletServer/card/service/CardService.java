@@ -55,7 +55,7 @@ public class CardService {
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto(cardRepository.count(), cards);
+        return new CardCountResponseDto(cardList.size(), cards);
     }
 
     public CardResponse findCard(Long cardId) {
@@ -104,6 +104,6 @@ public class CardService {
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto((long) cards.size(), cards);
+        return new CardCountResponseDto(cards.size(), cards);
     }
 }

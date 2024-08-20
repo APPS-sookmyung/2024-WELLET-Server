@@ -29,7 +29,7 @@ public class CategoryCardService {
 
     @Transactional
     public CardResponse createCardWithCategory(CardSaveDto dto, Member member) {
-        List<Category> categories = categoryService.findCategoryNames(dto.getCategoryNames());
+        List<Category> categories = categoryService.findCategoryNames(member, dto.getCategoryNames());
         Card card = cardService.saveCard(member, dto);
         List<CategoryCard> categoryList = save(card, categories);
         return cardService.addCategory(card, categoryList, dto.getCategoryNames());

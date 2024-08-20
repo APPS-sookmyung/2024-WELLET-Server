@@ -1,12 +1,9 @@
 package WELLET.welletServer.category.controller;
 
 import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.category.dto.*;
 import WELLET.welletServer.common.response.BasicResponse;
 import WELLET.welletServer.common.response.ResponseUtil;
-import WELLET.welletServer.category.dto.CategoryListName;
-import WELLET.welletServer.category.dto.CategoryCardListResponse;
-import WELLET.welletServer.category.dto.CategorySaveDto;
-import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.service.CategoryService;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.service.MemberService;
@@ -93,25 +90,10 @@ public class CategoryController {
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
             @Parameter(name = "category_id", description = "공백 X", example = "1"),
     })
-    public BasicResponse<List<CategoryCardListResponse>> findCardsByCategoryId(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
+    public BasicResponse<CategoryCountResponse> findCardsByCategoryId(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
         memberService.findMember(member_id);
-        List<CategoryCardListResponse> cardListResponses = categoryService.findCardsByCategoryId(member_id, categoryId);
-        return ResponseUtil.success(cardListResponses);
-    }
-
-    @GetMapping
-    @Operation(summary = "전체 그룹별 명함 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "전체 명함 조회에 성공하였습니다"),
-            @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-    })
-    @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
-    })
-    public BasicResponse<List<CategoryCardListResponse>> findAllCards(@PathVariable Long member_id) {
-        List<CategoryCardListResponse> cardListResponses = categoryService.findAllCards(member_id);
-        return ResponseUtil.success(cardListResponses);
+        CategoryCountResponse response = categoryService.findCardsByIds(member_id, categoryId);
+        return ResponseUtil.success(response);
     }
 
     @GetMapping("/name")
