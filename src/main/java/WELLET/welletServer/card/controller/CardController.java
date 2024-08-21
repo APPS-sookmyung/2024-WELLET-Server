@@ -160,6 +160,4 @@ public class CardController {
         Category category = categoryService.findById(categoryId);
         return cardService.findByCategory(member, category);
     }
-
-
 }
