@@ -92,13 +92,12 @@ public class CardService {
         cardRepository.deleteAllByIdInBatch(cardIdList);
     }
 
-    public CardCountResponseDto searchCardsByName(String keyword) {
-        List<Card> cardList = cardRepository.searchCardsByName(keyword);
+    public CardCountResponseDto searchCards(String keyword) {
+        List<Card> cardList = cardRepository.searchCards(keyword);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
-
         return new CardCountResponseDto((long) cards.size(), cards);
     }
 }
