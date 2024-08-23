@@ -2,18 +2,20 @@ package WELLET.welletServer.card.service;
 
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.dto.CardListResponse;
-import WELLET.welletServer.card.dto.CardResponse;
-import WELLET.welletServer.card.dto.CardSaveDto;
-import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
+import WELLET.welletServer.categoryCard.domain.CategoryCard;
+import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,52 +25,85 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public long saveCard (CardSaveDto dto) {
+    public Card saveCard (Member member, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
-                .position(dto.getPosition())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .tel(dto.getTel())
-                .department(dto.getDepartment())
                 .company(dto.getCompany())
+                .role(dto.getRole())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .tel(dto.getTel())
                 .address(dto.getAddress())
-                .address(dto.getMemo())
+                .memo(dto.getMemo())
+                .member(member)
                 .build();
-        return cardRepository.save(card).getId();
+
+        return cardRepository.save(card);
     }
 
-    public List<CardListResponse> findAllCard() {
-        List<Card> cardList = cardRepository.findAll();
+    @Transactional
+    public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories) {
+        card.addCardCategory(categoryCards);
+        card = cardRepository.save(card);
+        return CardResponse.toCardDto(card, categories);
+    }
+
+    public CardCountResponseDto findAllCard(Member member) {
+        List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
-        return cardList.stream()
+        List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
+
+        return new CardCountResponseDto(cardList.size(), cards);
     }
 
-    public CardResponse findOne(Long cardId) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
-
-        return CardResponse.toCardDto(card);
+    public CardResponse findCard(Long cardId) {
+        Card card = findOne(cardId);
+        return CardResponse.toCardDto(card, findCategoryCardNames(card));
     }
 
-
+    private List<String> findCategoryCardNames(Card card) {
+        return card.getCategoryCards().stream()
+                .map(categoryCard -> categoryCard.getCategory().getName())
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
+        Card card = findOne(cardId);
 
         card.updateCard(dto);
         return CardUpdateDto.toCardUpdateDto(card);
     }
 
     @Transactional
-    public long deleteCard(Long cardId) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUNT));
+    public void deleteCard(Card card) {
         cardRepository.delete(card);
-        return cardId;
+    }
+
+    public Card findOne(Long cardId) {
+        return cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+    }
+
+    public List<Card> findCardList(List<Long> cardIdList) {
+        List<Card> cardList = new ArrayList<>();
+        cardIdList.forEach(cardId -> {
+            Card card = cardRepository.findById(cardId)
+                    .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND, cardId + "번 명함이 존재하지 않습니다."));
+            cardList.add(card);
+        });
+        return cardList;
+    }
+
+    public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {
+        List<Card> cardList = cardRepository.searchCardsByName(memberId, keyword);
+        // Entity -> DTO
+        List<CardListResponse> cards = cardList.stream()
+                .map(CardListResponse::toCardList)
+                .toList();
+
+        return new CardCountResponseDto(cards.size(), cards);
     }
 }
