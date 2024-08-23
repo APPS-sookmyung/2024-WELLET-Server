@@ -6,13 +6,17 @@ import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.category.domain.Category;
+import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,6 +24,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CardService {
     private final CardRepository cardRepository;
+    private final S3FileUploader s3FileUploader;
 
     @Transactional
     public Card saveCard (Member member, Category category, CardSaveDto dto) {

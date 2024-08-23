@@ -48,7 +48,6 @@ public class CardController {
         if (dto.getCategoryName() == null) {
             throw new CardException(CardErrorCode.CATEGORY_NOT_SELECTED);
         }
-
         Category category = categoryService.findByName(dto.getCategoryName());
         Card card = cardService.saveCard(member, category, dto);
         return CardResponse.toCardDto(card, dto.getCategoryName());

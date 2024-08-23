@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Getter
@@ -38,6 +39,10 @@ public class Card extends BaseTimeEntity {
     private String address;
     private String memo;
 
+    private String profImgUrl;
+    private String frontImgUrl;
+    private String backImgUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -60,6 +65,9 @@ public class Card extends BaseTimeEntity {
         this.memo = memo;
         this.category = category;
         this.member = member;
+        this.profImgUrl = profImgUrl;
+        this.frontImgUrl = frontImgUrl;
+        this.backImgUrl = backImgUrl;
         this.ownerId = ownerId;
     }
 
@@ -72,6 +80,9 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
+        this.profImgUrl = dto.getProfImgUrl();
+        this.frontImgUrl = dto.getFrontImgUrl();
+        this.backImgUrl = dto.getBackImgUrl();
     }
 
     public void updateCard(MyCardUpdateDto dto) {
@@ -82,6 +93,9 @@ public class Card extends BaseTimeEntity {
         this.email = dto.getEmail();
         this.tel = dto.getTel();
         this.address = dto.getAddress();
+        this.profImgUrl = dto.getProfImgUrl();
+        this.frontImgUrl = dto.getFrontImgUrl();
+        this.backImgUrl = dto.getBackImgUrl();
     }
 
     public void updateCategoryWithNull() {

@@ -17,7 +17,10 @@ public record CardResponse(
         @Schema(description = "유선전화", example = "02-111-1111") String tel,
         @Schema(description = "주소", example = "서울시 00동 00구") String address,
         @Schema(description = "메모", example = "메모") String memo,
-        @Schema(description = "그룹", example = "비즈니스") String category) {
+        @Schema(description = "그룹", example = "비즈니스") String category,
+        @Schema(description = "프로필이미지 URL", example = "profimg/url") String profImgUrl,
+        @Schema(description = "명함앞이미지 URL", example = "frontimg/url") String frontImgUrl,
+        @Schema(description = "명함뒤이미지 URL", example = "backimg/url") String backImgUrl){
 
     public static CardResponse toCardDto(Card card, String category) {
         return CardResponse.builder()
@@ -31,6 +34,9 @@ public record CardResponse(
                 .address(card.getAddress())
                 .memo(card.getMemo())
                 .category(category)
+                .profImgUrl(card.getProfImgUrl())
+                .frontImgUrl(card.getFrontImgUrl())
+                .backImgUrl(card.getBackImgUrl())
                 .build();
     }
 }

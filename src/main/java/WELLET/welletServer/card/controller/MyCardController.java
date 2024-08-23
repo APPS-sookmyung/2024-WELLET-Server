@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/me/{member_id}")
 @RequiredArgsConstructor
@@ -37,6 +39,8 @@ public class MyCardController {
     })
     public MyCardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody MyCardSaveDto dto) {
         memberService.findMember(memberId);
+        myCardService.saveprocessImages(memberId, dto);
+
         Card card = myCardService.saveCard(memberId, dto);
         return MyCardResponse.toCardDto(card);
     }
