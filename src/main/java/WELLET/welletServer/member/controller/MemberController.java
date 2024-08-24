@@ -15,8 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -25,17 +23,16 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    @Operation(summary = "회원 저장 및 생성")
+    @Operation(summary = "회원 저장")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "공백이 포함되어 있습니다."),
-            @ApiResponse(responseCode = "400", description = "중복회원입니다.")
+            @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
-
     public BasicResponse<String> create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
         long memberId = memberService.saveMember(memberSaveDto);
-        return ResponseUtil.success("회원 저장에 성공하였습니다. 화원 id: " + memberId);
+        return ResponseUtil.success("회원 저장에 성공하였습니다. 회원 id: " + memberId);
     }
+
     @PutMapping ("/{member_id}")
     @Operation(summary = "회원 수정")
     @ApiResponses(value = {
