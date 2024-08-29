@@ -26,13 +26,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin(allowedOrigin); // 허용할 origin 설정
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin(allowedOrigin);
         configuration.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 위 설정 적용
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -46,8 +47,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
             request.requestMatchers(
-//                            antMatcher("/health")
-                            antMatcher("/**")
+                            antMatcher("/health")
+//                            antMatcher("/**")
                     ).permitAll()
                     .anyRequest().authenticated();
         });
