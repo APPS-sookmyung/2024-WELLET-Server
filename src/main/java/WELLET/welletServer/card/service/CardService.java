@@ -66,13 +66,6 @@ public class CardService {
         return null;
     }
 
-    @Transactional
-    public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories, CardImage cardImage) {
-        card.addCardCategory(categoryCards);
-        card = cardRepository.save(card);
-        return CardResponse.toCardDto(card, categories, cardImage);
-    }
-
     public CardCountResponseDto findAllCard(Member member) {
         List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
@@ -92,12 +85,6 @@ public class CardService {
         return CardResponse.toCardDto(card, categoryName);
     }
 
-
-    public List<String> findCategoryCardNames(Card card) {
-        return card.getCategoryCards().stream()
-                .map(categoryCard -> categoryCard.getCategory().getName())
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public Card updateCard(Long cardId, CardUpdateDto dto) {
@@ -171,4 +158,8 @@ public class CardService {
     public List<Card> findCategoryReturnCard (Member member, Category category) {
         return cardRepository.findByCategoryAndMember(category, member);
     }
+//    public List<Card> findCategoryReturnCard (Member member, Category category) {
+////        return cardRepository.findByCategoryAndMember(category, member);
+//    }
 }
+

@@ -29,6 +29,7 @@ public class CardUpdateDto {
 
     @Schema(description = "주소", example = "서울특별시 용산구 청파로 47길 100(청파동 2가)") private String address;
     @Schema(description = "메모", example = "메모") private String memo;
+    @Schema(description = "그룹", example = "비즈니스") private String categoryName;
 
     @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile profImg;
     @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile frontImg;

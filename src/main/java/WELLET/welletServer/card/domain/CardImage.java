@@ -1,5 +1,6 @@
 package WELLET.welletServer.card.domain;
 
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
