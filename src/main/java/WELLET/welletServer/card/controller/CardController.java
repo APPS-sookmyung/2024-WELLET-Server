@@ -34,7 +34,6 @@ public class CardController {
     private final MemberService memberService;
     private final CategoryService categoryService;
 
-
     @PostMapping("/{member_id}")
     @Operation(summary = "명함 생성")
     @ApiResponses(value = {
