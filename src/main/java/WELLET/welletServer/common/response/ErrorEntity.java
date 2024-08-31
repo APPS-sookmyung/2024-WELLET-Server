@@ -1,6 +1,7 @@
 package WELLET.welletServer.common.response;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,8 @@ import java.util.Map;
 public class ErrorEntity {
     private String errorCode;
     private String errorMessage;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, String> errors;
 
     public ErrorEntity(String errorCode, String errorMessage) {
