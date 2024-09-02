@@ -2,6 +2,7 @@ package WELLET.welletServer.category.controller;
 
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.category.dto.CategoryCountResponse;
+import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.service.CategoryService;
@@ -103,7 +104,7 @@ public class CategoryController {
     @Parameters({
             @Parameter(name = "member_id", description = "공백 X", example = "1"),
     })
-    public List<String> findAllNames(@PathVariable Long member_id) {
+    public List<CategoryListName> findAllNames(@PathVariable Long member_id) {
         Member member = memberService.findMember(member_id);
         return categoryService.findAllName(member);
     }
