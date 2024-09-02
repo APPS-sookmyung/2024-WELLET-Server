@@ -123,7 +123,7 @@ public class CardController {
     }
 
     @GetMapping("/{member_id}/search")
-    @Operation(summary = "이름으로 명함 검색")
+    @Operation(summary = "명함 검색")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "keyword", example = "ajeong"),
@@ -132,7 +132,7 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 검색에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
       })
-    public BasicResponse<CardCountResponseDto> searchCardsByName (
+    public BasicResponse<CardCountResponseDto> searchCards (
             @PathVariable Long member_id, @RequestParam(value = "keyword", required = false) String keyword) {
 
         if (keyword == null || keyword.isEmpty()) {
@@ -140,7 +140,7 @@ public class CardController {
             return ResponseUtil.success(cardService.findAllCard(member));
         } else {
             memberService.findMember(member_id);
-            return ResponseUtil.success(cardService.searchCardsByName(member_id, keyword));
+            return ResponseUtil.success(cardService.searchCards(keyword));
     }}
 
 

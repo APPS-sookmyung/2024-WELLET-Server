@@ -97,8 +97,8 @@ public class CardService {
         return cardList;
     }
   
-    public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {
-        List<Card> cardList = cardRepository.searchCardsByName(memberId, keyword);
+    public CardCountResponseDto searchCards(String keyword) {
+        List<Card> cardList = cardRepository.searchCards(keyword);
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
