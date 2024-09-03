@@ -1,11 +1,8 @@
 package WELLET.welletServer.category.service;
 
-import WELLET.welletServer.category.dto.CategoryCardListResponse;
+import WELLET.welletServer.category.dto.*;
 import WELLET.welletServer.category.domain.Category;
-import WELLET.welletServer.category.dto.CategoryCountResponse;
 import WELLET.welletServer.categoryCard.domain.CategoryCard;
-import WELLET.welletServer.category.dto.CategorySaveDto;
-import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
@@ -63,11 +60,12 @@ public class CategoryService {
         return new CategoryCountResponse(responses.size(), responses);
     }
 
-    public List<String> findAllName(Member member) {
+    public List<CategoryListName> findAllName(Member member) {
         List<Category> categories = categoryRepository.findByMember(member);
+
         return categories.stream()
-                .map(Category::getName)
-                .collect(Collectors.toList());
+                .map(CategoryListName::toCategoryList)
+                .toList();
     }
 
     public List<Category> findCategoryNames(Member member, List<String> categoryNames) {

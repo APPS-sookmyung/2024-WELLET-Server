@@ -1,8 +1,6 @@
 package WELLET.welletServer;
 
 
-import WELLET.welletServer.common.response.BasicResponse;
-import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.files.FileUploader;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,14 +19,13 @@ public class HealthCheck {
     private final String TEST_KEY = "test/";
 
     @GetMapping("/health")
-    public BasicResponse<String> healthCheck() {
-        return ResponseUtil.success("health check");
+    public String healthCheck() {
+        return "health check";
     }
 
     @PostMapping("/file")
     @Operation(summary = "서버 파일 업로드 테스트용 API")
-    public BasicResponse<String> healthCheckFile (@ModelAttribute MultipartFile file) {
-        String url = fileUploader.uploadFile(file, TEST_KEY);
-        return ResponseUtil.success(url);
+    public String healthCheckFile (@ModelAttribute MultipartFile file) {
+        return fileUploader.uploadFile(file, TEST_KEY);
     }
 }

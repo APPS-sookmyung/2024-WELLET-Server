@@ -1,7 +1,5 @@
 package WELLET.welletServer.member.controller;
 
-import WELLET.welletServer.common.response.BasicResponse;
-import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.service.MemberService;
@@ -28,9 +26,9 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
-    public BasicResponse<String> create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
+    public String create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
         long memberId = memberService.saveMember(memberSaveDto);
-        return ResponseUtil.success("회원 저장에 성공하였습니다. 회원 id: " + memberId);
+        return "회원 저장에 성공하였습니다. 회원 id: " + memberId;
     }
 
     @PutMapping ("/{member_id}")
@@ -42,8 +40,7 @@ public class MemberController {
     @Parameters(
             @Parameter(name = "member_id", description = "공백 X", example = "1")
     )
-    public BasicResponse<MemberUpdateDto> updateMember(@PathVariable(name = "member_id") Long member_id, @Valid @RequestBody MemberUpdateDto dto) {
-        MemberUpdateDto memberUpdateDto = memberService.updateMember(member_id, dto);
-        return ResponseUtil.success(memberUpdateDto);
+    public MemberUpdateDto updateMember(@PathVariable(name = "member_id") Long member_id, @Valid @RequestBody MemberUpdateDto dto) {
+        return memberService.updateMember(member_id, dto);
     }
 }
