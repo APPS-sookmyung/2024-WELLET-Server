@@ -1,6 +1,8 @@
 package WELLET.welletServer.login.service;
 
 import WELLET.welletServer.login.jwt.JwtService;
+import WELLET.welletServer.login.repository.KakaoTokenResponse;
+import WELLET.welletServer.login.repository.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
