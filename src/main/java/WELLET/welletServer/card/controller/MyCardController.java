@@ -42,7 +42,6 @@ public class MyCardController {
     })
     public MyCardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @ModelAttribute MyCardSaveDto dto) throws IOException{
         memberService.findMember(memberId);
-        myCardService.saveprocessImages(memberId, dto);
 
         Card card = myCardService.saveCard(memberId, dto);
         return MyCardResponse.toCardDto(card);
@@ -74,7 +73,6 @@ public class MyCardController {
     })
     public MyCardUpdateDto updateMyCard(@PathVariable Long member_id, @Valid @RequestBody MyCardUpdateDto dto) {
         memberService.findMember(member_id);
-        myCardService.updateprocessImages(member_id, dto);
 
 //        MyCardUpdateDto myCardUpdateDto = myCardService.updateMyCard(member_id, dto);
         return myCardService.updateMyCard(member_id, dto);

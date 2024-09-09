@@ -14,12 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
 
 @Slf4j
 @Service
@@ -43,9 +38,6 @@ public class CardService {
                 .memo(dto.getMemo())
                 .member(member)
                 .category(category)
-//                .profImgUrl(dto.getProfImgUrl())
-//                .frontImgUrl(dto.getFrontImgUrl())
-//                .backImgUrl(dto.getBackImgUrl())
                 .build();
 
         return cardRepository.save(card);
@@ -69,6 +61,12 @@ public class CardService {
         return null;
     }
 
+//    @Transactional
+//    public CardResponse addCategory(Card card, L categoryCards, List<String> categories, CardImage cardImage) {
+//        card.addCardCategory(categoryCards);
+//        card = cardRepository.save(card);
+//        return CardResponse.toCardDto(card, categories, cardImage);
+//    }
     public CardCountResponseDto findAllCard(Member member) {
         List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
@@ -87,7 +85,6 @@ public class CardService {
         }
         return CardResponse.toCardDto(card, categoryName);
     }
-
 
     @Transactional
     public Card updateCard(Long cardId, CardUpdateDto dto) {

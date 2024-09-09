@@ -30,7 +30,7 @@ public class MyCardSaveDto  {
 
 
     @Builder
-    public MyCardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, MultipartFile profImg, MultipartFile frontImg, MultipartFile backImg) {
+    public MyCardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, MultipartFile profile_Img) {
         this.name = name;
         this.company = company;
         this.role = role;
@@ -38,8 +38,6 @@ public class MyCardSaveDto  {
         this.email = email;
         this.tel = tel;
         this.address = address;
-        this.profImg = profImg;
-        this.frontImg = frontImg;
-        this.backImg = backImg;
+        this.profImg = profile_Img;
     }
 }

@@ -1,13 +1,10 @@
 package WELLET.welletServer.card.domain;
-
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Entity
 @Getter

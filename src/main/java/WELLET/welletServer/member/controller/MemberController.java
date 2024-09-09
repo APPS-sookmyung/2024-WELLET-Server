@@ -27,7 +27,11 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
+<<<<<<< HEAD
     public String create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
+=======
+    public BasicResponse<String> create(@Valid @RequestBody MemberSaveDto memberSaveDto){
+>>>>>>> 79ecb29 (Feat: 내 명함 생성 이미지 로직 추가)
         long memberId = memberService.saveMember(memberSaveDto);
         return "회원 저장에 성공하였습니다. 회원 id: " + memberId;
     }
