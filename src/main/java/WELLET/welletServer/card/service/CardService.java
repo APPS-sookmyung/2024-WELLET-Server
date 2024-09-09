@@ -1,7 +1,9 @@
 package WELLET.welletServer.card.service;
 
+import WELLET.welletServer.card.Repository.CardImageRepository;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
 import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class CardService {
     private final CardRepository cardRepository;
     private final S3FileUploader s3FileUploader;
+    private final CardImageRepository cardImageRepository;
 
     @Transactional
     public Card saveCard (Member member, Category category, CardSaveDto dto) {

@@ -40,8 +40,6 @@ public class Card extends BaseTimeEntity {
     private String memo;
 
     private String profImgUrl;
-    private String frontImgUrl;
-    private String backImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -54,7 +52,7 @@ public class Card extends BaseTimeEntity {
     private Long ownerId;
 
     @Builder
-    public Card(String name, String company, String role, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId) {
+    public Card(String name, String company, String role, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId, String profImgUrl) {
         this.name = name;
         this.company = company;
         this.role = role;
@@ -66,8 +64,6 @@ public class Card extends BaseTimeEntity {
         this.category = category;
         this.member = member;
         this.profImgUrl = profImgUrl;
-        this.frontImgUrl = frontImgUrl;
-        this.backImgUrl = backImgUrl;
         this.ownerId = ownerId;
     }
 
@@ -81,8 +77,6 @@ public class Card extends BaseTimeEntity {
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
         this.profImgUrl = dto.getProfImgUrl();
-        this.frontImgUrl = dto.getFrontImgUrl();
-        this.backImgUrl = dto.getBackImgUrl();
     }
 
     public void updateCard(MyCardUpdateDto dto) {
@@ -94,8 +88,6 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.profImgUrl = dto.getProfImgUrl();
-        this.frontImgUrl = dto.getFrontImgUrl();
-        this.backImgUrl = dto.getBackImgUrl();
     }
 
     public void updateCategoryWithNull() {

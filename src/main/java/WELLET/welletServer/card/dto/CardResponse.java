@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.dto;
 
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,8 +36,8 @@ public record CardResponse(
                 .memo(card.getMemo())
                 .category(category)
                 .profImgUrl(card.getProfImgUrl())
-                .frontImgUrl(card.getFrontImgUrl())
-                .backImgUrl(card.getBackImgUrl())
+//                .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
+//                .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
                 .build();
     }
 }

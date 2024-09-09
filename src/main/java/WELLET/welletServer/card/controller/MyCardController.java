@@ -1,6 +1,8 @@
 package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
+import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,7 +30,7 @@ public class MyCardController {
     private final MyCardService myCardService;
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "내 명함 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 추가에 성공하였습니다."),
@@ -39,7 +42,6 @@ public class MyCardController {
     })
     public MyCardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody MyCardSaveDto dto) {
         memberService.findMember(memberId);
-        myCardService.saveprocessImages(memberId, dto);
 
         Card card = myCardService.saveCard(memberId, dto);
         return MyCardResponse.toCardDto(card);

@@ -2,6 +2,8 @@ package WELLET.welletServer.card.service;
 
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
+import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
@@ -30,10 +32,11 @@ public class MyCardService {
     @Transactional
     public Card saveCard (Long memberId, MyCardSaveDto dto) {
 
-
         cardRepository.findByOwnerId(memberId).ifPresent(e -> {
             throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
         });
+
+        String profileImageUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
 
         Card card = Card.builder()
                 .name(dto.getName())
@@ -46,39 +49,40 @@ public class MyCardService {
 //                .profImgUrl(dto.getProfImgUrl())
 //                .frontImgUrl(dto.getFrontImgUrl())
 //                .backImgUrl(dto.getBackImgUrl())
+                .profImgUrl(profileImageUrl)
                 .ownerId(memberId)
                 .build();
 
         return cardRepository.save(card);
     }
 
-    public void saveprocessImages(Long memberId, MyCardSaveDto dto) {
-        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
-        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
-        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
-
-        for (int i = 0; i < images.size(); i++) {
-            String path = paths.get(i) + memberId + "/";
-            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
-        }
-    }
-
-    public void updateprocessImages(Long memberId, MyCardUpdateDto dto) {
-        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
-        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
-        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
-
-        for (int i = 0; i < images.size(); i++) {
-            String path = paths.get(i) + memberId + "/";
-            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
-        }
-    }
-
-    private void uploadAndSetImage(MultipartFile image, String path, Consumer<String> urlSetter) {
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = s3FileUploader.uploadFile(image, path);
-            urlSetter.accept(imageUrl);
-    }}
+//    public void saveprocessImages(Long memberId, MyCardSaveDto dto) {
+//        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
+//        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
+//        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
+//
+//        for (int i = 0; i < images.size(); i++) {
+//            String path = paths.get(i) + memberId + "/";
+//            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
+//        }
+//    }
+//
+//    public void updateprocessImages(Long memberId, MyCardUpdateDto dto) {
+//        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
+//        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
+//        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
+//
+//        for (int i = 0; i < images.size(); i++) {
+//            String path = paths.get(i) + memberId + "/";
+//            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
+//        }
+//    }
+//
+//    private void uploadAndSetImage(MultipartFile image, String path, Consumer<String> urlSetter) {
+//        if (image != null && !image.isEmpty()) {
+//            String imageUrl = s3FileUploader.uploadFile(image, path);
+//            urlSetter.accept(imageUrl);
+//    }}
 
 
     public MyCardResponse findMyCard(Long memberId) {
