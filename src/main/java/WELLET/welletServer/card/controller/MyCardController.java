@@ -5,8 +5,6 @@ import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
 import WELLET.welletServer.card.service.MyCardService;
-import WELLET.welletServer.common.response.BasicResponse;
-import WELLET.welletServer.common.response.ResponseUtil;
 import WELLET.welletServer.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,10 +35,10 @@ public class MyCardController {
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
     })
-    public BasicResponse<MyCardResponse> create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody MyCardSaveDto dto) {
+    public MyCardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody MyCardSaveDto dto) {
         memberService.findMember(memberId);
         Card card = myCardService.saveCard(memberId, dto);
-        return ResponseUtil.success(MyCardResponse.toCardDto(card));
+        return MyCardResponse.toCardDto(card);
     }
 
     @GetMapping
@@ -52,9 +50,9 @@ public class MyCardController {
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
     })
-    public BasicResponse<MyCardResponse> findMyCard(@PathVariable(name = "member_id") Long memberId) {
+    public MyCardResponse findMyCard(@PathVariable(name = "member_id") Long memberId) {
         memberService.findMember(memberId);
-        return ResponseUtil.success(myCardService.findMyCard(memberId));
+        return myCardService.findMyCard(memberId);
     }
 
     @PutMapping
@@ -67,10 +65,9 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public BasicResponse<MyCardUpdateDto> updateMyCard(@PathVariable Long member_id, @Valid @RequestBody MyCardUpdateDto dto) {
+    public MyCardUpdateDto updateMyCard(@PathVariable Long member_id, @Valid @RequestBody MyCardUpdateDto dto) {
         memberService.findMember(member_id);
-        MyCardUpdateDto myCardUpdateDto = myCardService.updateMyCard(member_id, dto);
-        return ResponseUtil.success(myCardUpdateDto);
+        return myCardService.updateMyCard(member_id, dto);
     }
 
     @DeleteMapping
@@ -83,9 +80,9 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public BasicResponse<String> deleteMyCard(@PathVariable Long member_id) {
+    public String deleteMyCard(@PathVariable Long member_id) {
         memberService.findMember(member_id);
         myCardService.deleteMyCard(member_id);
-        return ResponseUtil.success("내 명함 삭제에 성공하였습니다.");
+        return "내 명함 삭제에 성공하였습니다.";
     }
 }
