@@ -1,7 +1,8 @@
 package WELLET.welletServer.category.controller;
 
+import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.category.domain.Category;
-import WELLET.welletServer.category.dto.CategoryCountResponse;
 import WELLET.welletServer.category.dto.CategoryListName;
 import WELLET.welletServer.category.dto.CategorySaveDto;
 import WELLET.welletServer.category.dto.CategoryUpdateDto;
@@ -27,6 +28,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     private final MemberService memberService;
+    private final CardService cardService;
 
     @PostMapping
     @Operation(summary = "그룹 생성")
@@ -56,9 +58,8 @@ public class CategoryController {
             @Parameter(name = "category_id", description = "공백 X", example = "1"),
     })
     public CategoryUpdateDto updateCategory(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
-        memberService.findMember(member_id);
-        Category category = categoryService.findById(categoryId);
-        return categoryService.updateCategory(category, dto);
+        memberService.findMember(member_id); // 인가 서비스를 위함
+        return categoryService.updateCategory(categoryId, dto);
     }
 
     @DeleteMapping("/{category_id}")
@@ -73,26 +74,12 @@ public class CategoryController {
             @Parameter(name = "category_id", description = "공백 X", example = "1"),
     })
     public String deleteCategory(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
-        memberService.findMember(member_id);
+        Member member = memberService.findMember(member_id);
         Category category = categoryService.findById(categoryId);
-        categoryService.deleteCategory(category);
-        return "그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId;
-    }
 
-    @GetMapping("/{category_id}")
-    @Operation(summary = "그룹별 명함 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 조회에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
-    })
-    @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
-    })
-    public CategoryCountResponse findCardsByCategoryId(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
-        memberService.findMember(member_id);
-        return categoryService.findCardsByIds(member_id, categoryId);
+        List<Card> cardList = cardService.findCategoryReturnCard(member, category);
+        categoryService.deleteCategory(category, cardList);
+        return "그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId;
     }
 
     @GetMapping("/name")

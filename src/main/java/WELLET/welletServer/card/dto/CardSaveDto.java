@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardSaveDto {
@@ -29,11 +27,11 @@ public class CardSaveDto {
     @Schema(description = "주소", example = "서울특별시 용산구 청파로 47길 100(청파동 2가)") private String address;
     @Schema(description = "메모", example = "메모") private String memo;
 
-    @Schema(description = "그룹", example = "[\"비즈니스\"]")
-    private List<String> categoryNames;
+    @Schema(description = "그룹", example = "비즈니스")
+    private String categoryName;
 
     @Builder
-    public CardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, String memo, List<String> categoryNames) {
+    public CardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, String memo, String categoryName) {
         this.name = name;
         this.company = company;
         this.role = role;
@@ -42,6 +40,6 @@ public class CardSaveDto {
         this.tel = tel;
         this.address = address;
         this.memo = memo;
-        this.categoryNames = categoryNames;
+        this.categoryName = categoryName;
     }
 }

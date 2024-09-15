@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.util.List;
-
 @Builder
 public record MyCardResponse(
         @Schema(description = "아이디", example = "1") @NotNull Long id,
