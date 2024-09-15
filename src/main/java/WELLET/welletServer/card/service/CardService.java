@@ -12,7 +12,6 @@ import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -104,23 +104,11 @@ public class CardService {
     }
     
 
-
-        @Transactional
+     @Transactional
         public void deleteCard(Long cardId) {
             Card card = findOne(cardId);
             cardRepository.delete(card);
         CardImage cardImage = cardImageRepository.findByCard(card);
-        if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
-            if (card.getProfImgUrl() != null) {
-                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-            }
-            if (cardImage.getFront_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
-            }
-            if (cardImage.getBack_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back-image");
-            }
-        }
         cardRepository.delete(card);
         cardImageRepository.delete(cardImage);
     }
@@ -136,7 +124,7 @@ public class CardService {
         return cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
-  
+
     public CardCountResponseDto searchCards(String keyword) {
         List<Card> cardList = cardRepository.searchCards(keyword);
         List<CardListResponse> cards = cardList.stream()
@@ -158,8 +146,5 @@ public class CardService {
     public List<Card> findCategoryReturnCard (Member member, Category category) {
         return cardRepository.findByCategoryAndMember(category, member);
     }
-//    public List<Card> findCategoryReturnCard (Member member, Category category) {
-//        return cardRepository.findByCategoryAndMember(category, member);
-//    }
 }
 

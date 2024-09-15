@@ -76,11 +76,10 @@ public class CategoryController {
     public String deleteCategory(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
         Member member = memberService.findMember(member_id);
         Category category = categoryService.findById(categoryId);
-//        List<Card> cardList = cardService.findCategoryReturnCard(member, category);
-//        categoryService.deleteCategory(category, cardList);
+        List<Card> cardList = cardService.findCategoryReturnCard(member, category);
+        categoryService.deleteCategory(category, cardList);
         return "그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId;
     }
-
     @GetMapping("/name")
     @Operation(summary = "전체 그룹명 조회")
     @ApiResponses(value = {

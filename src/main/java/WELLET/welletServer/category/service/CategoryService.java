@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+
     @Transactional
     public long saveCategory (Member member, CategorySaveDto dto) {
         categoryRepository.findByMemberAndName(member, dto.getName()).ifPresent(e -> {
