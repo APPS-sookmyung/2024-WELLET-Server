@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.util.List;
-
 @Builder
 public record CardResponse(
         @Schema(description = "아이디", example = "1") @NotNull Long id,
@@ -19,9 +17,9 @@ public record CardResponse(
         @Schema(description = "유선전화", example = "02-111-1111") String tel,
         @Schema(description = "주소", example = "서울시 00동 00구") String address,
         @Schema(description = "메모", example = "메모") String memo,
-        @Schema(description = "그룹", example = "[\"비즈니스\"]") List<String> categories) {
+        @Schema(description = "그룹", example = "비즈니스") String category) {
 
-    public static CardResponse toCardDto(Card card, List<String> categories) {
+    public static CardResponse toCardDto(Card card, String category) {
         return CardResponse.builder()
                 .id(card.getId())
                 .name(card.getName())
@@ -32,7 +30,7 @@ public record CardResponse(
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .memo(card.getMemo())
-                .categories(categories)
+                .category(category)
                 .build();
     }
 }
