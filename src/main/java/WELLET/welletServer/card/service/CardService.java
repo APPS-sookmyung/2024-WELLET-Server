@@ -5,17 +5,14 @@ import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
-import WELLET.welletServer.categoryCard.domain.CategoryCard;
+import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +22,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     @Transactional
-    public Card saveCard (Member member, CardSaveDto dto) {
+    public Card saveCard (Member member, Category category, CardSaveDto dto) {
         Card card = Card.builder()
                 .name(dto.getName())
                 .company(dto.getCompany())
@@ -36,16 +33,10 @@ public class CardService {
                 .address(dto.getAddress())
                 .memo(dto.getMemo())
                 .member(member)
+                .category(category)
                 .build();
 
         return cardRepository.save(card);
-    }
-
-    @Transactional
-    public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories) {
-        card.addCardCategory(categoryCards);
-        card = cardRepository.save(card);
-        return CardResponse.toCardDto(card, categories);
     }
 
     public CardCountResponseDto findAllCard(Member member) {
@@ -60,13 +51,11 @@ public class CardService {
 
     public CardResponse findCard(Long cardId) {
         Card card = findOne(cardId);
-        return CardResponse.toCardDto(card, findCategoryCardNames(card));
-    }
-
-    private List<String> findCategoryCardNames(Card card) {
-        return card.getCategoryCards().stream()
-                .map(categoryCard -> categoryCard.getCategory().getName())
-                .collect(Collectors.toList());
+        String categoryName = "";
+        if (card.getCategory() != null) {
+            categoryName = card.getCategory().getName();
+        }
+        return CardResponse.toCardDto(card, categoryName);
     }
 
     @Transactional
@@ -78,32 +67,42 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteCard(Card card) {
+    public void deleteCard(Long cardId) {
+        Card card = findOne(cardId);
         cardRepository.delete(card);
+    }
+
+    @Transactional
+    public void deleteCardList(List<Long> cardIds) {
+        for (Long cardId : cardIds) {
+            deleteCard(cardId);
+        }
     }
 
     public Card findOne(Long cardId) {
         return cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
-
-    public List<Card> findCardList(List<Long> cardIdList) {
-        List<Card> cardList = new ArrayList<>();
-        cardIdList.forEach(cardId -> {
-            Card card = cardRepository.findById(cardId)
-                    .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND, cardId + "번 명함이 존재하지 않습니다."));
-            cardList.add(card);
-        });
-        return cardList;
+  
+    public CardCountResponseDto searchCards(String keyword) {
+        List<Card> cardList = cardRepository.searchCards(keyword);
+        List<CardListResponse> cards = cardList.stream()
+                .map(CardListResponse::toCardList)
+                .toList();
+        return new CardCountResponseDto(cards.size(), cards);
     }
 
-    public CardCountResponseDto searchCardsByName(Long memberId, String keyword) {
-        List<Card> cardList = cardRepository.searchCardsByName(memberId, keyword);
-        // Entity -> DTO
+    public CardCountResponseDto findByCategory(Member member, Category category) {
+        List<Card> cardList = findCategoryReturnCard(member, category);
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
 
-        return new CardCountResponseDto(cards.size(), cards);
+        return new CardCountResponseDto(cardList.size(), cards);
+    }
+
+
+    public List<Card> findCategoryReturnCard (Member member, Category category) {
+        return cardRepository.findByCategoryAndMember(category, member);
     }
 }
