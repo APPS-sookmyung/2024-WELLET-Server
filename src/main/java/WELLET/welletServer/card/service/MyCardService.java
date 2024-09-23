@@ -33,13 +33,15 @@ public class MyCardService {
 
     @Transactional
     public Card saveCard (Long memberId, MyCardSaveDto dto) {
+        String profileImageUrl = null;
 
         cardRepository.findByOwnerId(memberId).ifPresent(e -> {
             throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
         });
 
-        String profileImageUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
-
+        if (dto.getProfile_Img() != null) {
+            profileImageUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
+        }
         Card card = Card.builder()
                 .name(dto.getName())
                 .company(dto.getCompany())
