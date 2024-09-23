@@ -131,9 +131,10 @@ public class CardService {
                 s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
             }
             if (cardImage.getBack_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "front-image");
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back-image");
             }
         }
+        cardRepository.delete(card);
         cardImageRepository.delete(cardImage);
     }
 
