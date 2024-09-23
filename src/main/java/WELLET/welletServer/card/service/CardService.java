@@ -140,7 +140,6 @@ public class CardService {
     public void deleteCard(Long card_id) {
         Card card = cardRepository.findById(card_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 명함이 없습니다. id: " + card_id));
-        cardRepository.delete(card);
         CardImage cardImage = cardImageRepository.findByCard(card);
         if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
             if (card.getProfImgUrl() != null) {
@@ -150,9 +149,10 @@ public class CardService {
                 s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
             }
             if (cardImage.getBack_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "front-image");
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back-image");
             }
         }
+        cardRepository.delete(card);
         cardImageRepository.delete(cardImage);
     }
 
