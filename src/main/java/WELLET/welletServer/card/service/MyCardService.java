@@ -70,16 +70,20 @@ public class MyCardService {
     }
 
     @Transactional
-    public MyCardUpdateDto updateMyCard(Long memberId, MyCardUpdateDto dto) {
+    public MyCardResponse updateMyCard(Long memberId, MyCardUpdateDto dto) {
+        String newProfImgUrl = null;
+
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        if (card.getProfImgUrl() != null) {
-            s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+        if (dto.getProfile_Img() != null) {
+            if (card.getProfImgUrl() != null) {
+                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+            }
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
         }
-
-        card.updateCard(dto);
-        return MyCardUpdateDto.toCardUpdateDto(card);
+        card.updateCard(dto, newProfImgUrl);
+        return MyCardResponse.toCardDto(card);
     }
 
     @Transactional

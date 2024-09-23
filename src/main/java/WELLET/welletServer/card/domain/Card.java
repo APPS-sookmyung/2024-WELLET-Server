@@ -79,7 +79,7 @@ public class Card extends BaseTimeEntity {
         this.profImgUrl = profImgUrl;
     }
 
-    public void updateCard(MyCardUpdateDto dto) {
+    public void updateCard(MyCardUpdateDto dto, String profImgUrl) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.role = dto.getRole();
@@ -87,7 +87,7 @@ public class Card extends BaseTimeEntity {
         this.email = dto.getEmail();
         this.tel = dto.getTel();
         this.address = dto.getAddress();
-        this.profImgUrl = dto.getProfImgUrl();
+        this.profImgUrl = profImgUrl;
     }
 
     public void updateCategoryWithNull() {
