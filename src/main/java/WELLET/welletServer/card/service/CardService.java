@@ -12,6 +12,7 @@ import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,31 @@ public class CardService {
         return cardRepository.save(card);
     }
 
+    @Transactional
+    public CardImage saveCardImage (Card card, CardSaveDto dto) {
+
+        if (dto.getFrontImg() != null || dto.getBackImg() != null) {
+
+            String frontImgUrl = dto.getFrontImg() != null ? s3FileUploader.uploadFile(dto.getFrontImg(), "front-image") : null;
+            String backImgUrl = dto.getBackImg() != null ? s3FileUploader.uploadFile(dto.getBackImg(), "back-image") : null;
+
+            CardImage cardImage = CardImage.builder()
+                    .front_img_url(frontImgUrl)
+                    .back_img_url(backImgUrl)
+                    .card(card)
+                    .build();
+            return cardImageRepository.save(cardImage);
+        }
+        return null;
+    }
+
+    @Transactional
+    public CardResponse addCategory(Card card, List<CategoryCard> categoryCards, List<String> categories, CardImage cardImage) {
+        card.addCardCategory(categoryCards);
+        card = cardRepository.save(card);
+        return CardResponse.toCardDto(card, categories, cardImage);
+    }
+
     public CardCountResponseDto findAllCard(Member member) {
         List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
@@ -66,18 +92,49 @@ public class CardService {
         return CardResponse.toCardDto(card, categoryName);
     }
 
-    @Transactional
-    public CardUpdateDto updateCard(Long cardId, CardUpdateDto dto) {
-        Card card = findOne(cardId);
 
-        card.updateCard(dto);
-        return CardUpdateDto.toCardUpdateDto(card);
+    public List<String> findCategoryCardNames(Card card) {
+        return card.getCategoryCards().stream()
+                .map(categoryCard -> categoryCard.getCategory().getName())
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public void deleteCard(Long cardId) {
+    public Card updateCard(Long cardId, CardUpdateDto dto) {
         Card card = findOne(cardId);
-        cardRepository.delete(card);
+        String newProfImgUrl = null;
+
+        if (dto.getProfImg() != null) {
+            if (card.getProfImgUrl() != null) {
+                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+            }
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
+        }
+
+        card.updateCard(dto, newProfImgUrl);
+
+        return card;
+    }
+
+
+
+        @Transactional
+        public void deleteCard(Long cardId) {
+            Card card = findOne(cardId);
+            cardRepository.delete(card);
+        CardImage cardImage = cardImageRepository.findByCard(card);
+        if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
+            if (card.getProfImgUrl() != null) {
+                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+            }
+            if (cardImage.getFront_img_url() != null) {
+                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
+            }
+            if (cardImage.getBack_img_url() != null) {
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "front-image");
+            }
+        }
+        cardImageRepository.delete(cardImage);
     }
 
     @Transactional

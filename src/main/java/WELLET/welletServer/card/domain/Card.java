@@ -67,7 +67,7 @@ public class Card extends BaseTimeEntity {
         this.ownerId = ownerId;
     }
 
-    public void updateCard(CardUpdateDto dto) {
+    public void updateCard(CardUpdateDto dto, String profImgUrl) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.role = dto.getRole();
@@ -76,7 +76,7 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
-        this.profImgUrl = dto.getProfImgUrl();
+        this.profImgUrl = profImgUrl;
     }
 
     public void updateCard(MyCardUpdateDto dto) {

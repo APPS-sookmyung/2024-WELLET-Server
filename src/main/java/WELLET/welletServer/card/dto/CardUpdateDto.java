@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.dto;
 
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -29,14 +30,12 @@ public class CardUpdateDto {
     @Schema(description = "주소", example = "서울특별시 용산구 청파로 47길 100(청파동 2가)") private String address;
     @Schema(description = "메모", example = "메모") private String memo;
 
-    @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
-    @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
-    @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
-    @Schema(description = "프로필 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String profImgUrl;
-    @Schema(description = "명함앞 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String frontImgUrl;
-    @Schema(description = "명함뒤 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String backImgUrl;
+    @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile profImg;
+    @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile frontImg;
+    @Schema(description = "명함뒤 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile backImg;
 
-    public static CardUpdateDto toCardUpdateDto(Card card) {
+
+    public static CardUpdateDto toCardUpdateDto(Card card, CardImage cardImage) {
         return CardUpdateDto.builder()
                 .name(card.getName())
                 .company(card.getCompany())
@@ -46,9 +45,9 @@ public class CardUpdateDto {
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .memo(card.getMemo())
-                .profImgUrl(card.getProfImgUrl())
-//                .frontImgUrl(card.getFrontImgUrl())
-//                .backImgUrl(card.getBackImgUrl())
+//                .profImgurl(card.getProfImgUrl())
+//                .origin_frontImgUrl(cardImage.getFront_img_url())
+//                .origin_backImgUrl(cardImage.getBack_img_url())
                 .build();
 
     }

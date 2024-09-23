@@ -1,5 +1,6 @@
 package WELLET.welletServer.card.controller;
 
+import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardCountResponseDto;
 import WELLET.welletServer.card.dto.CardResponse;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cards")
@@ -32,6 +34,7 @@ public class CardController {
     private final CardService cardService;
     private final MemberService memberService;
     private final CategoryService categoryService;
+    private final CardRepository cardRepository;
 
     @PostMapping("/{member_id}")
     @Operation(summary = "명함 생성")

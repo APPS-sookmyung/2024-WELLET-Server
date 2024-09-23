@@ -1,6 +1,5 @@
 package WELLET.welletServer.card.domain;
 
-import WELLET.welletServer.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,6 +30,12 @@ public class CardImage {
         this.front_img_url = front_img_url;
         this.back_img_url = back_img_url;
         this.card = card;
-    }}
+    }
+
+    public void updateCardImage(String back_img_url, String front_img_url) {
+        this.front_img_url = back_img_url;
+        this.back_img_url = front_img_url;
+    }
+}
 
 

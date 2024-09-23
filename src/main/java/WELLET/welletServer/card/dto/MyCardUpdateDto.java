@@ -18,12 +18,9 @@ public class MyCardUpdateDto {
     @Schema(description = "유선전화", example = "02-111-1111") private String tel;
     @Schema(description = "주소", example = "서울시 00동 00구") private String address;
 
-    @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
-    @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
-    @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
-    @Schema(description = "프로필 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String profImgUrl;
-    @Schema(description = "명함앞 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String frontImgUrl;
-    @Schema(description = "명함뒤 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String backImgUrl;
+//    @Schema(description = "프로필 이미지") private MultipartFile profile_Img;
+
+    @Schema(description = "프로필 이미지파일 url") private String profImgUrl;
 
     public static MyCardUpdateDto toCardUpdateDto(Card card) {
         return MyCardUpdateDto.builder()
@@ -35,10 +32,7 @@ public class MyCardUpdateDto {
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .profImgUrl(card.getProfImgUrl())
-//                .frontImgUrl(card.getFrontImgUrl())
-//                .backImgUrl(card.getBackImgUrl())
                 .build();
-
     }
 }
 
