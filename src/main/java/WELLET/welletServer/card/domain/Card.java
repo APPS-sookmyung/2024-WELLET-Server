@@ -27,7 +27,8 @@ public class Card extends BaseTimeEntity {
     @NotBlank
     private String company;
 
-    private String role;
+    private String position;
+    private String department;
 
     @NotBlank
     private String phone;
@@ -49,10 +50,11 @@ public class Card extends BaseTimeEntity {
     private Long ownerId;
 
     @Builder
-    public Card(String name, String company, String role, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId) {
+    public Card(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId) {
         this.name = name;
         this.company = company;
-        this.role = role;
+        this.position = position;
+        this.department = department;
         this.phone = phone;
         this.email = email;
         this.tel = tel;
@@ -66,7 +68,8 @@ public class Card extends BaseTimeEntity {
     public void updateCard(CardUpdateDto dto) {
         this.name = dto.getName();
         this.company = dto.getCompany();
-        this.role = dto.getRole();
+        this.position = dto.getPosition();
+        this.department = dto.getDepartment();
         this.phone = dto.getPhone();
         this.email = dto.getEmail();
         this.tel = dto.getTel();
@@ -77,7 +80,8 @@ public class Card extends BaseTimeEntity {
     public void updateCard(MyCardUpdateDto dto) {
         this.name = dto.getName();
         this.company = dto.getCompany();
-        this.role = dto.getRole();
+        this.position = dto.getPosition();
+        this.department = dto.getDepartment();
         this.phone = dto.getPhone();
         this.email = dto.getEmail();
         this.tel = dto.getTel();

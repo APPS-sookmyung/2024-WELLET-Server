@@ -10,7 +10,8 @@ import lombok.Builder;
 public record MyCardResponse(
         @Schema(description = "아이디", example = "1") @NotNull Long id,
         @Schema(description = "이름", example = "주아정") @NotBlank String name,
-        @Schema(description = "직책/부서", example = "백엔드 개발자/팀장") String role,
+        @Schema(description = "직책", example = "백엔드 개발자/팀장") String position,
+        @Schema(description = "부서", example = "개발팀") String department,
         @Schema(description = "회사", example = "WELLET Corp.") @NotBlank String company,
         @Schema(description = "휴대폰", example = "010-1111-2222") String phone,
         @Schema(description = "이메일", example = "ajung7038@naver.com") @NotBlank String email,
@@ -21,7 +22,8 @@ public record MyCardResponse(
         return MyCardResponse.builder()
                 .id(card.getId())
                 .name(card.getName())
-                .role(card.getRole())
+                .position(card.getPosition())
+                .department(card.getDepartment())
                 .company(card.getCompany())
                 .phone(card.getPhone())
                 .email(card.getEmail())
