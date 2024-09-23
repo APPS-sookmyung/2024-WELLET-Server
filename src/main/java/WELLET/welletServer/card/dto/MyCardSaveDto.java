@@ -14,7 +14,8 @@ public class MyCardSaveDto {
     private String name;
 
     @Schema(description = "회사", example = "WELLET Corp.") private String company;
-    @Schema(description = "직책/부서", example = "Web Engineer / 개발팀") private String role;
+    @Schema(description = "직책", example = "Web Engineer / 팀장") private String position;
+    @Schema(description = "부서", example = "개발팀") private String department;
     @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
 
     @NotBlank @Schema(description = "이메일", example = "ajung7038@naver.com")
@@ -24,10 +25,11 @@ public class MyCardSaveDto {
     @Schema(description = "주소", example = "서울시 00동 00구") private String address;
 
     @Builder
-    public MyCardSaveDto(String name, String company, String role, String phone, String email, String tel, String address) {
+    public MyCardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address) {
         this.name = name;
         this.company = company;
-        this.role = role;
+        this.position = position;
+        this.department = department;
         this.phone = phone;
         this.email = email;
         this.tel = tel;

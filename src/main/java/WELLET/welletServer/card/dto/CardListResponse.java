@@ -10,7 +10,8 @@ import lombok.Builder;
 public record CardListResponse(
         @Schema(description = "아이디", example = "1") @NotNull Long id,
         @Schema(description = "이름", example = "주아정") @NotBlank String name,
-        @Schema(description = "직책/부서", example = "백엔드 개발자") String role,
+        @Schema(description = "직책", example = "백엔드 개발자") String position,
+        @Schema(description = "부서", example = "개발팀") String department,
         @Schema(description = "회사", example = "WELLET Corp.") @NotBlank String company,
         @Schema(description = "생성일자", example = "2024-08-03 15:51:46") @NotBlank String createdAt) {
 
@@ -18,7 +19,8 @@ public record CardListResponse(
         return CardListResponse.builder()
                 .id(card.getId())
                 .name(card.getName())
-                .role(card.getRole())
+                .position(card.getPosition())
+                .department(card.getDepartment())
                 .company(card.getCompany())
                 .createdAt(card.getCreatedAt())
                 .build();
