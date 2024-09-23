@@ -12,6 +12,7 @@ import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -110,6 +111,18 @@ public class CardService {
             cardRepository.delete(card);
         CardImage cardImage = cardImageRepository.findByCard(card);
         cardRepository.delete(card);
+        CardImage cardImage = cardImageRepository.findByCard(card);
+        if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
+            if (card.getProfImgUrl() != null) {
+                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+            }
+            if (cardImage.getFront_img_url() != null) {
+                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
+            }
+            if (cardImage.getBack_img_url() != null) {
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "front-image");
+            }
+        }
         cardImageRepository.delete(cardImage);
     }
 

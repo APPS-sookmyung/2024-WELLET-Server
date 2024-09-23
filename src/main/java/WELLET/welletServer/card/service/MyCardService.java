@@ -29,6 +29,7 @@ public class MyCardService {
 
     private final CardRepository cardRepository;
     private final S3FileUploader s3FileUploader;
+    private final CardImageRepository cardImageRepository;
 
     @Transactional
     public Card saveCard (Long memberId, MyCardSaveDto dto) {
@@ -58,35 +59,6 @@ public class MyCardService {
         return cardRepository.save(card);
     }
 
-//    public void saveprocessImages(Long memberId, MyCardSaveDto dto) {
-//        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
-//        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
-//        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
-//
-//        for (int i = 0; i < images.size(); i++) {
-//            String path = paths.get(i) + memberId + "/";
-//            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
-//        }
-//    }
-//
-//    public void updateprocessImages(Long memberId, MyCardUpdateDto dto) {
-//        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
-//        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
-//        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
-//
-//        for (int i = 0; i < images.size(); i++) {
-//            String path = paths.get(i) + memberId + "/";
-//            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
-//        }
-//    }
-//
-//    private void uploadAndSetImage(MultipartFile image, String path, Consumer<String> urlSetter) {
-//        if (image != null && !image.isEmpty()) {
-//            String imageUrl = s3FileUploader.uploadFile(image, path);
-//            urlSetter.accept(imageUrl);
-//    }}
-
-
     public MyCardResponse findMyCard(Long memberId) {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElse(null);
@@ -105,14 +77,13 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        if (dto.getProfile_Img() != null) {
-            if (card.getProfImgUrl() != null) {
-                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-            }
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
+
+        if (card.getProfImgUrl() != null) {
+            s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
         }
-        card.updateCard(dto, newProfImgUrl);
-        return MyCardResponse.toCardDto(card);
+
+        card.updateCard(dto);
+        return MyCardUpdateDto.toCardUpdateDto(card);
     }
 
     @Transactional
@@ -120,8 +91,8 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
         cardRepository.delete(card);
-        if (card.getProfImgUrl() != null) {
-            s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-        }
+        CardImage cardImage = cardImageRepository.findByCard(card);
+        cardImageRepository.delete(cardImage);
+        s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
     }
 }
