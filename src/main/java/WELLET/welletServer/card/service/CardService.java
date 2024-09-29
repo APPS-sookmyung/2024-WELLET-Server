@@ -12,7 +12,6 @@ import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -39,9 +38,6 @@ public class CardService {
                 .memo(dto.getMemo())
                 .member(member)
                 .category(category)
-//                .profImgUrl(dto.getProfImgUrl())
-//                .frontImgUrl(dto.getFrontImgUrl())
-//                .backImgUrl(dto.getBackImgUrl())
                 .build();
 
         return cardRepository.save(card);
@@ -65,12 +61,6 @@ public class CardService {
         return null;
     }
 
-//    @Transactional
-//    public CardResponse addCategory(Card card, L categoryCards, List<String> categories, CardImage cardImage) {
-//        card.addCardCategory(categoryCards);
-//        card = cardRepository.save(card);
-//        return CardResponse.toCardDto(card, categories, cardImage);
-//    }
     public CardCountResponseDto findAllCard(Member member) {
         List<Card> cardList = cardRepository.findByMember(member);
         // Entity -> DTO
@@ -167,7 +157,6 @@ public class CardService {
         return cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
-
     public CardCountResponseDto searchCards(String keyword) {
         List<Card> cardList = cardRepository.searchCards(keyword);
         List<CardListResponse> cards = cardList.stream()

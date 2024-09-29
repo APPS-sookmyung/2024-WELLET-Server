@@ -1,8 +1,6 @@
 package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.domain.CardImage;
-import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
@@ -18,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @RestController

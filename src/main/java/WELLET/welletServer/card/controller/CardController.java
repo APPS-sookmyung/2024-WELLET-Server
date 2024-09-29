@@ -1,6 +1,5 @@
 package WELLET.welletServer.card.controller;
 
-import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.CardCountResponseDto;
 import WELLET.welletServer.card.dto.CardResponse;
@@ -8,13 +7,8 @@ import WELLET.welletServer.card.dto.CardSaveDto;
 import WELLET.welletServer.card.dto.CardUpdateDto;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
-import WELLET.welletServer.card.domain.CardImage;
-import WELLET.welletServer.card.dto.*;
-import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.category.service.CategoryService;
-import WELLET.welletServer.card.dto.*;
-import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

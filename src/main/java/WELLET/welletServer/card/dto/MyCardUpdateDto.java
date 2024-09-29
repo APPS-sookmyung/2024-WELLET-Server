@@ -29,7 +29,6 @@ public class MyCardUpdateDto {
                 .email(card.getEmail())
                 .tel(card.getTel())
                 .address(card.getAddress())
-//                .profImgUrl(card.getProfImgUrl())
                 .build();
     }
 }

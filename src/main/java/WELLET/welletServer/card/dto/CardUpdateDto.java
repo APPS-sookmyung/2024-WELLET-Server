@@ -46,9 +46,6 @@ public class CardUpdateDto {
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .memo(card.getMemo())
-//                .profImgurl(card.getProfImgUrl())
-//                .origin_frontImgUrl(cardImage.getFront_img_url())
-//                .origin_backImgUrl(cardImage.getBack_img_url())
                 .build();
 
     }

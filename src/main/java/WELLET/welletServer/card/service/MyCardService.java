@@ -4,7 +4,6 @@ import WELLET.welletServer.card.Repository.CardImageRepository;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.domain.CardImage;
-import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
@@ -15,11 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 @Slf4j
 @Service
