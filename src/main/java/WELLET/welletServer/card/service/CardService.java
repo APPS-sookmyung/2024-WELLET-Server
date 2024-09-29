@@ -43,6 +43,9 @@ public class CardService {
                 .memo(dto.getMemo())
                 .member(member)
                 .category(category)
+//                .profImgUrl(dto.getProfImgUrl())
+//                .frontImgUrl(dto.getFrontImgUrl())
+//                .backImgUrl(dto.getBackImgUrl())
                 .build();
 
         return cardRepository.save(card);

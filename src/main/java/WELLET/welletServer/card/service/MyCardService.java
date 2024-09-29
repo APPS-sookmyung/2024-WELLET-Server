@@ -13,6 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -22,7 +27,6 @@ public class MyCardService {
 
     private final CardRepository cardRepository;
     private final S3FileUploader s3FileUploader;
-    private final CardImageRepository cardImageRepository;
 
     @Transactional
     public Card saveCard (Long memberId, MyCardSaveDto dto) {
@@ -32,8 +36,8 @@ public class MyCardService {
             throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
         });
 
-        if (dto.getProfile_Img() != null) {
-            profileImageUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
+        if (dto.getProfImg() != null) {
+            profileImageUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
         }
         Card card = Card.builder()
                 .name(dto.getName())
@@ -52,6 +56,35 @@ public class MyCardService {
 
         return cardRepository.save(card);
     }
+
+    public void saveprocessImages(Long memberId, MyCardSaveDto dto) {
+        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
+        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
+        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
+
+        for (int i = 0; i < images.size(); i++) {
+            String path = paths.get(i) + memberId + "/";
+            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
+        }
+    }
+
+    public void updateprocessImages(Long memberId, MyCardUpdateDto dto) {
+        List<MultipartFile> images = Arrays.asList(dto.getProfImg(), dto.getFrontImg(), dto.getBackImg());
+        List<String> paths = Arrays.asList("user-profiles/", "user-front/", "user-back/");
+        List<Consumer<String>> urlSetters = Arrays.asList(dto::setProfImgUrl, dto::setFrontImgUrl, dto::setBackImgUrl);
+
+        for (int i = 0; i < images.size(); i++) {
+            String path = paths.get(i) + memberId + "/";
+            uploadAndSetImage(images.get(i), path, urlSetters.get(i));
+        }
+    }
+
+    private void uploadAndSetImage(MultipartFile image, String path, Consumer<String> urlSetter) {
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = s3FileUploader.uploadFile(image, path);
+            urlSetter.accept(imageUrl);
+    }}
+
 
     public MyCardResponse findMyCard(Long memberId) {
         Card card = cardRepository.findByOwnerId(memberId)

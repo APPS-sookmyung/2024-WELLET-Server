@@ -38,6 +38,7 @@ public record CardResponse(
                 .profImgUrl(card.getProfImgUrl())
 //                .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
 //                .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
+
                 .build();
     }
 }

@@ -31,12 +31,14 @@ public class CardUpdateDto {
     @Schema(description = "메모", example = "메모") private String memo;
     @Schema(description = "그룹", example = "비즈니스") private String categoryName;
 
-    @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile profImg;
-    @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile frontImg;
-    @Schema(description = "명함뒤 이미지", example = "https://bucket-name.s3.amazonaws.com") @Setter private MultipartFile backImg;
+    @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
+    @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
+    @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
+    @Schema(description = "프로필 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String profImgUrl;
+    @Schema(description = "명함앞 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String frontImgUrl;
+    @Schema(description = "명함뒤 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String backImgUrl;
 
-
-    public static CardUpdateDto toCardUpdateDto(Card card, CardImage cardImage) {
+    public static CardUpdateDto toCardUpdateDto(Card card) {
         return CardUpdateDto.builder()
                 .name(card.getName())
                 .company(card.getCompany())
@@ -46,9 +48,9 @@ public class CardUpdateDto {
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .memo(card.getMemo())
-//                .profImgurl(card.getProfImgUrl())
-//                .origin_frontImgUrl(cardImage.getFront_img_url())
-//                .origin_backImgUrl(cardImage.getBack_img_url())
+                .profImgUrl(card.getProfImgUrl())
+                .frontImgUrl(card.getFrontImgUrl())
+                .backImgUrl(card.getBackImgUrl())
                 .build();
 
     }

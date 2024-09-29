@@ -11,6 +11,8 @@ import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.card.service.CardService;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.category.service.CategoryService;
+import WELLET.welletServer.card.dto.*;
+import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +46,7 @@ public class CardController {
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
     })
-    public CardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto dto) {
+    public CardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @ModelAttribute CardSaveDto dto) {
         Member member = memberService.findMember(memberId);
         if (dto.getCategoryName() == null) {
             throw new CardException(CardErrorCode.CATEGORY_NOT_SELECTED);
