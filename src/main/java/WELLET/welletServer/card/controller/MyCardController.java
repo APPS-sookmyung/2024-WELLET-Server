@@ -73,7 +73,6 @@ public class MyCardController {
     })
     public MyCardUpdateDto updateMyCard(@PathVariable Long member_id, @Valid @RequestBody MyCardUpdateDto dto) {
         memberService.findMember(member_id);
-        MyCardResponse myCardResponse = myCardService.updateMyCard(member_id, dto);
         return myCardService.updateMyCard(member_id, dto);
     }
 
