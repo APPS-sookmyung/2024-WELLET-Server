@@ -52,9 +52,6 @@ public class Card extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private CardImage cardImage;
-
     private Long ownerId;
 
     @Builder
