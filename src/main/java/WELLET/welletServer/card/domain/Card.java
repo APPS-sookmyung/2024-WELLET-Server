@@ -45,8 +45,7 @@ public class Card extends BaseTimeEntity {
 
     @JoinColumn(name = "category_id") private Category category;
 
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_id") private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
