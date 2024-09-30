@@ -39,3 +39,7 @@ out/
 ### VS Code ###
 .vscode/
 application.yml
+
+
+### ocr ###
+welletOcrKey.json
