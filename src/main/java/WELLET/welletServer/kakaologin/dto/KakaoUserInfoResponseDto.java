@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +15,7 @@ public class KakaoUserInfoResponseDto {
 
     // 회원 번호
     @JsonProperty("id")
-    public Long id;
+    private Long id;
 
     // 자동 연결 설정
     // true: 연결 상태, false: 연결 대기 상태

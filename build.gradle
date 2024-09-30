@@ -26,7 +26,8 @@ repositories {
 }
 
 dependencies {
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	// runtimeOnly 'org.postgresql:postgresql' // 포스트그레
+	runtimeOnly 'com.mysql:mysql-connector-j' // MySQL
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -40,6 +41,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
 	implementation "io.jsonwebtoken:jjwt:0.9.1" //JWT 관련 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //OAuth 2.0 관련 의존성
 
@@ -48,6 +51,9 @@ dependencies {
 
 	//thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//servlet
+	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 }
 
 tasks.named('test') {
