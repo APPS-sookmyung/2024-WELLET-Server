@@ -27,6 +27,11 @@ public class CardService {
 
     @Transactional
     public Card saveCard (Member member, Category category, CardSaveDto dto) {
+        String newProfImgUrl = null;
+        if (dto.getProfImg() != null) {
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
+        }
+
         Card card = Card.builder()
                 .name(dto.getName())
                 .company(dto.getCompany())
@@ -38,6 +43,7 @@ public class CardService {
                 .memo(dto.getMemo())
                 .member(member)
                 .category(category)
+                .profImgUrl(newProfImgUrl)
                 .build();
 
         return cardRepository.save(card);
@@ -45,9 +51,6 @@ public class CardService {
 
     @Transactional
     public CardImage saveCardImage (Card card, CardSaveDto dto) {
-
-        if (dto.getFrontImg() != null || dto.getBackImg() != null) {
-
             String frontImgUrl = dto.getFrontImg() != null ? s3FileUploader.uploadFile(dto.getFrontImg(), "front-image") : null;
             String backImgUrl = dto.getBackImg() != null ? s3FileUploader.uploadFile(dto.getBackImg(), "back-image") : null;
 
@@ -57,8 +60,6 @@ public class CardService {
                     .card(card)
                     .build();
             return cardImageRepository.save(cardImage);
-        }
-        return null;
     }
 
     public CardCountResponseDto findAllCard(Member member) {
@@ -73,11 +74,12 @@ public class CardService {
 
     public CardResponse findCard(Long cardId) {
         Card card = findOne(cardId);
+        CardImage cardImage = cardImageRepository.findByCard(card);
         String categoryName = "";
         if (card.getCategory() != null) {
             categoryName = card.getCategory().getName();
         }
-        return CardResponse.toCardDto(card, categoryName);
+        return CardResponse.toCardDto(card, categoryName, cardImage);
     }
 
     @Transactional
@@ -91,40 +93,31 @@ public class CardService {
             }
             newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
         }
-
         card.updateCard(dto, newProfImgUrl);
-
         return card;
     }
-    
 
-     @Transactional
-        public void deleteCard(Long cardId) {
-            Card card = findOne(cardId);
-            cardRepository.delete(card);
+    @Transactional
+    public CardImage updateCardImage(Card card, CardUpdateDto dto) {
         CardImage cardImage = cardImageRepository.findByCard(card);
-
         String newFrontImgUrl = null;
         String newBackImgUrl = null;
 
         if (dto.getFrontImg() != null) {
             if (cardImage.getFront_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
+                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
             }
-            newFrontImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front-image");
+            newFrontImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front_image");
         }
-        if (dto.getBackImg() != null) {
+        if (dto.getBackImg()!= null) {
             if (cardImage.getBack_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back-image");
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
             }
-            newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back-image");
+            newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back_image");
         }
-        if (cardImage != null) {
-            cardImage.updateCardImage(newFrontImgUrl, newBackImgUrl);
-        }
+        cardImage.updateCardImage(newFrontImgUrl, newBackImgUrl);
         return cardImage;
     }
-
 
     @Transactional
     public void deleteCard(Long card_id) {
@@ -136,10 +129,10 @@ public class CardService {
                 s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
             }
             if (cardImage.getFront_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front-image");
+                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
             }
             if (cardImage.getBack_img_url() != null) {
-                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back-image");
+                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
             }
         }
         cardRepository.delete(card);

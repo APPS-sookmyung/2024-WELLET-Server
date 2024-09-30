@@ -42,9 +42,6 @@ public class Card extends BaseTimeEntity {
     private String profImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
-    @JoinColumn(name = "category_id") private Category category;
-
     @JoinColumn(name = "member_id") private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)

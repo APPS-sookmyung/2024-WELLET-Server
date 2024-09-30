@@ -87,8 +87,6 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
         cardRepository.delete(card);
-        CardImage cardImage = cardImageRepository.findByCard(card);
-        cardImageRepository.delete(cardImage);
         s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
     }
 }

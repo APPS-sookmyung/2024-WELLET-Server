@@ -68,7 +68,7 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public MyCardUpdateDto updateMyCard(@PathVariable Long member_id, @Valid @RequestBody MyCardUpdateDto dto) {
+    public MyCardResponse updateMyCard(@PathVariable Long member_id, @Valid @ModelAttribute MyCardUpdateDto dto) {
         memberService.findMember(member_id);
         return myCardService.updateMyCard(member_id, dto);
     }

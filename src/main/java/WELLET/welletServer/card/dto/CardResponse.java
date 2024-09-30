@@ -23,7 +23,7 @@ public record CardResponse(
         @Schema(description = "명함앞이미지 URL", example = "frontimg/url") String frontImgUrl,
         @Schema(description = "명함뒤이미지 URL", example = "backimg/url") String backImgUrl){
 
-    public static CardResponse toCardDto(Card card, String category) {
+    public static CardResponse toCardDto(Card card, String category, CardImage cardImage) {
         return CardResponse.builder()
                 .id(card.getId())
                 .name(card.getName())
@@ -36,9 +36,8 @@ public record CardResponse(
                 .memo(card.getMemo())
                 .category(category)
                 .profImgUrl(card.getProfImgUrl())
-//                .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
-//                .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
-
+                .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
+                .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
                 .build();
     }
 }
