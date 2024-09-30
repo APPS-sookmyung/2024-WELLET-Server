@@ -1,5 +1,6 @@
-package WELLET.welletServer.kakaologin.jwt;
+package WELLET.welletServer.kakaologin.security;
 
+import WELLET.welletServer.kakaologin.jwt.JwtAuthenticationFilter;
 import WELLET.welletServer.kakaologin.jwt.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,9 +1,11 @@
 package WELLET.welletServer.kakaologin.controller;
 
+import WELLET.welletServer.kakaologin.domain.KakaoUser;
 import WELLET.welletServer.kakaologin.dto.KakaoUserInfoResponseDto;
 import WELLET.welletServer.kakaologin.jwt.JwtService;
 import WELLET.welletServer.kakaologin.service.KakaoService;
-import WELLET.welletServer.kakaologin.service.UserService; // 사용자 서비스 추가
+import WELLET.welletServer.kakaologin.service.UserService;
+import WELLET.welletServer.kakaologin.Repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -25,7 +28,8 @@ public class KakaoLoginController {
 
     private final KakaoService kakaoService;
     private final JwtService jwtService;
-    private final UserService userService; // DB 연동을 위한 사용자 서비스 추가
+    private final UserService userService;
+    private final UserRepository userRepository; // DB 연동을 위한 사용자 레포지토리 추가
 
     @GetMapping("/callback")
     public ResponseEntity<?> callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
@@ -36,14 +40,27 @@ public class KakaoLoginController {
             KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
 
             // 3. 회원가입 또는 로그인 처리
+            KakaoUser user;
             if (userService.isNewUser(userInfo.getId())) {
                 userService.registerNewUser(userInfo); // 신규 회원 가입 로직
+                // 새 사용자 생성
+                user = new KakaoUser(
+                        userInfo.getId(),
+                        userInfo.getKakaoAccount().getProfile().getNickName(), // 닉네임 추출
+                        userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
+                        LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
+                );
+                userRepository.save(user);  // 사용자 저장
             } else {
-                userService.loginUser(userInfo); // 기존 사용자 로그인 로직
+                // 기존 사용자 검색
+                KakaoUser existingUser = userRepository.findByKakaoId(userInfo.getId());
+                existingUser.updateLastLoginTime(LocalDateTime.now());
+                user = existingUser;  // 기존 사용자로 설정
+                userRepository.save(existingUser);  // 업데이트된 사용자 저장
             }
 
             // 4. JWT 생성
-            String jwtToken = jwtService.generateToken(String.valueOf(userInfo.getId()));
+            String jwtToken = jwtService.generateToken(user);  // 생성된 또는 업데이트된 사용자로 JWT 생성
 
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
@@ -62,5 +79,8 @@ public class KakaoLoginController {
         }
     }
 }
+
+
+
 
 

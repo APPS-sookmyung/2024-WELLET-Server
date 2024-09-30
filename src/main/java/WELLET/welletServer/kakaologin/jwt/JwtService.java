@@ -3,6 +3,7 @@ package WELLET.welletServer.kakaologin.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import WELLET.welletServer.kakaologin.domain.KakaoUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,31 +25,34 @@ public class JwtService {
         this.expirationTime = expirationTime;
     }
 
-    // JWT 토큰 생성
-    public String generateToken(Map<String, Object> claims, String subject) {
+    // JWT 토큰 생성 - 사용자 정보를 포함
+    public String generateToken(KakaoUser user) {  // User 객체를 받아 사용자 정보 추가
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getKakaoId());  // 사용자 ID
+        claims.put("nickname", user.getNickname());  // 사용자 닉네임
+        claims.put("role", "USER");  // 기본 클레임
+
+        // subject로 kakaoId 사용
+        return generateToken(claims, String.valueOf(user.getKakaoId()));
+    }
+
+    // JWT 토큰 생성 - 클레임과 subject를 받아 토큰 생성
+    private String generateToken(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
 
-        // 클레임에 모든 정보를 넣음
         claims.put("sub", subject);  // 주체 (subject)
         claims.put("iat", new Date(now));  // 발행 시간 (issuedAt)
         claims.put("exp", new Date(now + expirationTime));  // 만료 시간 (expiration)
 
         return Jwts.builder()
-                .addClaims(claims)  // 클레임을 직접 추가
+                .addClaims(claims)  // 클레임을 추가
                 .signWith(SignatureAlgorithm.HS512, secretKey)  // 서명 알고리즘 및 서명 키
                 .compact();
     }
 
-    // 사용자 정보로부터 JWT 생성
-    public String generateToken(String userId) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", "USER");  // 기본 클레임
-        return generateToken(claims, userId);
-    }
-
     // JWT에서 사용자 정보 추출
     public String extractUserId(String token) {
-        return extractAllClaims(token).getSubject();
+        return extractAllClaims(token).get("id", String.class);  // 클레임에서 사용자 ID 추출
     }
 
     // JWT에서 모든 클레임 정보 추출
@@ -64,5 +68,6 @@ public class JwtService {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 }
+
 
 
