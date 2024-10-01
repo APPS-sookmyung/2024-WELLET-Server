@@ -62,5 +62,4 @@ tasks.named('test') {
 
 repositories {
 	mavenCentral()
-	jcenter() // 필요한 경우 다른 저장소
 }
