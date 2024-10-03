@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "cardimage")
+@Table(name = "card_image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardImage {
     @Id
-    @Column(name = "image_id")
+    @Column(name = "card_image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
