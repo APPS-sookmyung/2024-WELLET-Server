@@ -32,14 +32,12 @@ public class Member extends BaseTimeEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-//    private String profile_image;
 
     @Builder
     public Member(String username, String nickname, String password) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
-//        this.profile_image = profile_image;
     }
 
     public void updateMember(MemberUpdateDto dto) {

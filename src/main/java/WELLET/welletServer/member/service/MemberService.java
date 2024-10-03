@@ -1,5 +1,6 @@
 package WELLET.welletServer.member.service;
 
+import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final S3FileUploader s3FileUploader;
     @Transactional
     public long saveMember (MemberSaveDto dto) {
         // Username 중복 체크
@@ -36,7 +39,6 @@ public class MemberService {
                 .build();
 
         return memberRepository.save(member).getId();
-
     }
 
     @Transactional

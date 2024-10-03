@@ -4,6 +4,8 @@ import WELLET.welletServer.card.domain.Card;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
@@ -16,6 +18,8 @@ public class MyCardUpdateDto {
     @Schema(description = "유선전화", example = "02-111-1111") private String tel;
     @Schema(description = "주소", example = "서울시 00동 00구") private String address;
 
+    @Schema(description = "프로필 이미지") private MultipartFile profile_Img;
+
     public static MyCardUpdateDto toCardUpdateDto(Card card) {
         return MyCardUpdateDto.builder()
                 .name(card.getName())
@@ -26,7 +30,6 @@ public class MyCardUpdateDto {
                 .tel(card.getTel())
                 .address(card.getAddress())
                 .build();
-
     }
 }
 

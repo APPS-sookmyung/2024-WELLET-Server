@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.domain.CardImage;
 import WELLET.welletServer.card.dto.CardCountResponseDto;
 import WELLET.welletServer.card.dto.CardResponse;
 import WELLET.welletServer.card.dto.CardSaveDto;
@@ -21,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -43,15 +43,15 @@ public class CardController {
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
     })
-    public CardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @RequestBody CardSaveDto dto) {
+    public CardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @ModelAttribute CardSaveDto dto) {
         Member member = memberService.findMember(memberId);
         if (dto.getCategoryName() == null) {
             throw new CardException(CardErrorCode.CATEGORY_NOT_SELECTED);
         }
-
         Category category = categoryService.findByName(dto.getCategoryName());
         Card card = cardService.saveCard(member, category, dto);
-        return CardResponse.toCardDto(card, dto.getCategoryName());
+        CardImage cardImage = cardService.saveCardImage(card, dto);
+        return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 
     @GetMapping("/{member_id}")
@@ -90,9 +90,12 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardUpdateDto updateCard(@PathVariable Long card_id, @Valid @RequestBody CardUpdateDto dto) {
-        return cardService.updateCard(card_id, dto);
+    public CardResponse updateCard(@PathVariable Long card_id, @Valid @ModelAttribute CardUpdateDto dto) {
+        Card card = cardService.updateCard(card_id, dto);
+        CardImage cardImage = cardService.updateCardImage(card, dto);
+        return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
+
 
     @DeleteMapping("/{card_id}")
     @Operation(summary = "명함 삭제")
@@ -160,6 +163,4 @@ public class CardController {
         Category category = categoryService.findById(categoryId);
         return cardService.findByCategory(member, category);
     }
-
-
 }
