@@ -1,5 +1,6 @@
 package WELLET.welletServer.member.controller;
 
+import WELLET.welletServer.member.dto.MemberListDto;
 import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.service.MemberService;
@@ -42,5 +43,14 @@ public class MemberController {
     )
     public MemberUpdateDto updateMember(@PathVariable(name = "member_id") Long member_id, @Valid @RequestBody MemberUpdateDto dto) {
         return memberService.updateMember(member_id, dto);
+    }
+
+    @GetMapping
+    @Operation(summary = "회원 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 목록 조회에 성공하였습니다."),
+    })
+    public MemberListDto findMemberList() {
+        return memberService.findMemberList();
     }
 }
