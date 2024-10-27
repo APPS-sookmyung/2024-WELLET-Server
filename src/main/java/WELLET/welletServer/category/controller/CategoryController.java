@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories/{member_id}")
+@RequestMapping("/categories/{memberId}")
 @RequiredArgsConstructor
 @Tag(name = "그룹", description = "Category API")
 public class CategoryController {
@@ -38,15 +38,15 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "이미 존재하는 그룹입니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
+            @Parameter(name = "memberId", description = "공백 X", example = "1"),
     })
-    public String create(@PathVariable Long member_id, @Valid @RequestBody CategorySaveDto categorySaveDto) {
-        Member member = memberService.findMember(member_id);
+    public String create(@PathVariable Long memberId, @Valid @RequestBody CategorySaveDto categorySaveDto) {
+        Member member = memberService.findMember(memberId);
         long CategoryId = categoryService.saveCategory(member, categorySaveDto);
         return "그룹 생성에 성공하였습니다. 그룹 id : " + CategoryId;
     }
 
-    @PutMapping("/{category_id}")
+    @PutMapping("/{categoryId}")
     @Operation(summary = "그룹 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "그룹 수정에 성공하였습니다"),
@@ -54,15 +54,15 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
+            @Parameter(name = "memberId", description = "공백 X", example = "1"),
+            @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
-    public CategoryUpdateDto updateCategory(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
-        memberService.findMember(member_id); // 인가 서비스를 위함
+    public CategoryUpdateDto updateCategory(@PathVariable Long memberId, @PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
+        memberService.findMember(memberId); // 인가 서비스를 위함
         return categoryService.updateCategory(categoryId, dto);
     }
 
-    @DeleteMapping("/{category_id}")
+    @DeleteMapping("/{categoryId}")
     @Operation(summary = "그룹 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "그룹 삭제에 성공하였습니다"),
@@ -70,11 +70,11 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
+            @Parameter(name = "memberId", description = "공백 X", example = "1"),
+            @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
-    public String deleteCategory(@PathVariable Long member_id, @PathVariable(name = "category_id") Long categoryId) {
-        Member member = memberService.findMember(member_id);
+    public String deleteCategory(@PathVariable Long memberId, @PathVariable Long categoryId) {
+        Member member = memberService.findMember(memberId);
         Category category = categoryService.findById(categoryId);
 
         List<Card> cardList = cardService.findCategoryReturnCard(member, category);
@@ -89,10 +89,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
+            @Parameter(name = "memberId", description = "공백 X", example = "1"),
     })
-    public List<CategoryListName> findAllNames(@PathVariable Long member_id) {
-        Member member = memberService.findMember(member_id);
+    public List<CategoryListName> findAllNames(@PathVariable Long memberId) {
+        Member member = memberService.findMember(memberId);
         return categoryService.findAllName(member);
     }
 }
