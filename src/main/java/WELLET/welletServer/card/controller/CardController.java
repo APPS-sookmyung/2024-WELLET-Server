@@ -54,18 +54,18 @@ public class CardController {
         return CardResponse.toCardDto(card, dto.getCategoryName());
     }
 
-    @GetMapping("/{member_id}")
-    @Operation(summary = "전체 명함 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 전체 조회에 성공하였습니다."),
-    })
-    @Parameters({
-            @Parameter(name = "member_id", example = "1"),
-    })
-    public CardCountResponseDto findAllCards(@PathVariable Long member_id) {
-        Member member = memberService.findMember(member_id);
-        return cardService.findAllCard(member);
-    }
+//    @GetMapping("/{member_id}")
+//    @Operation(summary = "전체 명함 조회")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "명함 전체 조회에 성공하였습니다."),
+//    })
+//    @Parameters({
+//            @Parameter(name = "member_id", example = "1"),
+//    })
+//    public CardCountResponseDto findAllCards(@PathVariable Long member_id) {
+//        Member member = memberService.findMember(member_id);
+//        return cardService.findAllCard(member);
+//    }
 
     @GetMapping("/{member_id}/{card_id}")
     @Operation(summary = "명함 단건 조회")
@@ -122,7 +122,7 @@ public class CardController {
         return "명함 동시 삭제에 성공하였습니다. 명함 id : " + cards_id;
     }
 
-    @GetMapping("/{member_id}/search")
+    @GetMapping("/{member_id}")
     @Operation(summary = "명함 검색")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
