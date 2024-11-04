@@ -12,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class MyCardUpdateDto {
     @Schema(description = "이름", example = "수정") private String name;
     @Schema(description = "회사", example = "WELLET") private String company;
-    @Schema(description = "직책/부서", example = "Web Engineer / 팀장") private String role;
+    @Schema(description = "직책", example = "Web Engineer / 팀장") private String position;
+    @Schema(description = "부서", example = "개발팀") private String department;
     @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
     @Schema(description = "이메일", example = "ajung7038@naver.com") private String email;
     @Schema(description = "유선전화", example = "02-111-1111") private String tel;
@@ -24,7 +25,8 @@ public class MyCardUpdateDto {
         return MyCardUpdateDto.builder()
                 .name(card.getName())
                 .company(card.getCompany())
-                .role(card.getRole())
+                .position(card.getPosition())
+                .department(card.getDepartment())
                 .phone(card.getPhone())
                 .email(card.getEmail())
                 .tel(card.getTel())

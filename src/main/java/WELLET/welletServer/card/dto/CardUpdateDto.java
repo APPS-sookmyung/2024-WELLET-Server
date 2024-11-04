@@ -19,7 +19,8 @@ public class CardUpdateDto {
     @NotBlank @Schema(description = "회사", example = "WELLET Corp.")
     private String company;
 
-    @Schema(description = "직책/부서", example = "백엔드 개발자/팀장") private String role;
+    @Schema(description = "직책", example = "백엔드 개발자/팀장") private String position;
+    @Schema(description = "부서", example = "개발팀") private String department;
     @NotBlank @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
 
     @Schema(description = "이메일", example = "ajung7038@naver.com")
@@ -40,7 +41,8 @@ public class CardUpdateDto {
         return CardUpdateDto.builder()
                 .name(card.getName())
                 .company(card.getCompany())
-                .role(card.getRole())
+                .position(card.getPosition())
+                .department(card.getDepartment())
                 .phone(card.getPhone())
                 .email(card.getEmail())
                 .tel(card.getTel())

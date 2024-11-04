@@ -14,7 +14,8 @@ public class CardSaveDto {
     @NotBlank @Schema(description = "회사", example = "WELLET Corp.")
     private String company;
 
-    @Schema(description = "직책/부서", example = "백엔드 개발자/팀장") private String role;
+    @Schema(description = "직책", example = "백엔드 개발자/팀장") private String position;
+    @Schema(description = "부서", example = "개발팀") private String department;
     @NotBlank @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
 
     @Schema(description = "이메일", example = "ajung7038@naver.com")
@@ -32,10 +33,11 @@ public class CardSaveDto {
     @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
 
     @Builder
-    public CardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, String memo, MultipartFile profImg, MultipartFile frontImg, MultipartFile backImg, String categoryName ) {
+    public CardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, MultipartFile profImg, MultipartFile frontImg, MultipartFile backImg, String categoryName) {
         this.name = name;
         this.company = company;
-        this.role = role;
+        this.position = position;
+        this.department = department;
         this.phone = phone;
         this.email = email;
         this.tel = tel;
