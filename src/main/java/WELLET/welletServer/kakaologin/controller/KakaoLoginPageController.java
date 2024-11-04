@@ -1,33 +1,37 @@
 package WELLET.welletServer.kakaologin.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import java.net.URI;
+import org.springframework.http.HttpHeaders;
+
+@Controller
 @RequestMapping("/auth/kakao/callback")
 public class KakaoLoginPageController {
 
-    @Value("${kakao.client_id}")
-    private String client_id;
+    // .env에서 client_id와 redirect_uri 값을 불러오기
+    @Value("${KAKAO_CLIENT_ID}")
+    private String clientId;
 
-    @Value("${kakao.redirect_uri}")
-    private String redirect_uri;
+    @Value("${KAKAO_REDIRECT_URI}")
+    private String redirectUri;
 
     @GetMapping("/page")
-    public String loginPage(Model model) {
-        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+client_id+"&redirect_uri="+redirect_uri;
-        model.addAttribute("location", location);
+    public ResponseEntity<Void> loginPage() {
+        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code"
+                + "&client_id=" + clientId
+                + "&redirect_uri=" + redirectUri;
+        URI uri = URI.create(location);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uri);
 
-        return "login";
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 }
 
-// https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=856122255feeea21d537c0225f6c658a&redirect_uri=https://localhost:8080/auth/kakao/callback  SSL 인증서 필요
-
-// https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=856122255feeea21d537c0225f6c658a&redirect_uri=https://5685-59-15-81-194.ngrok-free.app/auth/kakao/callback 로컬 서버 ngrok 사용
-
-// https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=856122255feeea21d537c0225f6c658a&redirect_uri=http://localhost:8080/auth/kakao/callback
+// SSL 인증서 필요
