@@ -41,3 +41,5 @@ out/
 application.yml
 
 .env
+
+welletOcrKey.json

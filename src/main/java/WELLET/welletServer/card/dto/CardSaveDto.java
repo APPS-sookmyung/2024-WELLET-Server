@@ -2,12 +2,8 @@ package WELLET.welletServer.card.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,7 +14,8 @@ public class CardSaveDto {
     @NotBlank @Schema(description = "회사", example = "WELLET Corp.")
     private String company;
 
-    @Schema(description = "직책/부서", example = "백엔드 개발자/팀장") private String role;
+    @Schema(description = "직책", example = "백엔드 개발자/팀장") private String position;
+    @Schema(description = "부서", example = "개발팀") private String department;
     @NotBlank @Schema(description = "휴대폰", example = "010-1111-2222") private String phone;
 
     @Schema(description = "이메일", example = "ajung7038@naver.com")
@@ -29,19 +26,26 @@ public class CardSaveDto {
     @Schema(description = "주소", example = "서울특별시 용산구 청파로 47길 100(청파동 2가)") private String address;
     @Schema(description = "메모", example = "메모") private String memo;
 
-    @Schema(description = "그룹", example = "[\"비즈니스\"]")
-    private List<String> categoryNames;
+    @Schema(description = "그룹", example = "비즈니스") private String categoryName;
+
+    @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
+    @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
+    @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
 
     @Builder
-    public CardSaveDto(String name, String company, String role, String phone, String email, String tel, String address, String memo, List<String> categoryNames) {
+    public CardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, MultipartFile profImg, MultipartFile frontImg, MultipartFile backImg, String categoryName) {
         this.name = name;
         this.company = company;
-        this.role = role;
+        this.position = position;
+        this.department = department;
         this.phone = phone;
         this.email = email;
         this.tel = tel;
         this.address = address;
         this.memo = memo;
-        this.categoryNames = categoryNames;
+        this.categoryName = categoryName;
+        this.profImg = profImg;
+        this.frontImg = frontImg;
+        this.backImg = backImg;
     }
 }

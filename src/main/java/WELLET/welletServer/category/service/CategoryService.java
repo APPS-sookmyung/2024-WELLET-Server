@@ -1,15 +1,11 @@
 package WELLET.welletServer.category.service;
 
-import WELLET.welletServer.category.dto.CategoryCardListResponse;
+import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.category.dto.*;
 import WELLET.welletServer.category.domain.Category;
-import WELLET.welletServer.category.dto.CategoryCountResponse;
-import WELLET.welletServer.categoryCard.domain.CategoryCard;
-import WELLET.welletServer.category.dto.CategorySaveDto;
-import WELLET.welletServer.category.dto.CategoryUpdateDto;
 import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
-import WELLET.welletServer.categoryCard.repository.CategoryCardRepository;
 import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -25,7 +21,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryCardRepository categoryCardRepository;
 
     @Transactional
     public long saveCategory (Member member, CategorySaveDto dto) {
@@ -41,47 +36,41 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryUpdateDto updateCategory(Category category, CategoryUpdateDto dto) {
+    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
+        Category category = findById(categoryId);
+        categoryRepository.findByName(dto.getName())
+                .ifPresent(e -> {
+                    throw new CategoryException(CategoryErrorCode.CATEGORY_DUPLICATE);
+                });
+
         category.updateCategory(dto);
         return CategoryUpdateDto.toCategoryUpdateDto(category);
     }
 
     @Transactional
-    public void deleteCategory(Category category) {
-        categoryCardRepository.deleteByCategory(category);
+    public void deleteCategory(Category category, List<Card> cardList) {
+        if (cardList != null && !cardList.isEmpty()) {
+            cardList.forEach(Card::updateCategoryWithNull);
+        }
+
         categoryRepository.delete(category);
     }
 
-    public CategoryCountResponse findCardsByIds(Long memberId, Long categoryId) {
-        categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-
-        List<CategoryCardListResponse> responses = categoryRepository.findCardsByIds(memberId, categoryId).stream()
-                .map(CategoryCardListResponse::toCategoryList)
-                .toList();
-
-        return new CategoryCountResponse(responses.size(), responses);
-    }
-
-    public List<String> findAllName(Member member) {
+    public List<CategoryListName> findAllName(Member member) {
         List<Category> categories = categoryRepository.findByMember(member);
-        return categories.stream()
-                .map(Category::getName)
-                .collect(Collectors.toList());
-    }
 
-    public List<Category> findCategoryNames(Member member, List<String> categoryNames) {
-        return categoryNames.stream()
-                .map(name -> categoryRepository.findByMemberAndName(member, name)
-                        .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)))
-                .collect(Collectors.toList());
+        return categories.stream()
+                .map(CategoryListName::toCategoryList)
+                .toList();
     }
 
     public Category findById(Long categoryId) {
-        if (categoryId == null || categoryId <= 0) {
-            throw new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND);
-        }
         return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    public Category findByName(String name){
+        return categoryRepository.findByName(name)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 }

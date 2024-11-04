@@ -1,5 +1,5 @@
 # github repository actions 페이지에 나타날 이름
-name: OUTFOOT CI/CD (Docker Image)
+name: WELLET CI/CD (Docker Image)
 
 # event trigger
 on:
