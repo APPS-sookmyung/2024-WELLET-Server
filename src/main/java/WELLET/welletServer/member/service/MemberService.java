@@ -2,6 +2,8 @@ package WELLET.welletServer.member.service;
 
 import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.dto.MemberDto;
+import WELLET.welletServer.member.dto.MemberListDto;
 import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.exception.MemberErrorCode;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -52,5 +56,14 @@ public class MemberService {
     public Member findMember(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public MemberListDto findMemberList() {
+
+        List<MemberDto> members = new ArrayList<>();
+        for (Member member : memberRepository.findAll()) {
+            members.add(MemberDto.toMemberDto(member));
+        }
+        return MemberListDto.toMemberList(members.size(), members);
     }
 }
