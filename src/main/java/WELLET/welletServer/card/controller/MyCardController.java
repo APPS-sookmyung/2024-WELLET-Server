@@ -14,7 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/me/{memberId}")
@@ -25,7 +27,7 @@ public class MyCardController {
     private final MyCardService myCardService;
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "내 명함 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 추가에 성공하였습니다."),
@@ -35,8 +37,9 @@ public class MyCardController {
     @Parameters({
             @Parameter(name = "memberId", example = "1"),
     })
-    public MyCardResponse create(@PathVariable Long memberId, @Valid @RequestBody MyCardSaveDto dto) {
+    public MyCardResponse create(@PathVariable Long memberId, @Valid @ModelAttribute MyCardSaveDto dto) throws IOException{
         memberService.findMember(memberId);
+
         Card card = myCardService.saveCard(memberId, dto);
         return MyCardResponse.toCardDto(card);
     }
@@ -65,9 +68,9 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public MyCardUpdateDto updateMyCard(@PathVariable Long memberId, @Valid @RequestBody MyCardUpdateDto dto) {
-        memberService.findMember(memberId);
-        return myCardService.updateMyCard(memberId, dto);
+    public MyCardResponse updateMyCard(@PathVariable Long memberId, @Valid @ModelAttribute MyCardUpdateDto dto) {
+        memberService.findMember(member_id);
+        return myCardService.updateMyCard(member_id, dto);
     }
 
     @DeleteMapping
