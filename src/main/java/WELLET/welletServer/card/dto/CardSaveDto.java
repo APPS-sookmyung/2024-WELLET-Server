@@ -2,10 +2,8 @@ package WELLET.welletServer.card.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,11 +26,14 @@ public class CardSaveDto {
     @Schema(description = "주소", example = "서울특별시 용산구 청파로 47길 100(청파동 2가)") private String address;
     @Schema(description = "메모", example = "메모") private String memo;
 
-    @Schema(description = "그룹", example = "비즈니스")
-    private String categoryName;
+    @Schema(description = "그룹", example = "비즈니스") private String categoryName;
+
+    @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
+    @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
+    @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
 
     @Builder
-    public CardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, String categoryName) {
+    public CardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, MultipartFile profImg, MultipartFile frontImg, MultipartFile backImg, String categoryName) {
         this.name = name;
         this.company = company;
         this.position = position;
@@ -43,5 +44,8 @@ public class CardSaveDto {
         this.address = address;
         this.memo = memo;
         this.categoryName = categoryName;
+        this.profImg = profImg;
+        this.frontImg = frontImg;
+        this.backImg = backImg;
     }
 }

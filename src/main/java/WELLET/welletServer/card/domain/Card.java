@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Getter
@@ -39,9 +40,10 @@ public class Card extends BaseTimeEntity {
     private String address;
     private String memo;
 
+    private String profImgUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_id") private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -50,7 +52,7 @@ public class Card extends BaseTimeEntity {
     private Long ownerId;
 
     @Builder
-    public Card(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId) {
+    public Card(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId, String profImgUrl) {
         this.name = name;
         this.company = company;
         this.position = position;
@@ -62,10 +64,11 @@ public class Card extends BaseTimeEntity {
         this.memo = memo;
         this.category = category;
         this.member = member;
+        this.profImgUrl = profImgUrl;
         this.ownerId = ownerId;
     }
 
-    public void updateCard(CardUpdateDto dto) {
+    public void updateCard(CardUpdateDto dto, String profImgUrl) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.position = dto.getPosition();
@@ -75,9 +78,10 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
+        this.profImgUrl = profImgUrl;
     }
 
-    public void updateCard(MyCardUpdateDto dto) {
+    public void updateCard(MyCardUpdateDto dto, String profImgUrl) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.position = dto.getPosition();
@@ -86,6 +90,7 @@ public class Card extends BaseTimeEntity {
         this.email = dto.getEmail();
         this.tel = dto.getTel();
         this.address = dto.getAddress();
+        this.profImgUrl = profImgUrl;
     }
 
     public void updateCategoryWithNull() {

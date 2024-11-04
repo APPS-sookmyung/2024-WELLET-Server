@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -27,6 +28,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
     public String create(@Valid @RequestBody MemberSaveDto memberSaveDto) {
+
         long memberId = memberService.saveMember(memberSaveDto);
         return "회원 저장에 성공하였습니다. 회원 id: " + memberId;
     }
