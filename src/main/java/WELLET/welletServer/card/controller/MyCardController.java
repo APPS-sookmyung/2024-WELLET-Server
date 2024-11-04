@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/me/{member_id}")
+@RequestMapping("/me/{memberId}")
 @RequiredArgsConstructor
 @Tag(name = "명함", description = "My Card API")
 public class MyCardController {
@@ -35,9 +35,9 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
+            @Parameter(name = "memberId", example = "1"),
     })
-    public MyCardResponse create(@PathVariable(name = "member_id") Long memberId, @Valid @ModelAttribute MyCardSaveDto dto) throws IOException{
+    public MyCardResponse create(@PathVariable Long memberId, @Valid @ModelAttribute MyCardSaveDto dto) throws IOException{
         memberService.findMember(memberId);
 
         Card card = myCardService.saveCard(memberId, dto);
@@ -51,9 +51,9 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
+            @Parameter(name = "memberId", example = "1"),
     })
-    public MyCardResponse findMyCard(@PathVariable(name = "member_id") Long memberId) {
+    public MyCardResponse findMyCard(@PathVariable Long memberId) {
         memberService.findMember(memberId);
         return myCardService.findMyCard(memberId);
     }
@@ -61,14 +61,14 @@ public class MyCardController {
     @PutMapping
     @Operation(summary = "내 명함 수정")
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
+            @Parameter(name = "memberId", example = "1"),
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public MyCardResponse updateMyCard(@PathVariable Long member_id, @Valid @ModelAttribute MyCardUpdateDto dto) {
+    public MyCardResponse updateMyCard(@PathVariable Long memberId, @Valid @ModelAttribute MyCardUpdateDto dto) {
         memberService.findMember(member_id);
         return myCardService.updateMyCard(member_id, dto);
     }
@@ -76,16 +76,16 @@ public class MyCardController {
     @DeleteMapping
     @Operation(summary = "내 명함 삭제")
     @Parameters({
-            @Parameter(name = "member_id", example = "1"),
+            @Parameter(name = "memberId", example = "1"),
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public String deleteMyCard(@PathVariable Long member_id) {
-        memberService.findMember(member_id);
-        myCardService.deleteMyCard(member_id);
+    public String deleteMyCard(@PathVariable Long memberId) {
+        memberService.findMember(memberId);
+        myCardService.deleteMyCard(memberId);
         return "내 명함 삭제에 성공하였습니다.";
     }
 }
