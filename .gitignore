@@ -40,5 +40,6 @@ out/
 .vscode/
 application.yml
 
+.env
 
 welletOcrKey.json
