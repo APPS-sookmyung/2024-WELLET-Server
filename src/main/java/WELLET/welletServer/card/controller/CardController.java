@@ -91,7 +91,7 @@ public class CardController {
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
     public CardResponse updateCard(@PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
-        Card card = cardService.updateCard(card_id, dto);
+        Card card = cardService.updateCard(cardId, dto);
         CardImage cardImage = cardService.updateCardImage(card, dto);
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
