@@ -73,11 +73,11 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        if (dto.getProfile_Img() != null) {
+        if (dto.getProfileImg() != null) {
             if (card.getProfImgUrl() != null) {
                 s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
             }
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfile_Img(), "profile_image");
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfileImg(), "profile_image");
         }
         card.updateCard(dto, newProfImgUrl);
         return MyCardResponse.toCardDto(card);
@@ -88,6 +88,8 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(memberId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
         cardRepository.delete(card);
-        s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+        if (card.getProfImgUrl() != null) {
+            s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+        }
     }
 }
