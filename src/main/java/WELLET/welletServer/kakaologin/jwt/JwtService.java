@@ -1,9 +1,13 @@
 package WELLET.welletServer.kakaologin.jwt;
 
+import WELLET.welletServer.member.exception.MemberErrorCode;
+import WELLET.welletServer.member.exception.MemberException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import WELLET.welletServer.kakaologin.domain.KakaoUser;
+import jakarta.security.auth.message.AuthException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +52,20 @@ public class JwtService {
                 .addClaims(claims)  // 클레임을 추가
                 .signWith(SignatureAlgorithm.HS512, secretKey)  // 서명 알고리즘 및 서명 키
                 .compact();
+    }
+
+    // JWT 헤더에서 토큰을 가져오는 메소드
+    public String getTokenFromHeader(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+    }
+
+    // 토큰에서 사용자 ID 추출 메소드 추가
+    public String getUsernameFromToken(String token) {
+        return extractUserId(token);
     }
 
     // JWT에서 사용자 정보 추출

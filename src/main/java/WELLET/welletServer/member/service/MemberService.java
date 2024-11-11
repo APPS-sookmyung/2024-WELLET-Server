@@ -9,17 +9,17 @@ import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.exception.MemberErrorCode;
 import WELLET.welletServer.member.exception.MemberException;
 import WELLET.welletServer.member.repository.MemberRepository;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import WELLET.welletServer.kakaologin.jwt.JwtService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 
 @Slf4j
@@ -29,6 +29,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final S3FileUploader s3FileUploader;
+    private final JwtService jwtService;
     @Transactional
     public long saveMember (MemberSaveDto dto) {
         // Username 중복 체크
@@ -65,5 +66,17 @@ public class MemberService {
             members.add(MemberDto.toMemberDto(member));
         }
         return MemberListDto.toMemberList(members.size(), members);
+    }
+
+    public Member loadMember(Long member_id) {
+        return memberRepository.findById(member_id)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public Member loadMember(HttpServletRequest header){
+        String token = jwtService.getTokenFromHeader(header);
+        UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
+        return memberRepository.findByUsername(username.toString())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 }

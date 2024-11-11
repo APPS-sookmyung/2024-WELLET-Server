@@ -43,7 +43,7 @@ public class MemberController {
     @Parameters(
             @Parameter(name = "memberId", description = "공백 X", example = "1")
     )
-    public MemberUpdateDto updateMember(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateDto dto) {
+    public MemberUpdateDto updateMember(@PathVariable(value = "memberId") Long memberId, @Valid @RequestBody MemberUpdateDto dto) {
         return memberService.updateMember(memberId, dto);
     }
 
