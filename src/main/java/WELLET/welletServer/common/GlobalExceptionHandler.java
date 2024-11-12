@@ -3,6 +3,7 @@ package WELLET.welletServer.common;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.common.response.ErrorEntity;
+import WELLET.welletServer.kakaologin.exception.TokenException;
 import WELLET.welletServer.member.exception.MemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorEntity categoryNotFoundException(CategoryException e) {
         log.error("Category Not Found({})={}", e.getCode(), e.getMessage());
+        return new ErrorEntity(e.getCode().toString(), e.getMessage());
+    }
+
+    @ExceptionHandler(TokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorEntity InvalidTokenException(TokenException e) {
+        log.error("Invalid Token Exception({})={}", e.getCode(), e.getMessage());
         return new ErrorEntity(e.getCode().toString(), e.getMessage());
     }
 }

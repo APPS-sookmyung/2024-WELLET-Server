@@ -1,13 +1,10 @@
 package WELLET.welletServer.kakaologin.controller;
 
-import WELLET.welletServer.kakaologin.domain.KakaoUser;
 import WELLET.welletServer.kakaologin.dto.KakaoUserInfoResponseDto;
 import WELLET.welletServer.kakaologin.jwt.JwtService;
 import WELLET.welletServer.kakaologin.service.KakaoService;
 import WELLET.welletServer.kakaologin.service.UserService;
-import WELLET.welletServer.kakaologin.Repository.UserRepository;
 import WELLET.welletServer.member.domain.Member;
-import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.exception.MemberErrorCode;
 import WELLET.welletServer.member.exception.MemberException;
 import WELLET.welletServer.member.repository.MemberRepository;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -67,7 +63,7 @@ public class KakaoLoginController {
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
             jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
             response.addCookie(jwtCookie);

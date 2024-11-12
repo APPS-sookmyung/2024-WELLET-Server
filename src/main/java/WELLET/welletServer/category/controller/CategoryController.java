@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories/{memberId}")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 @Tag(name = "그룹", description = "Category API")
 public class CategoryController {
@@ -37,11 +38,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "이미 존재하는 그룹입니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
-    })
-    public String create(@PathVariable Long memberId, @Valid @RequestBody CategorySaveDto categorySaveDto) {
-        Member member = memberService.findMember(memberId);
+    public String create(HttpServletRequest request, @Valid @RequestBody CategorySaveDto categorySaveDto) {
+        Member member = memberService.loadMember(request);
         long CategoryId = categoryService.saveCategory(member, categorySaveDto);
         return "그룹 생성에 성공하였습니다. 그룹 id : " + CategoryId;
     }
@@ -54,11 +52,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
             @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
-    public CategoryUpdateDto updateCategory(@PathVariable Long memberId, @PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
-        memberService.findMember(memberId); // 인가 서비스를 위함
+    public CategoryUpdateDto updateCategory(HttpServletRequest request, @PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
+        memberService.loadMember(request); // 인가 서비스를 위함
         return categoryService.updateCategory(categoryId, dto);
     }
 
@@ -70,11 +67,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
             @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
-    public String deleteCategory(@PathVariable Long memberId, @PathVariable Long categoryId) {
-        Member member = memberService.findMember(memberId);
+    public String deleteCategory(HttpServletRequest request, @PathVariable Long categoryId) {
+        Member member = memberService.loadMember(request);
         Category category = categoryService.findById(categoryId);
         List<Card> cardList = cardService.findCategoryReturnCard(member, category);
         categoryService.deleteCategory(category, cardList);
@@ -86,11 +82,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "전체 그룹명 조회에 성공하였습니다"),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
-    })
-    public List<CategoryListName> findAllNames(@PathVariable Long memberId) {
-        Member member = memberService.findMember(memberId);
+    public List<CategoryListName> findAllNames(HttpServletRequest request) {
+        Member member = memberService.loadMember(request);
         return categoryService.findAllName(member);
     }
 }

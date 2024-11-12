@@ -14,8 +14,7 @@ import org.springframework.http.HttpHeaders;
 @RequestMapping("/auth/kakao/callback")
 public class KakaoLoginPageController {
 
-    // .env에서 client_id와 redirect_uri 값을 불러오기
-//    @Value("${KAKAO_CLIENT_ID}")
+    // application.yml에서 client_id와 redirect_uri 값을 불러오기
     @Value("${kakao.client_id}")
     private String clientId;
 

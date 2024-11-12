@@ -36,15 +36,12 @@ public class MemberController {
         return "회원 저장에 성공하였습니다. 회원 id: " + memberId;
     }
 
-    @PutMapping ("/{memberId}")
+    @PutMapping
     @Operation(summary = "회원 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters(
-            @Parameter(name = "memberId", description = "공백 X", example = "1")
-    )
     public MemberUpdateDto updateMember(HttpServletRequest request, @Valid @RequestBody MemberUpdateDto dto) {
         Member member = memberService.loadMember(request);
         return memberService.updateMember(member, dto);

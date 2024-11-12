@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -33,18 +34,15 @@ public class CardController {
     private final MemberService memberService;
     private final CategoryService categoryService;
 
-    @PostMapping("/{memberId}")
+    @PostMapping
     @Operation(summary = "명함 생성")
     @ApiResponses(value = {
          @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
          @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
          @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
-    public CardResponse create(@PathVariable(name = "memberId") Long memberId, @Valid @RequestBody CardSaveDto dto) {
-        Member member = memberService.findMember(memberId);
+    public CardResponse create(HttpServletRequest request, @Valid @ModelAttribute CardSaveDto dto) {
+        Member member = memberService.loadMember(request);
         if (dto.getCategoryName() == null) {
             throw new CardException(CardErrorCode.CATEGORY_NOT_SELECTED);
         }
@@ -54,20 +52,7 @@ public class CardController {
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 
-//    @GetMapping("/{member_id}")
-//    @Operation(summary = "전체 명함 조회")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "명함 전체 조회에 성공하였습니다."),
-//    })
-//    @Parameters({
-//            @Parameter(name = "member_id", example = "1"),
-//    })
-//    public CardCountResponseDto findAllCards(@PathVariable Long member_id) {
-//        Member member = memberService.findMember(member_id);
-//        return cardService.findAllCard(member);
-//    }
-
-    @GetMapping("/{memberId}/{cardId}")
+    @GetMapping("/{cardId}")
     @Operation(summary = "명함 단건 조회")
     @Parameters({
             @Parameter(name = "memberId", example = "1"),
@@ -77,8 +62,9 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 단건 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardResponse findCard(@PathVariable(name = "cardId") Long cardId) {
-        return cardService.findCard(cardId);
+    public CardResponse findCard(HttpServletRequest request, @PathVariable(name = "cardId") Long cardId) {
+        Member member = memberService.loadMember(request);
+        return cardService.findCard(member, cardId);
     }
 
     @PutMapping("/{cardId}")
@@ -90,45 +76,29 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardResponse updateCard(@PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
-        Card card = cardService.updateCard(cardId, dto);
+    public CardResponse updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
+        Member member = memberService.loadMember(request);
+
+        Card card = cardService.updateCard(member, cardId, dto);
         CardImage cardImage = cardService.updateCardImage(card, dto);
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 
-
-    @DeleteMapping("/{card_id}")
-    @Operation(summary = "명함 삭제")
-    @Parameters({
-            @Parameter(name = "cardId", example = "1"),
-    })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 삭제에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
-    })
-    public String deleteCard(@PathVariable Long cardId) {
-        cardService.deleteCard(cardId);
-        return "명함 삭제에 성공하였습니다. 명함 id : " + cardId;
-    }
-
-    @PostMapping
+    @PatchMapping
     @Operation(summary = "명함 동시 삭제")
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "X번 명함이 존재하지 않습니다."),
     })
-    public String deleteCardList(@RequestBody List<Long> cardsId) {
-        cardService.deleteCardList(cardsId);
+    public String deleteCardList(HttpServletRequest request, @RequestBody List<Long> cardsId) {
+        Member member = memberService.loadMember(request);
+        cardService.deleteCardList(member, cardsId);
         return "명함 동시 삭제에 성공하였습니다. 명함 id : " + cardsId;
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping
     @Operation(summary = "명함 검색")
     @Parameters({
-            @Parameter(name = "memberId", example = "1"),
             @Parameter(name = "keyword", example = "ajeong"),
       })
     @ApiResponses(value = {
@@ -136,18 +106,18 @@ public class CardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
       })
     public CardCountResponseDto searchCards (
-            @PathVariable Long memberId, @RequestParam(value = "keyword", required = false) String keyword) {
+            HttpServletRequest request, @RequestParam(value = "keyword", required = false) String keyword) {
 
         if (keyword == null || keyword.isEmpty()) {
-            Member member = memberService.findMember(memberId);
+            Member member = memberService.loadMember(request);
             return cardService.findAllCard(member);
         } else {
-            memberService.findMember(memberId);
+            memberService.loadMember(request);
             return cardService.searchCards(keyword);
     }}
 
 
-    @GetMapping("categories/{memberId}/{categoryId}")
+    @GetMapping("categories/{categoryId}")
     @Operation(summary = "그룹별 명함 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 조회에 성공하였습니다."),
@@ -155,11 +125,10 @@ public class CardController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
+            @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
-    public CardCountResponseDto findCardsByCategoryId(@PathVariable Long memberId, @PathVariable Long categoryId) {
-        Member member = memberService.findMember(memberId);
+    public CardCountResponseDto findCardsByCategoryId(HttpServletRequest request, @PathVariable Long categoryId) {
+        Member member = memberService.loadMember(request);
         Category category = categoryService.findById(categoryId);
         return cardService.findByCategory(member, category);
     }

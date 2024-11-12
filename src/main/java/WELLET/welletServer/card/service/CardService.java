@@ -10,6 +10,8 @@ import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.files.S3FileUploader;
 import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.exception.MemberErrorCode;
+import WELLET.welletServer.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -73,8 +75,8 @@ public class CardService {
         return new CardCountResponseDto(cardList.size(), cards);
     }
 
-    public CardResponse findCard(Long cardId) {
-        Card card = findOne(cardId);
+    public CardResponse findCard(Member member, Long cardId) {
+        Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
         String categoryName = "";
         if (card.getCategory() != null) {
@@ -84,8 +86,8 @@ public class CardService {
     }
 
     @Transactional
-    public Card updateCard(Long cardId, CardUpdateDto dto) {
-        Card card = findOne(cardId);
+    public Card updateCard(Member member, Long cardId, CardUpdateDto dto) {
+        Card card = findOne(member, cardId);
         String newProfImgUrl = null;
 
         if (dto.getProfImg() != null) {
@@ -121,9 +123,8 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteCard(Long card_id) {
-        Card card = cardRepository.findById(card_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 명함이 없습니다. id: " + card_id));
+    public void deleteCard(Member member, Long cardId) {
+        Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
         if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
             if (card.getProfImgUrl() != null) {
@@ -141,15 +142,17 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteCardList(List<Long> cardIds) {
+    public void deleteCardList(Member member, List<Long> cardIds) {
         for (Long cardId : cardIds) {
-            deleteCard(cardId);
+            deleteCard(member, cardId);
         }
     }
 
-    public Card findOne(Long cardId) {
-        return cardRepository.findById(cardId)
+    public Card findOne(Member member, Long cardId) {
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+        if (card.getMember() != member) throw new MemberException(MemberErrorCode.UNAUTHORIZED_USER);
+        return card;
     }
     public CardCountResponseDto searchCards(String keyword) {
         List<Card> cardList = cardRepository.searchCards(keyword);
