@@ -58,7 +58,7 @@ public class MyCardController {
         return myCardService.findMyCard(memberId);
     }
 
-    @PutMapping
+    @PutMapping(consumes = "multipart/form-data")
     @Operation(summary = "내 명함 수정")
     @Parameters({
             @Parameter(name = "memberId", example = "1"),
