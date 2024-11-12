@@ -38,7 +38,6 @@ public class KakaoLoginController {
     private final UserService userService;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-//    private final UserRepository userRepository; // DB 연동을 위한 사용자 레포지토리 추가
 
 
     @GetMapping("/callback")
@@ -53,7 +52,7 @@ public class KakaoLoginController {
 //            KakaoUser user;
             Member member;
             if (userService.isNewUser(userInfo.getId())) {
-                userService.registerNewUser(userInfo); // 신규 회원 가입 로직
+//                userService.registerNewUser(userInfo); // 신규 회원 가입 로직
                 // 새 사용자 생성
 //                user = new KakaoUser(
 //                        userInfo.getId(),
@@ -62,15 +61,17 @@ public class KakaoLoginController {
 //                        userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
 //                        LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
 
-                System.out.println(userInfo);
-                member = Member.builder()
-                        .username(UUID.randomUUID())
-                        .nickname(userInfo.getKakaoAccount().getProfile().getNickName())
-                        .profileImage(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
-                        .lastLoginTime(LocalDateTime.now())
-                        .build();
+//                System.out.println(userInfo);
+//                member = Member.builder()
+//                        .username(UUID.randomUUID())
+//                        .nickname(userInfo.getKakaoAccount().getProfile().getNickName())
+//                        .profileImage(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
+//                        .lastLoginTime(LocalDateTime.now())
+//                        .build();
+//
+//                memberRepository.save(member);
 
-                memberRepository.save(member);
+                member = memberService.saveMember(userInfo);
 
             } else {
                 // 기존 사용자 검색

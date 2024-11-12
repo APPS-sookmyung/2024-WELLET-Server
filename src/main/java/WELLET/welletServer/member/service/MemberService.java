@@ -48,14 +48,15 @@ public class MemberService {
     }
 
     @Transactional
-    public long saveMember (KakaoUserInfoResponseDto dto) {
+    public Member saveMember (KakaoUserInfoResponseDto dto) {
         Member member = Member.builder()
                 .kakaoId(dto.getId())
+                .username(UUID.randomUUID())
                 .nickname(dto.getKakaoAccount().getProfile().getNickName())
                 .profileImage(dto.getKakaoAccount().getProfile().getProfileImageUrl())
                 .lastLoginTime(LocalDateTime.now())  // 최초 로그인 시간 설정
                 .build();
-        return memberRepository.save(member).getId();
+        return memberRepository.save(member);
     }
 
     @Transactional
