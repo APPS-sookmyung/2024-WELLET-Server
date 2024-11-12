@@ -1,6 +1,7 @@
 package WELLET.welletServer.member.service;
 
 import WELLET.welletServer.files.S3FileUploader;
+import WELLET.welletServer.kakaologin.dto.KakaoUserInfoResponseDto;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.dto.MemberDto;
 import WELLET.welletServer.member.dto.MemberListDto;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import WELLET.welletServer.kakaologin.jwt.JwtService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,11 +40,21 @@ public class MemberService {
         }
 
         Member member = Member.builder()
-                .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .build();
 
+        return memberRepository.save(member).getId();
+    }
+
+    @Transactional
+    public long saveMember (KakaoUserInfoResponseDto dto) {
+        Member member = Member.builder()
+                .kakaoId(dto.getId())
+                .nickname(dto.getKakaoAccount().getProfile().getNickName())
+                .profileImage(dto.getKakaoAccount().getProfile().getProfileImageUrl())
+                .lastLoginTime(LocalDateTime.now())  // 최초 로그인 시간 설정
+                .build();
         return memberRepository.save(member).getId();
     }
 
@@ -74,7 +86,7 @@ public class MemberService {
     public Member loadMember(HttpServletRequest header){
         String token = jwtService.getTokenFromHeader(header);
         UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
-        return memberRepository.findByUsername(username.toString())
+        return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 }

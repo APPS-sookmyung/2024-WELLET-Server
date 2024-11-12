@@ -1,5 +1,6 @@
 package WELLET.welletServer.kakaologin.jwt;
 
+import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.exception.MemberErrorCode;
 import WELLET.welletServer.member.exception.MemberException;
 import io.jsonwebtoken.Claims;
@@ -44,7 +45,7 @@ public class JwtService {
 //    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     // JWT 토큰 생성 - 사용자 정보를 포함
-    public String generateToken(KakaoUser user) {  // User 객체를 받아 사용자 정보 추가
+    public String generateToken(Member user) {  // User 객체를 받아 사용자 정보 추가
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getKakaoId());  // 사용자 ID
         claims.put("username", user.getUsername());
@@ -89,7 +90,7 @@ public class JwtService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
-                    .get("username", String.class).toString();
+                    .get("username", String.class);
 
             log.info("유저 네임을 반환");
             log.info(username);

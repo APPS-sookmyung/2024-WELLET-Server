@@ -6,6 +6,12 @@ import WELLET.welletServer.kakaologin.jwt.JwtService;
 import WELLET.welletServer.kakaologin.service.KakaoService;
 import WELLET.welletServer.kakaologin.service.UserService;
 import WELLET.welletServer.kakaologin.Repository.UserRepository;
+import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.dto.MemberSaveDto;
+import WELLET.welletServer.member.exception.MemberErrorCode;
+import WELLET.welletServer.member.exception.MemberException;
+import WELLET.welletServer.member.repository.MemberRepository;
+import WELLET.welletServer.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +36,10 @@ public class KakaoLoginController {
     private final KakaoService kakaoService;
     private final JwtService jwtService;
     private final UserService userService;
-    private final UserRepository userRepository; // DB 연동을 위한 사용자 레포지토리 추가
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+//    private final UserRepository userRepository; // DB 연동을 위한 사용자 레포지토리 추가
+
 
     @GetMapping("/callback")
     public ResponseEntity<?> callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
@@ -41,28 +50,39 @@ public class KakaoLoginController {
             KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
 
             // 3. 회원가입 또는 로그인 처리
-            KakaoUser user;
+//            KakaoUser user;
+            Member member;
             if (userService.isNewUser(userInfo.getId())) {
                 userService.registerNewUser(userInfo); // 신규 회원 가입 로직
                 // 새 사용자 생성
-                user = new KakaoUser(
-                        userInfo.getId(),
-                        UUID.randomUUID(),
-                        userInfo.getKakaoAccount().getProfile().getNickName(), // 닉네임 추출
-                        userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
-                        LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
-                );
-                userRepository.save(user);  // 사용자 저장
+//                user = new KakaoUser(
+//                        userInfo.getId(),
+//                        UUID.randomUUID(),
+//                        userInfo.getKakaoAccount().getProfile().getNickName(), // 닉네임 추출
+//                        userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
+//                        LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
+
+                System.out.println(userInfo);
+                member = Member.builder()
+                        .username(UUID.randomUUID())
+                        .nickname(userInfo.getKakaoAccount().getProfile().getNickName())
+                        .profileImage(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
+                        .lastLoginTime(LocalDateTime.now())
+                        .build();
+
+                memberRepository.save(member);
+
             } else {
                 // 기존 사용자 검색
-                KakaoUser existingUser = userRepository.findByKakaoId(userInfo.getId());
+                Member existingUser = memberRepository.findByKakaoId(userInfo.getId())
+                        .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
                 existingUser.updateLastLoginTime(LocalDateTime.now());
-                user = existingUser;  // 기존 사용자로 설정
-                userRepository.save(existingUser);  // 업데이트된 사용자 저장
+                member = existingUser;  // 기존 사용자로 설정
+//                memberRepository.save(existingUser);  // 업데이트된 사용자 저장
             }
 
             // 4. JWT 생성
-            String jwtToken = jwtService.generateToken(user);  // 생성된 또는 업데이트된 사용자로 JWT 생성
+            String jwtToken = jwtService.generateToken(member);  // 생성된 또는 업데이트된 사용자로 JWT 생성
 
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
