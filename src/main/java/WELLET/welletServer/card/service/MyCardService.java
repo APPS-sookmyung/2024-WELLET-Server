@@ -3,13 +3,13 @@ package WELLET.welletServer.card.service;
 import WELLET.welletServer.card.Repository.CardImageRepository;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.domain.CardImage;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.files.S3FileUploader;
+import WELLET.welletServer.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,11 @@ public class MyCardService {
     private final CardImageRepository cardImageRepository;
 
     @Transactional
-    public Card saveCard (Long memberId, MyCardSaveDto dto) {
+    public Card saveCard (Member member, MyCardSaveDto dto) {
         String profileImageUrl = null;
 
-        cardRepository.findByOwnerId(memberId).ifPresent(e -> {
+
+        cardRepository.findByOwnerId(member.getId()).ifPresent(e -> {
             throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
         });
         if (dto.getProfImg() != null) {
@@ -49,14 +50,14 @@ public class MyCardService {
 //                .frontImgUrl(dto.getFrontImgUrl())
 //                .backImgUrl(dto.getBackImgUrl())
                 .profImgUrl(profileImageUrl)
-                .ownerId(memberId)
+                .ownerId(member.getId())
                 .build();
 
         return cardRepository.save(card);
     }
 
-    public MyCardResponse findMyCard(Long memberId) {
-        Card card = cardRepository.findByOwnerId(memberId)
+    public MyCardResponse findMyCard(Member member) {
+        Card card = cardRepository.findByOwnerId(member.getId())
                 .orElse(null);
 
         if (card == null) {
@@ -67,10 +68,10 @@ public class MyCardService {
     }
 
     @Transactional
-    public MyCardResponse updateMyCard(Long memberId, MyCardUpdateDto dto) {
+    public MyCardResponse updateMyCard(Member member, MyCardUpdateDto dto) {
         String newProfImgUrl = null;
 
-        Card card = cardRepository.findByOwnerId(memberId)
+        Card card = cardRepository.findByOwnerId(member.getId())
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
         if (dto.getProfileImg() != null) {
@@ -84,8 +85,8 @@ public class MyCardService {
     }
 
     @Transactional
-    public void deleteMyCard(Long memberId) {
-        Card card = cardRepository.findByOwnerId(memberId)
+    public void deleteMyCard(Member member) {
+        Card card = cardRepository.findByOwnerId(member.getId())
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
         cardRepository.delete(card);
         if (card.getProfImgUrl() != null) {
