@@ -1,5 +1,6 @@
 package WELLET.welletServer.member.controller;
 
+import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.dto.MemberListDto;
 import WELLET.welletServer.member.dto.MemberSaveDto;
 import WELLET.welletServer.member.dto.MemberUpdateDto;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +45,9 @@ public class MemberController {
     @Parameters(
             @Parameter(name = "memberId", description = "공백 X", example = "1")
     )
-    public MemberUpdateDto updateMember(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateDto dto) {
-        return memberService.updateMember(memberId, dto);
+    public MemberUpdateDto updateMember(HttpServletRequest request, @Valid @RequestBody MemberUpdateDto dto) {
+        Member member = memberService.loadMember(request);
+        return memberService.updateMember(member, dto);
     }
 
     @GetMapping

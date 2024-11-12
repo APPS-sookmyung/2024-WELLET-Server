@@ -33,7 +33,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 2. JWT가 존재하고 유효한지 확인
         if (jwtToken != null && !jwtService.isTokenExpired(jwtToken)) {
-            String userId = jwtService.extractUserId(jwtToken);
+//            String userId = jwtService.extractUserId(jwtToken);
+            jwtService.isTokenExpired(jwtToken);
+
             // 여기서 사용자 인증 로직 추가 (ex: SecurityContextHolder에 유저 정보 추가)
         }
 

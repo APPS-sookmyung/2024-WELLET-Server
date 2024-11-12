@@ -1,6 +1,7 @@
 package WELLET.welletServer.member.service;
 
 import WELLET.welletServer.files.S3FileUploader;
+import WELLET.welletServer.kakaologin.dto.KakaoUserInfoResponseDto;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.dto.MemberDto;
 import WELLET.welletServer.member.dto.MemberListDto;
@@ -9,17 +10,18 @@ import WELLET.welletServer.member.dto.MemberUpdateDto;
 import WELLET.welletServer.member.exception.MemberErrorCode;
 import WELLET.welletServer.member.exception.MemberException;
 import WELLET.welletServer.member.repository.MemberRepository;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import WELLET.welletServer.kakaologin.jwt.JwtService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 
 @Slf4j
@@ -29,6 +31,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final S3FileUploader s3FileUploader;
+    private final JwtService jwtService;
     @Transactional
     public long saveMember (MemberSaveDto dto) {
         // Username 중복 체크
@@ -37,7 +40,6 @@ public class MemberService {
         }
 
         Member member = Member.builder()
-                .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(dto.getPassword())
                 .build();
@@ -46,9 +48,19 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberUpdateDto updateMember(Long memberId, MemberUpdateDto dto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    public Member saveMember (KakaoUserInfoResponseDto dto) {
+        Member member = Member.builder()
+                .kakaoId(dto.getId())
+                .username(UUID.randomUUID())
+                .nickname(dto.getKakaoAccount().getProfile().getNickName())
+                .profileImage(dto.getKakaoAccount().getProfile().getProfileImageUrl())
+                .lastLoginTime(LocalDateTime.now())  // 최초 로그인 시간 설정
+                .build();
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public MemberUpdateDto updateMember(Member member, MemberUpdateDto dto) {
         member.updateMember(dto);
         return MemberUpdateDto.toMemberUpdateDto(member);
     }
@@ -65,5 +77,17 @@ public class MemberService {
             members.add(MemberDto.toMemberDto(member));
         }
         return MemberListDto.toMemberList(members.size(), members);
+    }
+
+    public Member loadMember(Long member_id) {
+        return memberRepository.findById(member_id)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public Member loadMember(HttpServletRequest header){
+        String token = jwtService.getTokenFromHeader(header);
+        UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 }

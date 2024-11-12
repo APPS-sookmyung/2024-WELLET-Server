@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Entity
 @Getter
 @Table(name = "member")
@@ -20,28 +23,39 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long kakaoId;
+
     @NotNull
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "username", nullable = false, unique = true)
+    private UUID username;
 
     @NotNull
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
-    @NotNull
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
+
+    private String profileImage;
+    private LocalDateTime lastLoginTime;
 
 
     @Builder
-    public Member(String username, String nickname, String password) {
+    public Member(Long kakaoId, UUID username, String nickname, String password, String profileImage, LocalDateTime lastLoginTime) {
+        this.kakaoId = kakaoId;
         this.username = username;
         this.nickname = nickname;
         this.password = password;
+        this.profileImage = profileImage;
+        this.lastLoginTime = lastLoginTime;
     }
 
+    public void updateLastLoginTime(LocalDateTime Time) {
+        this.lastLoginTime = Time;
+    }
+
+
     public void updateMember(MemberUpdateDto dto) {
-        this.username = dto.getUsername();
         this.nickname = dto.getNickname();
     }
 }
