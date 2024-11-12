@@ -47,6 +47,7 @@ public class MyCardService {
                 .tel(dto.getTel())
                 .address(dto.getAddress())
                 .profImgUrl(profileImageUrl)
+                .member(member)
                 .ownerId(member.getId())
                 .build();
 
