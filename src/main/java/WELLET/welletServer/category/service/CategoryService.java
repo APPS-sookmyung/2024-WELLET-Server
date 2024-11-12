@@ -7,6 +7,8 @@ import WELLET.welletServer.category.exception.CategoryErrorCode;
 import WELLET.welletServer.category.exception.CategoryException;
 import WELLET.welletServer.category.reponsitory.CategoryRepository;
 import WELLET.welletServer.member.domain.Member;
+import WELLET.welletServer.member.exception.MemberErrorCode;
+import WELLET.welletServer.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,9 +38,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryUpdateDto updateCategory(Long categoryId, CategoryUpdateDto dto) {
+    public CategoryUpdateDto updateCategory(Member member, Long categoryId, CategoryUpdateDto dto) {
         Category category = findById(categoryId);
-        categoryRepository.findByName(dto.getName())
+        authenticateUser(member, category);
+
+        categoryRepository.findByMemberAndName(member, dto.getName())
                 .ifPresent(e -> {
                     throw new CategoryException(CategoryErrorCode.CATEGORY_DUPLICATE);
                 });
@@ -48,7 +52,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(Category category, List<Card> cardList) {
+    public void deleteCategory(Member member, Category category, List<Card> cardList) {
+        authenticateUser(member, category);
+
         if (cardList != null && !cardList.isEmpty()) {
             cardList.forEach(Card::updateCategoryWithNull);
         }
@@ -72,5 +78,9 @@ public class CategoryService {
     public Category findByName(String name){
         return categoryRepository.findByName(name)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    private static void authenticateUser(Member member, Category category) {
+        if (!category.getMember().equals(member) ) throw new MemberException(MemberErrorCode.UNAUTHORIZED_USER);
     }
 }
