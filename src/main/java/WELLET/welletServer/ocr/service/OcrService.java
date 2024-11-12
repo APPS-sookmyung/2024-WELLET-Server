@@ -6,6 +6,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -28,11 +29,10 @@ public class OcrService {
      * @param {string} ext 확장자
      * @returns {List} 추출 text list
      */
-    public static List<String> callApi(String type, String filePath, String naver_secretKey, String ext) {
+    public static List<String> callApi(String type, String naver_secretKey, String ext, File img) {
         String apiURL = "https://y6eirqzxqo.apigw.ntruss.com/custom/v1/35874/c8dd98db253669f0dd43d0b100dbdc5711957a75cde89a38fb513a06809d4272/general";
-        String secretKey = naver_secretKey;
-        String imageFile = filePath;
         List<String> parseData = null;
+        StringBuffer response = new StringBuffer();
 
         try {
             URL url = new URL(apiURL);
@@ -44,7 +44,7 @@ public class OcrService {
             con.setRequestMethod(type);
             String boundary = "----" + UUID.randomUUID().toString().replaceAll("-", "");
             con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            con.setRequestProperty("X-OCR-SECRET", secretKey);
+            con.setRequestProperty("X-OCR-SECRET", naver_secretKey);
 
             JSONObject json = new JSONObject();
             json.put("version", "V2");
@@ -61,8 +61,7 @@ public class OcrService {
             con.connect();
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             long start = System.currentTimeMillis();
-            File file = new File(imageFile);
-            writeMultiPart(wr, postParams, file, boundary);
+            writeMultiPart(wr, postParams, img, boundary);
             wr.close();
 
             int responseCode = con.getResponseCode();
@@ -73,12 +72,12 @@ public class OcrService {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
             String inputLine;
-            StringBuffer response = new StringBuffer();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
             br.close();
 
+            System.out.println(response);
             parseData = jsonparse(response);
 
         } catch (Exception e) {
@@ -124,7 +123,7 @@ public class OcrService {
             }
 
             out.write(("--" + boundary + "--\r\n").getBytes("UTF-8"));
-        }
+        } else System.out.println("실패");
         out.flush();
     }
     /**
@@ -132,27 +131,6 @@ public class OcrService {
      * @param {StringBuffer} response 응답값
      * @returns {List} result text list
      */
-//    private static List<String> jsonparse(StringBuffer response) {
-//        List<String> result = new ArrayList<>();
-//        try {
-//            //json 파싱
-//            JSONParser jp = new JSONParser();
-//            JSONObject jobj = (JSONObject) jp.parse(response.toString());
-//            //images 배열 obj 화
-//            JSONArray JSONArrayPerson = (JSONArray) jobj.get("images");
-//            JSONObject JSONObjImage = (JSONObject) JSONArrayPerson.get(0);
-//            JSONArray s = (JSONArray) JSONObjImage.get("fields");
-//            //
-//            List<Map<String, Object>> m = JsonUtill.getListMapFromJsonArray(s);
-//            for (Map<String, Object> as : m) {
-//                result.add((String) as.get("inferText"));
-//            }
-//        }
-//        catch (net.minidev.json.parser.ParseException e) {
-//            System.out.println("JSON parsing error: " + e.getMessage());
-//        }
-//        return result;
-//    }
     private static List<String> jsonparse(StringBuffer response) {
         List<String> result = new ArrayList<>();
         try {

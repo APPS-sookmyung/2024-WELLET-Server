@@ -1,4 +1,7 @@
 package WELLET.welletServer.ocr.dto;
 import org.springframework.web.multipart.MultipartFile;
-public record OcrSaveDto(MultipartFile file) {
+
+import java.io.File;
+
+public record OcrSaveDto(File file) {
 }

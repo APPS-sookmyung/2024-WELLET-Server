@@ -9,11 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,24 @@ public class OcrController {
             @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
-    public List<String> create(@Valid @ModelAttribute OcrSaveDto dto) throws IOException {
-        String secretkey = "b3lzZ1RmbEZpR1VLcm5VQXBFVm5RYkdoZVdtSVBwbW4=";
+    public List<String> create(@RequestParam("img") MultipartFile img) throws IOException {
+        String secretKey = "b3lzZ1RmbEZpR1VLcm5VQXBFVm5RYkdoZVdtSVBwbW4=";
 
-        if (dto.file() != null && !dto.file().isEmpty()) {
-            String OCR_KEY = "ocr/";
-            String url = fileUploader.uploadFile(dto.file(), OCR_KEY);
-            return OcrService.callApi("POST", url, secretkey, "png");
+        if (img != null && !img.isEmpty()) {
+            // MultipartFile을 File로 변환
+            File file = convertMultiPartToFile(img);
+
+            // OCR 서비스 호출
+            return OcrService.callApi("POST", secretKey, "png", file);
         } else {
             return null;
         }
+    }
+
+    // MultipartFile을 java.io.File로 변환하는 헬퍼 메서드
+    private File convertMultiPartToFile(MultipartFile file) throws IOException {
+        File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
+        file.transferTo(convFile);
+        return convFile;
     }
 }
