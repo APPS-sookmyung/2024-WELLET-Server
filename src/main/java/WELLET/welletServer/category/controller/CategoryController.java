@@ -55,8 +55,8 @@ public class CategoryController {
             @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
     public CategoryUpdateDto updateCategory(HttpServletRequest request, @PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
-        memberService.loadMember(request); // 인가 서비스를 위함
-        return categoryService.updateCategory(categoryId, dto);
+        Member member = memberService.loadMember(request);// 인가 서비스를 위함
+        return categoryService.updateCategory(member, categoryId, dto);
     }
 
     @DeleteMapping("/{categoryId}")
@@ -73,7 +73,7 @@ public class CategoryController {
         Member member = memberService.loadMember(request);
         Category category = categoryService.findById(categoryId);
         List<Card> cardList = cardService.findCategoryReturnCard(member, category);
-        categoryService.deleteCategory(category, cardList);
+        categoryService.deleteCategory(member, category, cardList);
         return "그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId;
     }
     @GetMapping("/name")
