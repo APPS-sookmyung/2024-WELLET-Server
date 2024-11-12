@@ -24,7 +24,7 @@ import javax.swing.text.html.HTML;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/me/{memberId}")
+@RequestMapping("/me")
 @RequiredArgsConstructor
 @Tag(name = "명함", description = "My Card API")
 public class MyCardController {
@@ -39,9 +39,6 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "내 명함이 이미 존재합니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     public MyCardResponse create(HttpServletRequest request, @Valid @ModelAttribute MyCardSaveDto dto) throws IOException{
         Member member = memberService.loadMember(request);
 
@@ -55,9 +52,6 @@ public class MyCardController {
             @ApiResponse(responseCode = "200", description = "내 명함 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     public MyCardResponse findMyCard(HttpServletRequest request) {
         Member member = memberService.loadMember(request);
         return myCardService.findMyCard(member);
@@ -65,9 +59,6 @@ public class MyCardController {
 
     @PutMapping(consumes = "multipart/form-data")
     @Operation(summary = "내 명함 수정")
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
@@ -80,9 +71,6 @@ public class MyCardController {
 
     @DeleteMapping
     @Operation(summary = "내 명함 삭제")
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 명함 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),

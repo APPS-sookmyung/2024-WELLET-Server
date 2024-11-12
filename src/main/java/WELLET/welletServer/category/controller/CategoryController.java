@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories/{memberId}")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 @Tag(name = "그룹", description = "Category API")
 public class CategoryController {
@@ -37,9 +37,6 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "그룹 생성에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "이미 존재하는 그룹입니다."),
-    })
-    @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
     })
     public String create(HttpServletRequest request, @Valid @RequestBody CategorySaveDto categorySaveDto) {
         Member member = memberService.loadMember(request);
@@ -55,7 +52,6 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
             @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
     public CategoryUpdateDto updateCategory(HttpServletRequest request, @PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateDto dto) {
@@ -71,7 +67,6 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
             @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
     public String deleteCategory(HttpServletRequest request, @PathVariable Long categoryId) {
@@ -86,9 +81,6 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전체 그룹명 조회에 성공하였습니다"),
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
-    })
-    @Parameters({
-            @Parameter(name = "memberId", description = "공백 X", example = "1"),
     })
     public List<CategoryListName> findAllNames(HttpServletRequest request) {
         Member member = memberService.loadMember(request);
