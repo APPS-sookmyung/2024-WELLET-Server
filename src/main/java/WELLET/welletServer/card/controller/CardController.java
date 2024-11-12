@@ -34,17 +34,14 @@ public class CardController {
     private final MemberService memberService;
     private final CategoryService categoryService;
 
-    @PostMapping("/{memberId}")
+    @PostMapping
     @Operation(summary = "명함 생성")
     @ApiResponses(value = {
          @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
          @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
          @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
     })
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
-    public CardResponse create(HttpServletRequest request, @Valid @RequestBody CardSaveDto dto) {
+    public CardResponse create(HttpServletRequest request, @Valid @ModelAttribute CardSaveDto dto) {
         Member member = memberService.loadMember(request);
         if (dto.getCategoryName() == null) {
             throw new CardException(CardErrorCode.CATEGORY_NOT_SELECTED);
@@ -55,7 +52,7 @@ public class CardController {
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 
-    @GetMapping("/{memberId}/{cardId}")
+    @GetMapping("/{cardId}")
     @Operation(summary = "명함 단건 조회")
     @Parameters({
             @Parameter(name = "memberId", example = "1"),
@@ -87,26 +84,8 @@ public class CardController {
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 
-    @DeleteMapping("/{card_id}")
-    @Operation(summary = "명함 삭제")
-    @Parameters({
-            @Parameter(name = "cardId", example = "1"),
-    })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "명함 삭제에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
-    })
-    public String deleteCard(HttpServletRequest request, @PathVariable Long cardId) {
-        Member member = memberService.loadMember(request);
-        cardService.deleteCard(member, cardId);
-        return "명함 삭제에 성공하였습니다. 명함 id : " + cardId;
-    }
-
-    @PostMapping
+    @PatchMapping
     @Operation(summary = "명함 동시 삭제")
-    @Parameters({
-            @Parameter(name = "memberId", example = "1"),
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 동시 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "X번 명함이 존재하지 않습니다."),
@@ -117,10 +96,9 @@ public class CardController {
         return "명함 동시 삭제에 성공하였습니다. 명함 id : " + cardsId;
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping
     @Operation(summary = "명함 검색")
     @Parameters({
-            @Parameter(name = "memberId", example = "1"),
             @Parameter(name = "keyword", example = "ajeong"),
       })
     @ApiResponses(value = {
@@ -139,7 +117,7 @@ public class CardController {
     }}
 
 
-    @GetMapping("categories/{memberId}/{categoryId}")
+    @GetMapping("categories/{categoryId}")
     @Operation(summary = "그룹별 명함 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "명함 조회에 성공하였습니다."),
@@ -147,8 +125,7 @@ public class CardController {
             @ApiResponse(responseCode = "400", description = "그룹을 찾을 수 없습니다."),
     })
     @Parameters({
-            @Parameter(name = "member_id", description = "공백 X", example = "1"),
-            @Parameter(name = "category_id", description = "공백 X", example = "1"),
+            @Parameter(name = "categoryId", description = "공백 X", example = "1"),
     })
     public CardCountResponseDto findCardsByCategoryId(HttpServletRequest request, @PathVariable Long categoryId) {
         Member member = memberService.loadMember(request);
