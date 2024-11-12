@@ -52,34 +52,13 @@ public class KakaoLoginController {
 //            KakaoUser user;
             Member member;
             if (userService.isNewUser(userInfo.getId())) {
-//                userService.registerNewUser(userInfo); // 신규 회원 가입 로직
-                // 새 사용자 생성
-//                user = new KakaoUser(
-//                        userInfo.getId(),
-//                        UUID.randomUUID(),
-//                        userInfo.getKakaoAccount().getProfile().getNickName(), // 닉네임 추출
-//                        userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
-//                        LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
-
-//                System.out.println(userInfo);
-//                member = Member.builder()
-//                        .username(UUID.randomUUID())
-//                        .nickname(userInfo.getKakaoAccount().getProfile().getNickName())
-//                        .profileImage(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
-//                        .lastLoginTime(LocalDateTime.now())
-//                        .build();
-//
-//                memberRepository.save(member);
-
                 member = memberService.saveMember(userInfo);
-
             } else {
                 // 기존 사용자 검색
                 Member existingUser = memberRepository.findByKakaoId(userInfo.getId())
                         .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
                 existingUser.updateLastLoginTime(LocalDateTime.now());
                 member = existingUser;  // 기존 사용자로 설정
-//                memberRepository.save(existingUser);  // 업데이트된 사용자 저장
             }
 
             // 4. JWT 생성
