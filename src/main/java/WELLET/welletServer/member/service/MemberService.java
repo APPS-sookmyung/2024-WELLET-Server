@@ -47,9 +47,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberUpdateDto updateMember(Long memberId, MemberUpdateDto dto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    public MemberUpdateDto updateMember(Member member, MemberUpdateDto dto) {
         member.updateMember(dto);
         return MemberUpdateDto.toMemberUpdateDto(member);
     }
