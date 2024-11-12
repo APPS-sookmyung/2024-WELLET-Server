@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Getter
@@ -68,7 +67,7 @@ public class Card extends BaseTimeEntity {
         this.ownerId = ownerId;
     }
 
-    public void updateCard(CardUpdateDto dto, String profImgUrl) {
+    public void updateCard(CardUpdateDto dto) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.position = dto.getPosition();
@@ -78,7 +77,6 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.memo = dto.getMemo();
-        this.profImgUrl = profImgUrl;
     }
 
     public void updateCard(MyCardUpdateDto dto, String profImgUrl) {

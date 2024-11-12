@@ -54,8 +54,8 @@ public class CardService {
 
     @Transactional
     public CardImage saveCardImage (Card card, CardSaveDto dto) {
-            String frontImgUrl = dto.getFrontImg() != null ? s3FileUploader.uploadFile(dto.getFrontImg(), "front-image") : null;
-            String backImgUrl = dto.getBackImg() != null ? s3FileUploader.uploadFile(dto.getBackImg(), "back-image") : null;
+            String frontImgUrl = dto.getFrontImg() != null && !dto.getFrontImg().isEmpty() ? s3FileUploader.uploadFile(dto.getFrontImg(), "front-image") : null;
+            String backImgUrl = dto.getBackImg() != null && !dto.getBackImg().isEmpty() ? s3FileUploader.uploadFile(dto.getBackImg(), "back-image") : null;
 
             CardImage cardImage = CardImage.builder()
                     .front_img_url(frontImgUrl)
@@ -88,52 +88,55 @@ public class CardService {
     @Transactional
     public Card updateCard(Member member, Long cardId, CardUpdateDto dto) {
         Card card = findOne(member, cardId);
-        String newProfImgUrl = null;
-
-        if (dto.getProfImg() != null) {
-            if (card.getProfImgUrl() != null) {
-                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-            }
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
-        }
-        card.updateCard(dto, newProfImgUrl);
+        card.updateCard(dto);
         return card;
     }
 
     @Transactional
     public CardImage updateCardImage(Card card, CardUpdateDto dto) {
         CardImage cardImage = cardImageRepository.findByCard(card);
-        String newFrontImgUrl = null;
-        String newBackImgUrl = null;
+        String newFrontImgUrl, newBackImgUrl, newProfImgUrl;
 
-        if (dto.getFrontImg() != null) {
+        if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty()) {
             if (cardImage.getFront_img_url() != null) {
                 s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
             }
             newFrontImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front_image");
+            cardImage.updateFrontImage(newFrontImgUrl);
         }
-        if (dto.getBackImg()!= null) {
+        if (dto.getBackImg()!= null && !dto.getBackImg().isEmpty()) {
             if (cardImage.getBack_img_url() != null) {
                 s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
             }
             newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back_image");
+            cardImage.updateBackImage(newBackImgUrl);
         }
-        cardImage.updateCardImage(newFrontImgUrl, newBackImgUrl);
+        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
+            if (cardImage.getProf_img_url() != null) {
+                s3FileUploader.deleteFile(cardImage.getProf_img_url(), "front_image");
+            }
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front_image");
+            cardImage.updateProfImage(newProfImgUrl);
+        }
         return cardImage;
     }
 
     @Transactional
     public void deleteCard(Member member, Long cardId) {
         Card card = findOne(member, cardId);
+        if (card.getProfImgUrl() == null || card.getProfImgUrl().isEmpty()) {
+            cardRepository.delete(card);
+            return;
+        }
         CardImage cardImage = cardImageRepository.findByCard(card);
         if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
-            if (card.getProfImgUrl() != null) {
+            if (card.getProfImgUrl() != null && !card.getProfImgUrl().isEmpty()) {
                 s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
             }
-            if (cardImage.getFront_img_url() != null) {
+            if (cardImage.getFront_img_url() != null && !cardImage.getFront_img_url().isEmpty()) {
                 s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
             }
-            if (cardImage.getBack_img_url() != null) {
+            if (cardImage.getBack_img_url() != null && !cardImage.getBack_img_url().isEmpty()) {
                 s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
             }
         }
