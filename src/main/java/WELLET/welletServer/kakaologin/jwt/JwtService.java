@@ -47,6 +47,7 @@ public class JwtService {
     public String generateToken(KakaoUser user) {  // User 객체를 받아 사용자 정보 추가
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getKakaoId());  // 사용자 ID
+        claims.put("username", user.getUsername());
         claims.put("nickname", user.getNickname());  // 사용자 닉네임
         claims.put("role", "USER");  // 기본 클레임
 
@@ -88,7 +89,7 @@ public class JwtService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
-                    .get("username", String.class);
+                    .get("username", String.class).toString();
 
             log.info("유저 네임을 반환");
             log.info(username);

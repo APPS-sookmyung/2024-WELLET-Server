@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -46,6 +47,7 @@ public class KakaoLoginController {
                 // 새 사용자 생성
                 user = new KakaoUser(
                         userInfo.getId(),
+                        UUID.randomUUID(),
                         userInfo.getKakaoAccount().getProfile().getNickName(), // 닉네임 추출
                         userInfo.getKakaoAccount().getProfile().getProfileImageUrl(), // 프로필 이미지 추출
                         LocalDateTime.now() // 현재 시간을 마지막 로그인 시간으로 설정
