@@ -33,7 +33,7 @@ public class OcrController {
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")
     })
     public List<String> create(@RequestParam("img") MultipartFile img) throws IOException {
-        String secretKey = "b3lzZ1RmbEZpR1VLcm5VQXBFVm5RYkdoZVdtSVBwbW4=";
+        String secretKey = "R1JxTHlHTGhSdmlRTEhTdkF6a2RBTXZDakF1TklVb0k=";
 
         if (img != null && !img.isEmpty()) {
             // MultipartFile을 File로 변환

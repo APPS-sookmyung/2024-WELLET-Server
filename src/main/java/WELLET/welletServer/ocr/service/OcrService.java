@@ -30,7 +30,7 @@ public class OcrService {
      * @returns {List} 추출 text list
      */
     public static List<String> callApi(String type, String naver_secretKey, String ext, File img) {
-        String apiURL = "https://y6eirqzxqo.apigw.ntruss.com/custom/v1/35874/c8dd98db253669f0dd43d0b100dbdc5711957a75cde89a38fb513a06809d4272/general";
+        String apiURL = "https://y6eirqzxqo.apigw.ntruss.com/custom/v1/35874/c8dd98db253669f0dd43d0b100dbdc5711957a75cde89a38fb513a06809d4272/name-card";
         List<String> parseData = null;
         StringBuffer response = new StringBuffer();
 
@@ -74,6 +74,7 @@ public class OcrService {
             String inputLine;
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
+                System.out.println(inputLine); // 내가 임의로 추가함
             }
             br.close();
 
