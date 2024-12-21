@@ -37,7 +37,7 @@ public record CardResponse(
                 .address(card.getAddress())
                 .memo(card.getMemo())
                 .category(category)
-                .profImgUrl(card.getProfImgUrl())
+                .profImgUrl(cardImage != null ? cardImage.getProf_img_url() : null)
                 .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
                 .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
                 .build();

@@ -29,10 +29,6 @@ public class CardService {
 
     @Transactional
     public Card saveCard (Member member, Category category, CardSaveDto dto) {
-        String newProfImgUrl = null;
-        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
-        }
 
         Card card = Card.builder()
                 .name(dto.getName())
@@ -46,7 +42,6 @@ public class CardService {
                 .memo(dto.getMemo())
                 .member(member)
                 .category(category)
-                .profImgUrl(newProfImgUrl)
                 .build();
 
         return cardRepository.save(card);
@@ -56,12 +51,12 @@ public class CardService {
     public CardImage saveCardImage (Card card, CardSaveDto dto) {
             String frontImgUrl = dto.getFrontImg() != null && !dto.getFrontImg().isEmpty() ? s3FileUploader.uploadFile(dto.getFrontImg(), "front_image") : null;
             String backImgUrl = dto.getBackImg() != null && !dto.getBackImg().isEmpty() ? s3FileUploader.uploadFile(dto.getBackImg(), "back_image") : null;
-//            String profImgUrl = dto.getProfImg() != null && !dto.getProfImg().isEmpty() ? s3FileUploader.uploadFile(dto.getProfImg(), "prof_image") : null;
+            String profImgUrl = dto.getProfImg() != null && !dto.getProfImg().isEmpty() ? s3FileUploader.uploadFile(dto.getProfImg(), "prof_image") : null;
 
             CardImage cardImage = CardImage.builder()
                     .front_img_url(frontImgUrl)
                     .back_img_url(backImgUrl)
-//                    .prof_img_url(profImgUrl)
+                    .prof_img_url(profImgUrl)
                     .card(card)
                     .build();
             return cardImageRepository.save(cardImage);
@@ -100,8 +95,6 @@ public class CardService {
         String newFrontImgUrl, newBackImgUrl, newProfImgUrl;
 
         deleteCardImage(cardImage);
-//        cardImage.updateFrontImage(ba);
-//        card.updateCard(dto, newProfImgUrl);
 
         // 명함 이미지 (앞)
         if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty()) {
@@ -128,27 +121,7 @@ public class CardService {
     public void deleteCard(Member member, Long cardId) {
         Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
-
         deleteCardImage(cardImage);
-
-        // 이건 뭐지
-//        if (card.getProfImgUrl() == null || card.getProfImgUrl().isEmpty()) {
-//            cardRepository.delete(card);
-//            return;
-//        }
-
-//        CardImage cardImage = cardImageRepository.findByCard(card);
-//        if (card.getProfImgUrl() != null | cardImage.getFront_img_url() != null | cardImage.getBack_img_url() != null) {
-//            if (card.getProfImgUrl() != null && !card.getProfImgUrl().isEmpty()) {
-//                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-//            }
-//            if (cardImage.getFront_img_url() != null && !cardImage.getFront_img_url().isEmpty()) {
-//                s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
-//            }
-//            if (cardImage.getBack_img_url() != null && !cardImage.getBack_img_url().isEmpty()) {
-//                s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
-//            }
-//        }
         cardImageRepository.delete(cardImage);
         cardRepository.delete(card);
 

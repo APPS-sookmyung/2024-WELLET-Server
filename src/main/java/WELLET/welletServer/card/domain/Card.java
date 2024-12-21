@@ -51,7 +51,7 @@ public class Card extends BaseTimeEntity {
     private Long ownerId;
 
     @Builder
-    public Card(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId) {
+    public Card(String name, String company, String position, String department, String phone, String email, String tel, String address, String memo, Category category, Member member, Long ownerId, String profImgUrl) {
         this.name = name;
         this.company = company;
         this.position = position;
