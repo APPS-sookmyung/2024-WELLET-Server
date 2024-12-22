@@ -1,5 +1,8 @@
 package WELLET.welletServer.kakaologin.controller;
 
+import WELLET.welletServer.card.dto.LoginMyCardSaveDto;
+import WELLET.welletServer.card.dto.MyCardSaveDto;
+import WELLET.welletServer.card.service.MyCardService;
 import WELLET.welletServer.kakaologin.dto.KakaoUserInfoResponseDto;
 import WELLET.welletServer.kakaologin.jwt.JwtService;
 import WELLET.welletServer.kakaologin.service.KakaoService;
@@ -34,6 +37,7 @@ public class KakaoLoginController {
     private final UserService userService;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final MyCardService myCardService;
 
 
     @GetMapping("/callback")
@@ -49,6 +53,12 @@ public class KakaoLoginController {
             Member member;
             if (userService.isNewUser(userInfo.getId())) {
                 member = memberService.saveMember(userInfo);
+                String username = userInfo.getKakaoAccount().getProfile().getNickName();
+                LoginMyCardSaveDto dto = LoginMyCardSaveDto.builder()
+                        .name(username)
+                        .profile_Img(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
+                        .build();
+                myCardService.saveCard(member, dto);
             } else {
                 // 기존 사용자 검색
                 Member existingUser = memberRepository.findByKakaoId(userInfo.getId())
@@ -59,7 +69,6 @@ public class KakaoLoginController {
 
             // 4. JWT 생성
             String jwtToken = jwtService.generateToken(member);  // 생성된 또는 업데이트된 사용자로 JWT 생성
-
             return jwtToken;
 
             // 6. 성공적으로 로그인 완료 시 OK 응답

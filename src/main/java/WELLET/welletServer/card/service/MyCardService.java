@@ -3,6 +3,7 @@ package WELLET.welletServer.card.service;
 import WELLET.welletServer.card.Repository.CardImageRepository;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
+import WELLET.welletServer.card.dto.LoginMyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardResponse;
 import WELLET.welletServer.card.dto.MyCardSaveDto;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
@@ -46,6 +47,24 @@ public class MyCardService {
                 .email(dto.getEmail())
                 .tel(dto.getTel())
                 .address(dto.getAddress())
+                .profImgUrl(profileImageUrl)
+                .member(member)
+                .ownerId(member.getId())
+                .build();
+
+        return cardRepository.save(card);
+    }
+
+    @Transactional
+    public Card saveCard (Member member, LoginMyCardSaveDto dto) {
+        String profileImageUrl = null;
+
+        cardRepository.findByOwnerId(member.getId()).ifPresent(e -> {
+            throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
+        });
+
+        Card card = Card.builder()
+                .name(dto.getName())
                 .profImgUrl(profileImageUrl)
                 .member(member)
                 .ownerId(member.getId())

@@ -24,13 +24,13 @@ public class Card extends BaseTimeEntity {
 
     @NotBlank
     private String name;
-    @NotBlank
+//    @NotBlank
     private String company;
 
     private String position;
     private String department;
 
-    @NotBlank
+//    @NotBlank
     private String phone;
     private String email;
 
