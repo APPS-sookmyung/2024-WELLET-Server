@@ -64,17 +64,18 @@ public class KakaoLoginController {
 
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
-//            jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+            jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
+            jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
             jwtCookie.setDomain("netlify.app");
+            jwtCookie.setDomain("ngrok-free.app");
 //            response.setHeader("Set-Cookie", "jwtCookie;   Secure; SameSite=None");
 //            jwtCookie.setDomain("localhost");
             response.addCookie(jwtCookie);
 
-            String newRedirectUri = "https://wellet.netlify.app";
-//            String newRedirectUri = "http://localhost:8000/home";
+//            String newRedirectUri = "https://wellet.netlify.app";
+            String newRedirectUri = "http://localhost:8000/home";
             response.sendRedirect(newRedirectUri);
 
             // 6. 성공적으로 로그인 완료 시 OK 응답
