@@ -64,7 +64,7 @@ public class KakaoLoginController {
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
             jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
             jwtCookie.setDomain("netlify.app");
