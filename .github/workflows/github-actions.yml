@@ -39,6 +39,14 @@ jobs:
           echo "${{ secrets.YML }}" > ./application.yml
         shell: bash
 
+      - name: make ssl.txt
+        run:
+          mkdir ./src/main/resources/static/.well-known/pki-validation/
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.SSL }}" > ./application.yml
+        shell: bash
+
       # gradle build
       - name: Build with Gradle
         run: ./gradlew clean build -x test
