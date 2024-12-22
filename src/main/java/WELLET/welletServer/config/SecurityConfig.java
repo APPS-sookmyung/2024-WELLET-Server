@@ -58,6 +58,12 @@ public class SecurityConfig {
                     ).permitAll()
                     .anyRequest().authenticated();
         });
+
+        // HTTP -> HTTPS 강제 리다이렉트 비활성화
+        http.requiresChannel(channel ->
+                channel.anyRequest().requiresInsecure() // 임시로 HTTPS 강제 해제
+        );
+        
         return http.build();
     }
 
