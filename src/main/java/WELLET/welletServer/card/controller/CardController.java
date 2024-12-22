@@ -81,10 +81,7 @@ public class CardController {
 
         Card card = cardService.updateCard(member, cardId, dto);
 
-        CardImage cardImage = null;
-        if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty() && dto.getBackImg() != null && !dto.getBackImg().isEmpty() && dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
-            cardImage = cardService.updateCardImage(card, dto);
-        }
+        CardImage cardImage = cardService.updateCardImage(card, dto);
         return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
     }
 

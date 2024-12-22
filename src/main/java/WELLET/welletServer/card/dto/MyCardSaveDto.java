@@ -25,9 +25,6 @@ public class MyCardSaveDto  {
     @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
     @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
     @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
-    @Schema(description = "프로필 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String profImgUrl;
-    @Schema(description = "명함앞 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String frontImgUrl;
-    @Schema(description = "명함뒤 이미지URL", example = "https://bucket-name.s3.amazonaws.com") @Setter private String backImgUrl;
 
 
     @Builder

@@ -34,7 +34,7 @@ public class MyCardService {
         cardRepository.findByOwnerId(member.getId()).ifPresent(e -> {
             throw new CardException(CardErrorCode.DUPLICATE_MY_CARD);
         });
-        if (dto.getProfImg() != null) {
+        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
             profileImageUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
         }
         Card card = Card.builder()
@@ -72,10 +72,11 @@ public class MyCardService {
         Card card = cardRepository.findByOwnerId(member.getId())
                 .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
 
-        if (dto.getProfileImg() != null) {
-            if (card.getProfImgUrl() != null) {
-                s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
-            }
+        if (card.getProfImgUrl() != null) {
+            s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
+        }
+
+        if (dto.getProfileImg() != null && !dto.getProfileImg().isEmpty()) {
             newProfImgUrl = s3FileUploader.uploadFile(dto.getProfileImg(), "profile_image");
         }
         card.updateCard(dto, newProfImgUrl);
