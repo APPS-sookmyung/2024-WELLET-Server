@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/log/nginx/mytamla:/var/log/nginx/mytamla
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
