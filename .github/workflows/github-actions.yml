@@ -59,15 +59,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }} # .pem 키
           envs: GITHUB_SHA
-          script: |            
-            docker stop wellet
-            docker rm wellet
+          script: |
+            sudo docker ps
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wellet
-            docker run -d --name wellet -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/wellet
-            docker rmi -f $(docker images -f "dangling=true" -q)
-
-#            sudo docker ps
-#            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wellet
 #            sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
-#            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/wellet
-#            sudo docker image prune -f
+            sudo docker stop $(sudo docker ps --filter "publish=8080" --format "{{.ID}}") 2>/dev/null || true
+            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/wellet
+            sudo docker image prune -f
