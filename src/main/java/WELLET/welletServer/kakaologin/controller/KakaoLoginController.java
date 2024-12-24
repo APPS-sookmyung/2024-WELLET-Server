@@ -54,15 +54,16 @@ public class KakaoLoginController {
     private String redirectUri;
 
     @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
+    public String login(HttpServletResponse response) throws IOException {
         String location = "https://kauth.kakao.com/oauth/authorize?response_type=code"
                 + "&client_id=" + clientId
                 + "&redirect_uri=" + redirectUri;
         URI uri = URI.create(location);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uri);
+//        response.sendRedirect(location);
 
-        response.sendRedirect(location);
+        return loginUrl;
     }
 
 
