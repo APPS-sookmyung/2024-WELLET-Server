@@ -54,7 +54,8 @@ public class SecurityConfig {
                             antMatcher("/health"),
                             antMatcher("/login"),
                             antMatcher("/home"),
-                            antMatcher("/**")
+                            antMatcher("/**"),
+                            antMatcher("/auth/**")
                     ).permitAll()
                     .anyRequest().authenticated();
         });
