@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -45,9 +46,23 @@ public class KakaoLoginController {
     @Value("${cors.allowed.origin}")
     private String frontendUrl;
 
+    // application.yml에서 client_id와 redirect_uri 값을 불러오기
+    @Value("${kakao.client_id}")
+    private String clientId;
+
+    @Value("${kakao.redirect_uri}")
+    private String redirectUri;
+
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
-        response.sendRedirect(loginUrl);
+        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code"
+                + "&client_id=" + clientId
+                + "&redirect_uri=" + redirectUri;
+        URI uri = URI.create(location);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uri);
+
+        response.sendRedirect(location);
     }
 
 
