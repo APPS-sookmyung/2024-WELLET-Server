@@ -66,9 +66,14 @@ jobs:
             sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/wellet
             sudo docker image prune -f
 
-      - name: SSH into EC2 and run docker-compose
+      - name: Set up SSH key
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ubuntu@${{ secrets.HOST }} <<EOF
+          echo "${{ secrets.PRIVATE_KEY }}" > /tmp/private-key.pem
+          chmod 600 /tmp/private-key.pem
+
+      - name: Run docker-compose
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /tmp/private-key.pem ubuntu@${{ secrets.HOST }} <<EOF
           cd ~
           docker-compose pull
           docker-compose up -d
