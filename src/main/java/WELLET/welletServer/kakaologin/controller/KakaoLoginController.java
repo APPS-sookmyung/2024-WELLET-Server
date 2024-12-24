@@ -10,9 +10,11 @@ import WELLET.welletServer.member.exception.MemberException;
 import WELLET.welletServer.member.repository.MemberRepository;
 import WELLET.welletServer.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -28,7 +30,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/kakao")
+@RequestMapping
 public class KakaoLoginController {
 
     private final KakaoService kakaoService;
@@ -37,8 +39,16 @@ public class KakaoLoginController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
+    @Value("${kakao.login_uri}")
+    private String loginUrl;
 
-    @GetMapping("/callback")
+    @GetMapping("/login")
+    public void login(HttpServletResponse response) throws IOException {
+        response.sendRedirect(loginUrl);
+    }
+
+
+    @GetMapping("/auth/kakao/callback")
     public String callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         try {
             // 1. 카카오에서 accessToken 받아오기
@@ -83,9 +93,8 @@ public class KakaoLoginController {
 
 
             // 리다이렉트 URL 설정
-            String redirectUrl = "https://wellet.netlify.app";  // 원하는 프론트엔드 URL
-//            String redirectUrl = "http://localhost:8000";  // 원하는 프론트엔드 URL
-            response.sendRedirect(redirectUrl);
+//            String redirectUrl = "https://wellet.netlify.app";  // 원하는 프론트엔드 URL
+//            response.sendRedirect(redirectUrl);
 
 
             return "로그인 성공";
