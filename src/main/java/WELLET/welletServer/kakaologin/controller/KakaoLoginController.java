@@ -42,6 +42,9 @@ public class KakaoLoginController {
     @Value("${kakao.login_uri}")
     private String loginUrl;
 
+    @Value("${cors.allowed.origin}")
+    private String frontendUrl;
+
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
         response.sendRedirect(loginUrl);
@@ -79,7 +82,7 @@ public class KakaoLoginController {
 //            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
 //            jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
 //
-//            jwtCookie.setDomain("wellet.netlify.app");
+//            jwtCookie.setDomain(frontendUrl);
 //            response.addCookie(jwtCookie);
 
             ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", jwtToken)
@@ -93,7 +96,7 @@ public class KakaoLoginController {
 
 
             // 리다이렉트 URL 설정
-            String redirectUrl = "https://wellet.netlify.app/home";  // 원하는 프론트엔드 URL
+            String redirectUrl = frontendUrl;  // 원하는 프론트엔드 URL
             response.sendRedirect(redirectUrl);
 
 
