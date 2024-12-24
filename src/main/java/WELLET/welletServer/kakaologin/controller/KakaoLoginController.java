@@ -80,16 +80,12 @@ public class KakaoLoginController {
             Member member;
             if (userService.isNewUser(userInfo.getId())) {
                 member = memberService.saveMember(userInfo);
-                log.error("존재하지 않는 회원입니다.");
-                log.error("member:" + member);
             } else {
                 // 기존 사용자 검색
                 Member existingUser = memberRepository.findByKakaoId(userInfo.getId())
                         .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
                 existingUser.updateLastLoginTime(LocalDateTime.now());
                 member = existingUser;  // 기존 사용자로 설정
-                log.error("존재하는 회원입니다.");
-                log.error("member:" + member);
             }
 
             // 4. JWT 생성
@@ -98,7 +94,7 @@ public class KakaoLoginController {
 ////            // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
             jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
 
