@@ -80,12 +80,16 @@ public class KakaoLoginController {
             Member member;
             if (userService.isNewUser(userInfo.getId())) {
                 member = memberService.saveMember(userInfo);
+                log.error("존재하지 않는 회원입니다.");
+                log.error("member:" + member);
             } else {
                 // 기존 사용자 검색
                 Member existingUser = memberRepository.findByKakaoId(userInfo.getId())
                         .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
                 existingUser.updateLastLoginTime(LocalDateTime.now());
                 member = existingUser;  // 기존 사용자로 설정
+                log.error("존재하는 회원입니다.");
+                log.error("member:" + member);
             }
 
             // 4. JWT 생성
