@@ -96,7 +96,7 @@ public class KakaoLoginController {
 
 
             // 리다이렉트 URL 설정
-            String redirectUrl = frontendUrl;  // 원하는 프론트엔드 URL
+            String redirectUrl = frontendUrl + "/home";  // 원하는 프론트엔드 URL
             response.sendRedirect(redirectUrl);
 
 
