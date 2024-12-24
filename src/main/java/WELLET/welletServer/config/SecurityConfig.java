@@ -51,8 +51,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
             request.requestMatchers(
-//                            antMatcher("/health")
+                            antMatcher("/health"),
                             antMatcher("/login"),
+                            antMatcher("/home"),
                             antMatcher("/**")
                     ).permitAll()
                     .anyRequest().authenticated();
