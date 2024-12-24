@@ -93,8 +93,8 @@ public class KakaoLoginController {
 
 
             // 리다이렉트 URL 설정
-//            String redirectUrl = "https://wellet.netlify.app";  // 원하는 프론트엔드 URL
-//            response.sendRedirect(redirectUrl);
+            String redirectUrl = "https://wellet.netlify.app";  // 원하는 프론트엔드 URL
+            response.sendRedirect(redirectUrl);
 
 
             return "로그인 성공";
