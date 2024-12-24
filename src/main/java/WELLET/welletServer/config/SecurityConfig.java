@@ -26,7 +26,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("http://localhost:8000");
         configuration.addAllowedOrigin("https://wellet.netlify.app");
         configuration.addAllowedOrigin("http://localhost:8080");
         configuration.addAllowedOrigin(allowedOrigin);

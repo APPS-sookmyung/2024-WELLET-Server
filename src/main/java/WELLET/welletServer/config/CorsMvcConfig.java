@@ -12,6 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
 
         corsRegistry.addMapping("/**")
                 .exposedHeaders("Set-Cookie")
+                .allowedOrigins("http://localhost:8000")
                 .allowedOrigins("https://wellet.netlify.app");// 프론트 서버 주소
     }
 }
