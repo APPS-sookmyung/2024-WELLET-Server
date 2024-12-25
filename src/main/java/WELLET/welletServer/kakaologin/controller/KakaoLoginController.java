@@ -104,7 +104,7 @@ public class KakaoLoginController {
                     "Set-Cookie",
                     "token=" + jwtToken
                             + "; Path=/"
-                            + "; Domain=localhost"
+                            + "; Domain=wellet.netlify.app"
                             + "; HttpOnly"
                             + "; Max-Age=604800"
                             + "; SameSite=None"
