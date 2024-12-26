@@ -68,7 +68,7 @@ public class KakaoLoginController {
 
 
     @GetMapping("/auth/kakao/callback")
-    public String callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
+    public String callback(@RequestParam("code") String code, HttpServletResponse response, HttpServletRequest request) throws IOException {
         try {
             // 1. 카카오에서 accessToken 받아오기
             String accessToken = kakaoService.getAccessTokenFromKakao(code);
@@ -92,7 +92,7 @@ public class KakaoLoginController {
             String jwtToken = jwtService.generateToken(member);  // 생성된 또는 업데이트된 사용자로 JWT 생성
 //
 ////            // 5. 쿠키에 JWT 저장
-            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
+            Cookie jwtCookie = new Cookie("Set-Cookie", jwtToken);
             jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
             jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
@@ -127,16 +127,37 @@ public class KakaoLoginController {
 
 
             // 리다이렉트 URL 설정
-            String redirectUrl = frontendUrl + "/home";  // 원하는 프론트엔드 URL
+            String redirectUrl = getFrontendUrl(request) + "/home";
             response.sendRedirect(redirectUrl);
-
-
             return "로그인 성공";
 
         } catch (Exception e) {
             log.error("로그인 처리 중 오류 발생", e);
             return "로그인 처리 중 오류" + HttpStatus.INTERNAL_SERVER_ERROR;
         }
+    }
+
+    private String getFrontendUrl(HttpServletRequest request) {
+        String redirectUrl;
+
+        String origin = request.getHeader("referer");  // 요청의 출처를 가져옵니다.
+
+        if (origin != null) {
+            // 요청의 출처가 localhost일 경우
+            if (origin.contains("localhost:8000")) {
+                redirectUrl = "http://localhost:8000";
+            }
+            // 요청의 출처가 wellet.com일 경우
+            else if (origin.contains(frontendUrl)) {
+                redirectUrl = frontendUrl;
+            } else {
+                redirectUrl = frontendUrl;
+            }
+        } else {
+            redirectUrl = frontendUrl;
+        }
+
+        return redirectUrl;
     }
 }
 
