@@ -99,12 +99,12 @@ public class KakaoLoginController {
 //            jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
 //            jwtCookie.setDomain("wellet");
 
-            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(true);  // HTTPS에서만 전송
-            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
-            jwtCookie.setPath("/");
-            response.addCookie(jwtCookie);
+//            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
+//            jwtCookie.setHttpOnly(true);
+//            jwtCookie.setSecure(true);  // HTTPS에서만 전송
+//            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
+//            jwtCookie.setPath("/");
+//            response.addCookie(jwtCookie);
 
             response.addHeader("Set-Cookie", "jwtToken=" + jwtToken + "; Path=/; HttpOnly; Secure; Max-Age=" + (60 * 60 * 24) + "; SameSite=None");
 
@@ -123,7 +123,7 @@ public class KakaoLoginController {
 
 
 //            jwtCookie.setDomain(frontendUrl);
-            response.addCookie(jwtCookie);
+//            response.addCookie(jwtCookie);
 
 //            ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", jwtToken)
 //                    .httpOnly(true)
