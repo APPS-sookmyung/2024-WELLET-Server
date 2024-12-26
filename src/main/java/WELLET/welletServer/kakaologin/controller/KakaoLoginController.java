@@ -92,12 +92,21 @@ public class KakaoLoginController {
             String jwtToken = jwtService.generateToken(member);  // 생성된 또는 업데이트된 사용자로 JWT 생성
 //
 ////            // 5. 쿠키에 JWT 저장
-            Cookie jwtCookie = new Cookie("Set-Cookie", jwtToken);
-            jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+//            Cookie jwtCookie = new Cookie("Set-Cookie", jwtToken);
+//            jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
+//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
+//            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
+//            jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
+//            jwtCookie.setDomain("wellet");
+
+            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setSecure(true);  // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
-            jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
-            jwtCookie.setDomain("wellet");
+            jwtCookie.setPath("/");
+            response.addCookie(jwtCookie);
+
+            response.addHeader("Set-Cookie", "jwtToken=" + jwtToken + "; Path=/; HttpOnly; Secure; Max-Age=" + (60 * 60 * 24) + "; SameSite=None");
 
 //            response.setHeader("Set-Cookie","token=" + jwtToken +. ;Path=/; Domain=localhost; HttpOnly; Max-Age=604800; SameSite=None; Secure;");
 
