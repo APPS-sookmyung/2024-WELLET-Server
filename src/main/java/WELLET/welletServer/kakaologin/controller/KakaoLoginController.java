@@ -97,6 +97,7 @@ public class KakaoLoginController {
             jwtCookie.setSecure(true);    // HTTPS에서만 전송
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
+            jwtCookie.setDomain("wellet");
 
 //            response.setHeader("Set-Cookie","token=" + jwtToken +. ;Path=/; Domain=localhost; HttpOnly; Max-Age=604800; SameSite=None; Secure;");
 
