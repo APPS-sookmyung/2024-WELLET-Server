@@ -53,6 +53,9 @@ public class KakaoLoginController {
     @Value("${kakao.redirect_uri}")
     private String redirectUri;
 
+    @Value("${cors.allowed.domain}")
+    private String domain;
+
     @GetMapping("/login")
     public String login(HttpServletResponse response) throws IOException {
         String location = "https://kauth.kakao.com/oauth/authorize?response_type=code"
@@ -90,23 +93,17 @@ public class KakaoLoginController {
 
             // 4. JWT 생성
             String jwtToken = jwtService.generateToken(member);  // 생성된 또는 업데이트된 사용자로 JWT 생성
-//
-////            // 5. 쿠키에 JWT 저장
-//            Cookie jwtCookie = new Cookie("Set-Cookie", jwtToken);
-//            jwtCookie.setHttpOnly(true);  // JavaScript로 쿠키에 접근 불가
-//            jwtCookie.setSecure(true);    // HTTPS에서만 전송
-//            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
-//            jwtCookie.setPath("/");  // 쿠키를 모든 경로에 적용
-//            jwtCookie.setDomain("wellet");
 
-//            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
-//            jwtCookie.setHttpOnly(true);
+            // 5. 쿠키에 JWT 저장
+            Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
+            jwtCookie.setHttpOnly(true);
 //            jwtCookie.setSecure(true);  // HTTPS에서만 전송
-//            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
-//            jwtCookie.setPath("/");
-//            response.addCookie(jwtCookie);
+            jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
+            jwtCookie.setPath("/");
+            jwtCookie.setDomain(domain);
+            response.addCookie(jwtCookie);
 
-            response.addHeader("Set-Cookie", "jwtToken=" + jwtToken + "; Path=/; HttpOnly; Secure; Max-Age=" + (60 * 60 * 24) + "; SameSite=None");
+//            response.addHeader("Set-Cookie", "jwtToken=" + jwtToken + "; Path=/; HttpOnly; Secure; Max-Age=" + (60 * 60 * 24) + "; SameSite=None");
 
 //            response.setHeader("Set-Cookie","token=" + jwtToken +. ;Path=/; Domain=localhost; HttpOnly; Max-Age=604800; SameSite=None; Secure;");
 
@@ -149,14 +146,14 @@ public class KakaoLoginController {
     private String getFrontendUrl(HttpServletRequest request) {
         String redirectUrl;
 
-        String origin = request.getHeader("referer");  // 요청의 출처를 가져옵니다.
+        String origin = request.getHeader("referer");  // 요청의 출처를 가져옴
 
         if (origin != null) {
             // 요청의 출처가 localhost일 경우
             if (origin.contains("localhost:8000")) {
                 redirectUrl = "http://localhost:8000";
             }
-            // 요청의 출처가 wellet.com일 경우
+            // 요청의 출처가 배포 url인 경우
             else if (origin.contains(frontendUrl)) {
                 redirectUrl = frontendUrl;
             } else {
