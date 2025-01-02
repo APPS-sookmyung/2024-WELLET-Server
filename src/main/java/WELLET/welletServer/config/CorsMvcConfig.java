@@ -14,10 +14,10 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
-//        corsRegistry.addMapping("/**")
-//                .exposedHeaders("Set-Cookie")
-//                .allowedOrigins("http://localhost:8000", frontendUrl)
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP method
-//                .allowCredentials(true); // 쿠키 인증 요청 허용
+        corsRegistry.addMapping("/**")
+                .exposedHeaders("Set-Cookie")
+                .allowedOrigins("http://localhost:8000", frontendUrl)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP method
+                .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }
