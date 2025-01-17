@@ -97,7 +97,7 @@ public class KakaoLoginController {
             // 5. 쿠키에 JWT 저장
             Cookie jwtCookie = new Cookie("jwtToken", jwtToken);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(false);  // HTTPS에서만 전송 X
+            jwtCookie.setSecure(request.isSecure());  // HTTPS에서만 전송 X
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
             jwtCookie.setPath("/");
 //            jwtCookie.setDomain(domain);

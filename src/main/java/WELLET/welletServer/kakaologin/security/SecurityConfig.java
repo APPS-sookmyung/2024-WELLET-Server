@@ -19,7 +19,7 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
 
-    @Value("{$cors.allowed.origin}")
+    @Value("${cors.allowed.origin}")
     private String allowedOrigin;
 
     public SecurityConfig(JwtService jwtService) {
