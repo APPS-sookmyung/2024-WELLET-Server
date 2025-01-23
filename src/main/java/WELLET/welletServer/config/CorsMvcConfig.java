@@ -11,8 +11,8 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Value("${cors.allowed.origin}")
     private String frontendUrl;
 
-    @Value("${cors.allowed.domain}")
-    private String mainDomain;
+//    @Value("${cors.allowed.domain}")
+//    private String mainDomain;
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {

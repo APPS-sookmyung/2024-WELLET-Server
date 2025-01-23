@@ -19,12 +19,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // 1. 헤더에서 JWT 추출
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = null;
+//        // 1. 헤더에서 JWT 추출
+//        String authorizationHeader = request.getHeader("Authorization");
+//        String jwtToken = null;
+//
+//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+//            jwtToken = authorizationHeader.substring(7);
+//        }
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwtToken = authorizationHeader.substring(7);
+        // 1. 쿠키에서 JWT 추출
+        String jwtToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
+            }
         }
 
         // 2. JWT가 존재하고 유효한지 확인
