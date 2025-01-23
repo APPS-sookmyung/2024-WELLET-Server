@@ -11,13 +11,16 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Value("${cors.allowed.origin}")
     private String frontendUrl;
 
+//    @Value("${cors.allowed.domain}")
+//    private String mainDomain;
+
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
-
         corsRegistry.addMapping("/**")
-                .exposedHeaders("Set-Cookie")
+                .exposedHeaders("Set-Cookie") // 쿠키 노출 허용
                 .allowedOrigins("http://localhost:8000", frontendUrl)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP method
-                .allowCredentials(true); // 쿠키 인증 요청 허용
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용 HTTP 메서드
+                .allowCredentials(true); // 쿠키 포함 허용
     }
 }
+
