@@ -124,16 +124,17 @@ public class KakaoLoginController {
 
             ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", jwtToken)
                     .httpOnly(true)
-//                    .secure(true)
+                    .secure(true)
                     .path("/")
                     .sameSite("None")
+                    .domain(domain)
                     .maxAge(60 * 60 * 24)
                     .build();
-            response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
 
             // 리다이렉트 URL 설정
             String redirectUrl = getFrontendUrl(request) + "/home";
+            response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 //            response.addCookie(jwtCookie);
             response.sendRedirect(redirectUrl);
             return "로그인 성공";
