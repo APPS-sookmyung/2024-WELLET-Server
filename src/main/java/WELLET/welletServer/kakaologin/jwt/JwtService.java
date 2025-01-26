@@ -9,6 +9,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,20 @@ public class JwtService {
                 .claims(claims)  // 클레임을 추가
                 .signWith(getSigningKey())  // 서명 알고리즘 및 서명 키
                 .compact();
+    }
+
+    public static String getJwtToCookie(HttpServletRequest request) {
+        String jwtToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return jwtToken;
     }
 
     // JWT 헤더에서 토큰을 가져오는 메소드
