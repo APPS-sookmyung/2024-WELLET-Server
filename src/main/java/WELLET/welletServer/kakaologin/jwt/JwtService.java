@@ -66,8 +66,8 @@ public class JwtService {
                 .compact();
     }
 
-    public static String getJwtToCookie(HttpServletRequest request) {
-        String jwtToken = null;
+    public String getJwtToCookie(HttpServletRequest request) {
+        String jwtToken = "";
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -76,6 +76,8 @@ public class JwtService {
                     break;
                 }
             }
+        } else {
+            jwtToken = getTokenFromHeader(request);
         }
         return jwtToken;
     }

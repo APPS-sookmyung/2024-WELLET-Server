@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     public Member loadMember(HttpServletRequest header){
-        String token = JwtService.getJwtToCookie(header);
+        String token = jwtService.getJwtToCookie(header);
         UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
