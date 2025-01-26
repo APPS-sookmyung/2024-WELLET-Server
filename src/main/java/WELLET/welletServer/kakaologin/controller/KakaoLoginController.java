@@ -99,9 +99,9 @@ public class KakaoLoginController {
             jwtCookie.setHttpOnly(true);
             jwtCookie.setSecure(true);  // HTTPS에서만 전송 X
             jwtCookie.setMaxAge(60 * 60 * 24);  // 쿠키 유효 시간 설정
-            jwtCookie.setPath("/");
-//            jwtCookie.setDomain(domain);
-            response.addCookie(jwtCookie);
+//            jwtCookie.setPath("/");
+            jwtCookie.setDomain(domain);
+//            response.addCookie(jwtCookie);
 
 //            response.addHeader("Set-Cookie", "jwtToken=" + jwtToken + "; Path=/; HttpOnly; Secure; Max-Age=" + (60 * 60 * 24) + "; SameSite=None");
 
