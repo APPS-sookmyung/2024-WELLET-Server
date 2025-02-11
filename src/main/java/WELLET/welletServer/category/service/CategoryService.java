@@ -75,8 +75,8 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 
-    public Category findByName(String name){
-        return categoryRepository.findByName(name)
+    public Category findByName(Member member, String name){
+        return categoryRepository.findByMemberAndName(member, name)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 
