@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -63,7 +64,11 @@ public class CardService {
     }
 
     public CardCountResponseDto findAllCard(Member member) {
-        List<Card> cardList = cardRepository.findByMember(member);
+        List<Card> cardList = cardRepository.findByMember(member)
+                .stream()
+                .filter(card -> card.getOwnerId() == null)
+                .toList();
+
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
@@ -142,7 +147,12 @@ public class CardService {
     }
 
     public CardCountResponseDto searchCards(String keyword) {
-        List<Card> cardList = cardRepository.searchCards(keyword);
+
+        List<Card> cardList = cardRepository.searchCards(keyword)
+                .stream()
+                .filter(card -> card.getOwnerId() == null)
+                .toList();
+
         List<CardListResponse> cards = cardList.stream()
                 .map(CardListResponse::toCardList)
                 .toList();
