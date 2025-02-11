@@ -25,7 +25,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    @Operation(summary = "회원 저장")
+    @Operation(summary = "회원 저장, 사용 X")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 저장에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "중복된 회원입니다.")

@@ -19,7 +19,7 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("API Test")
+                .title("WELLET Server API")
                 .description("swagger description")
                 .version("1.0.0");
     }

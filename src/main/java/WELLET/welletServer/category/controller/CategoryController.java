@@ -44,6 +44,7 @@ public class CategoryController {
         return "그룹 생성에 성공하였습니다. 그룹 id : " + CategoryId;
     }
 
+
     @PutMapping("/{categoryId}")
     @Operation(summary = "그룹 수정")
     @ApiResponses(value = {
@@ -58,6 +59,7 @@ public class CategoryController {
         Member member = memberService.loadMember(request);// 인가 서비스를 위함
         return categoryService.updateCategory(member, categoryId, dto);
     }
+
 
     @DeleteMapping("/{categoryId}")
     @Operation(summary = "그룹 삭제")
@@ -76,6 +78,8 @@ public class CategoryController {
         categoryService.deleteCategory(member, category, cardList);
         return "그룹 삭제에 성공하였습니다. 그룹 id : " + categoryId;
     }
+
+
     @GetMapping("/name")
     @Operation(summary = "전체 그룹명 조회")
     @ApiResponses(value = {
