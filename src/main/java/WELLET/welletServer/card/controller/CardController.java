@@ -98,7 +98,7 @@ public class CardController {
     }
 
     @GetMapping
-    @Operation(summary = "명함 검색")
+    @Operation(summary = "명함 전체 조회 및 검색")
     @Parameters({
             @Parameter(name = "keyword", example = "ajeong"),
       })
