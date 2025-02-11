@@ -25,18 +25,4 @@ public class MyCardSaveDto  {
     @Schema(description = "프로필 이미지파일") private MultipartFile profImg;
     @Schema(description = "명함앞 이미지파일") private MultipartFile frontImg;
     @Schema(description = "명함뒤 이미지파일") private MultipartFile backImg;
-
-
-    @Builder
-    public MyCardSaveDto(String name, String company, String position, String department, String phone, String email, String tel, String address, MultipartFile profile_Img) {
-        this.name = name;
-        this.company = company;
-        this.position = position;
-        this.department = department;
-        this.phone = phone;
-        this.email = email;
-        this.tel = tel;
-        this.address = address;
-        this.profImg = profile_Img;
-    }
 }

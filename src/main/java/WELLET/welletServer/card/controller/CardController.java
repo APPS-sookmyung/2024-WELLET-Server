@@ -34,7 +34,7 @@ public class CardController {
     private final MemberService memberService;
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @Operation(summary = "명함 생성")
     @ApiResponses(value = {
          @ApiResponse(responseCode = "200", description = "명함 생성에 성공하였습니다."),
@@ -55,7 +55,6 @@ public class CardController {
     @GetMapping("/{cardId}")
     @Operation(summary = "명함 단건 조회")
     @Parameters({
-            @Parameter(name = "memberId", example = "1"),
             @Parameter(name = "cardId", example = "1"),
     })
     @ApiResponses(value = {
@@ -67,7 +66,7 @@ public class CardController {
         return cardService.findCard(member, cardId);
     }
 
-    @PutMapping("/{cardId}")
+    @PutMapping(value = "/{cardId}", consumes = "multipart/form-data")
     @Operation(summary = "명함 수정")
     @Parameters({
             @Parameter(name = "cardId", example = "1"),
