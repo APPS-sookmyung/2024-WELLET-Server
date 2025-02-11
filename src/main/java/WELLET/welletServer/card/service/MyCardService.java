@@ -1,6 +1,5 @@
 package WELLET.welletServer.card.service;
 
-import WELLET.welletServer.card.Repository.CardImageRepository;
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.dto.MyCardResponse;
@@ -24,7 +23,6 @@ public class MyCardService {
 
     private final CardRepository cardRepository;
     private final S3FileUploader s3FileUploader;
-    private final CardImageRepository cardImageRepository;
 
     @Transactional
     public Card saveCard (Member member, MyCardSaveDto dto) {
@@ -76,8 +74,8 @@ public class MyCardService {
             s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
         }
 
-        if (dto.getProfileImg() != null && !dto.getProfileImg().isEmpty()) {
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfileImg(), "profile_image");
+        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
         }
         card.updateCard(dto, newProfImgUrl);
         return MyCardResponse.toCardDto(card);
