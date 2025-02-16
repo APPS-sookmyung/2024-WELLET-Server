@@ -32,12 +32,13 @@ public class CardImage {
         this.card = card;
     }
 
-    public void updateBackImage(String back_img_url) {
-        this.back_img_url = back_img_url;
-    }
     public void updateFrontImage(String front_img_url) {
         this.front_img_url = front_img_url;
     }
+    public void updateBackImage(String back_img_url) {
+        this.back_img_url = back_img_url;
+    }
+
     public void updateProfImage(String prof_img_url) {
         this.prof_img_url = prof_img_url;
     }
