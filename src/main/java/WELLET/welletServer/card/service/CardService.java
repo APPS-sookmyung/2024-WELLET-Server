@@ -97,6 +97,9 @@ public class CardService {
     @Transactional
     public CardImage updateCardImageProfile(Member member, Long cardId, CardUpdateDtoProfImg dto) {
         Card card = findOne(member, cardId);
+        if (card == null) {
+            throw new CardException(CardErrorCode.CARD_NOT_FOUND);
+        }
         CardImage cardImage = cardImageRepository.findByCard(card);
         String newProfImgUrl;
 
@@ -114,6 +117,9 @@ public class CardService {
     @Transactional
     public CardImage updateCardImagefrontback(Member member, Long cardId, CardUpdateDtoBackFrontImgDto dto) {
         Card card = findOne(member, cardId);
+        if (card == null) {
+            throw new CardException(CardErrorCode.CARD_NOT_FOUND);
+        }
         CardImage cardImage = cardImageRepository.findByCard(card);
         String newFrontImgUrl, newBackImgUrl;
 
