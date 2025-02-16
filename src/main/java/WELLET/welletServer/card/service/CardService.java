@@ -88,16 +88,34 @@ public class CardService {
     }
 
     @Transactional
-    public Card updateCard(Member member, Long cardId, CardUpdateDto dto) {
+    public Card updateCard(Member member, Long cardId, CardUpdateDtoContent dto) {
         Card card = findOne(member, cardId);
         card.updateCard(dto);
         return card;
     }
 
     @Transactional
-    public CardImage updateCardImage(Card card, CardUpdateDto dto) {
+    public CardImage updateCardImageProfile(Member member, Long cardId, CardUpdateDtoProfImg dto) {
+        Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
-        String newFrontImgUrl, newBackImgUrl, newProfImgUrl;
+        String newProfImgUrl;
+
+        deleteCardImage(cardImage);
+
+        // 명함 이미지 (프로필)
+        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "prof_image");
+            cardImage.updateProfImage(newProfImgUrl);
+        }
+
+        return cardImage;
+    }
+
+    @Transactional
+    public CardImage updateCardImagefrontback(Member member, Long cardId, CardUpdateDtoBackFrontImgDto dto) {
+        Card card = findOne(member, cardId);
+        CardImage cardImage = cardImageRepository.findByCard(card);
+        String newFrontImgUrl, newBackImgUrl;
 
         deleteCardImage(cardImage);
 
@@ -111,12 +129,6 @@ public class CardService {
         if (dto.getBackImg()!= null && !dto.getBackImg().isEmpty()) {
             newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back_image");
             cardImage.updateBackImage(newBackImgUrl);
-        }
-
-        // 명함 이미지 (프로필)
-        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "prof_image");
-            cardImage.updateProfImage(newProfImgUrl);
         }
 
         return cardImage;

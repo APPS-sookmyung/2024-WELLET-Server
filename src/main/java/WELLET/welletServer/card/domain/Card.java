@@ -1,7 +1,9 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
-import WELLET.welletServer.card.dto.MyCardUpdateDto;
+import WELLET.welletServer.card.dto.CardUpdateDtoContent;
+import WELLET.welletServer.card.dto.MyCardUpdateDtoContent;
+import WELLET.welletServer.card.dto.MyCardUpdateDtoProfImg;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.common.BaseTimeEntity;
 import WELLET.welletServer.member.domain.Member;
@@ -67,7 +69,7 @@ public class Card extends BaseTimeEntity {
         this.ownerId = ownerId;
     }
 
-    public void updateCard(CardUpdateDto dto) {
+    public void updateCard(CardUpdateDtoContent dto) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.position = dto.getPosition();
@@ -79,7 +81,7 @@ public class Card extends BaseTimeEntity {
         this.memo = dto.getMemo();
     }
 
-    public void updateCard(MyCardUpdateDto dto, String profImgUrl) {
+    public void updateCard(MyCardUpdateDtoContent dto) {
         this.name = dto.getName();
         this.company = dto.getCompany();
         this.position = dto.getPosition();
@@ -88,8 +90,13 @@ public class Card extends BaseTimeEntity {
         this.email = dto.getEmail();
         this.tel = dto.getTel();
         this.address = dto.getAddress();
+    }
+
+    public void updateCard(String profImgUrl) {
         this.profImgUrl = profImgUrl;
     }
+
+
 
     public void updateCategoryWithNull() {
         this.category = null;
