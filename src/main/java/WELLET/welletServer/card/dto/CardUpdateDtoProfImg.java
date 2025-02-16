@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Builder
 public class CardUpdateDtoProfImg {
-    @NotBlank
     @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com")
     private MultipartFile profImg;
 

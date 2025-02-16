@@ -96,8 +96,6 @@ public class Card extends BaseTimeEntity {
         this.profImgUrl = profImgUrl;
     }
 
-
-
     public void updateCategoryWithNull() {
         this.category = null;
     }
