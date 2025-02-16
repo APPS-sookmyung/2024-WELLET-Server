@@ -88,7 +88,7 @@ public class CardService {
     }
 
     @Transactional
-    public Card updateCard(Member member, Long cardId, CardUpdateDto dto) {
+    public Card updateCard(Member member, Long cardId, CardUpdateDtoContent dto) {
         Card card = findOne(member, cardId);
         card.updateCard(dto);
         return card;

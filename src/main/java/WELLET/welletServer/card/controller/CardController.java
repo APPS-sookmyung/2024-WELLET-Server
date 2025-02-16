@@ -72,11 +72,11 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardResponse updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
+    public CardResponseContent updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoContent dto) {
         Member member = memberService.loadMember(request);
 
         Card card = cardService.updateCard(member, cardId, dto);
-        return CardResponse.toCardDto(card, dto.getCategoryName(), null);
+        return CardResponseContent.toCardDto(card, dto.getCategoryName());
     }
 
     @PutMapping(value = "/{cardId}/prof/images", consumes = "multipart/form-data")
@@ -88,12 +88,12 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 이미지 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardResponse updateCardImage(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoProfImg dto) {
+    public CardResponseProfile updateCardImage(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoProfImg dto) {
         Member member = memberService.loadMember(request);
         Card card = cardService.findOne(member, cardId);
 
         CardImage cardImage = cardService.updateCardImage(card, dto);
-        return CardResponse.toCardDto(card, null, cardImage);
+        return CardResponseProfile.toCardDto(cardImage);
     }
 
     @PatchMapping

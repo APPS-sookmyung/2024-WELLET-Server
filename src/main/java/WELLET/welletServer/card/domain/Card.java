@@ -1,6 +1,7 @@
 package WELLET.welletServer.card.domain;
 
 import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.CardUpdateDtoContent;
 import WELLET.welletServer.card.dto.MyCardUpdateDto;
 import WELLET.welletServer.category.domain.Category;
 import WELLET.welletServer.common.BaseTimeEntity;
@@ -89,6 +90,18 @@ public class Card extends BaseTimeEntity {
         this.tel = dto.getTel();
         this.address = dto.getAddress();
         this.profImgUrl = profImgUrl;
+    }
+
+    public void updateCard(CardUpdateDtoContent dto) {
+        this.name = dto.getName();
+        this.company = dto.getCompany();
+        this.position = dto.getPosition();
+        this.department = dto.getDepartment();
+        this.phone = dto.getPhone();
+        this.email = dto.getEmail();
+        this.tel = dto.getTel();
+        this.address = dto.getAddress();
+        this.memo = dto.getMemo();
     }
 
     public void updateCategoryWithNull() {
