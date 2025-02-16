@@ -72,10 +72,27 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardContentResponse updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
+    public CardResponseContent updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoContent dto) {
         Member member = memberService.loadMember(request);
+
         Card card = cardService.updateCard(member, cardId, dto);
-        return CardContentResponse.toCardContentDto(card, dto.getCategoryName());
+        return CardResponseContent.toCardDto(card, dto.getCategoryName());
+    }
+    @PutMapping(value = "/{cardId}/prof/images", consumes = "multipart/form-data")
+    @Operation(summary = "명함 프로필 수정")
+    @Parameters({
+            @Parameter(name = "cardId", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
+    })
+    public CardResponseProfile updateCardImageProfile(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoProfImg dto) {
+        Member member = memberService.loadMember(request);
+        Card card = cardService.findOne(member, cardId);
+
+        CardImage cardImage = cardService.updateCardImageProfile(member, cardId, dto);
+        return CardResponseProfile.toCardDto(cardImage);
     }
 
     @PutMapping(value = "/{cardId}/images", consumes = "multipart/form-data")
@@ -87,10 +104,10 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardBackFrontImageResponse updateCardBackFrontImg(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoBackFrontImgDto dto) {
+    public CardBackFrontImageResponse updateCardImagefrontback(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoBackFrontImgDto dto) {
         Member member = memberService.loadMember(request);
         Card card = cardService.findOne(member, cardId);
-        CardImage cardImage = cardService.updateCardBackFrontImg(member, cardId, dto);
+        CardImage cardImage = cardService.updateCardImagefrontback(member, cardId, dto);
         return CardBackFrontImageResponse.toCardBackFrontImageDto(card, cardImage);
     }
 
