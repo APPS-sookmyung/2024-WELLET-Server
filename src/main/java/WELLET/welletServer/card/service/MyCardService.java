@@ -2,9 +2,7 @@ package WELLET.welletServer.card.service;
 
 import WELLET.welletServer.card.Repository.CardRepository;
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.dto.MyCardResponse;
-import WELLET.welletServer.card.dto.MyCardSaveDto;
-import WELLET.welletServer.card.dto.MyCardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.files.S3FileUploader;
@@ -64,12 +62,17 @@ public class MyCardService {
     }
 
     @Transactional
-    public MyCardResponse updateMyCard(Member member, MyCardUpdateDto dto) {
+    public MyCardResponseContent updateMyCardContent(Member member, MyCardUpdateDtoContent dto) {
+        Card card = findCard(member);
+        card.updateCard(dto);
+        return MyCardResponseContent.toCardDto(card);
+    }
+
+    @Transactional
+    public MyCardResponseProfImg updateMyCardProfImg(Member member, MyCardUpdateDtoProfImg dto) {
         String newProfImgUrl = null;
 
-        Card card = cardRepository.findByOwnerId(member.getId())
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
-
+        Card card = findCard(member);
         if (card.getProfImgUrl() != null) {
             s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
         }
@@ -77,17 +80,22 @@ public class MyCardService {
         if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
             newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "profile_image");
         }
-        card.updateCard(dto, newProfImgUrl);
-        return MyCardResponse.toCardDto(card);
+        card.updateCard(newProfImgUrl);
+
+        return MyCardResponseProfImg.toCardDto(card);
     }
 
     @Transactional
     public void deleteMyCard(Member member) {
-        Card card = cardRepository.findByOwnerId(member.getId())
-                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
+        Card card = findCard(member);
         cardRepository.delete(card);
         if (card.getProfImgUrl() != null) {
             s3FileUploader.deleteFile(card.getProfImgUrl(), "profile_image");
         }
+    }
+
+    private Card findCard(Member member) {
+        return cardRepository.findByOwnerId(member.getId())
+                .orElseThrow(() -> new CardException(CardErrorCode.CARD_NOT_FOUND));
     }
 }

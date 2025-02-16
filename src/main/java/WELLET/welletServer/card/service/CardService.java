@@ -88,35 +88,34 @@ public class CardService {
     }
 
     @Transactional
-    public Card updateCard(Member member, Long cardId, CardUpdateDtoContent dto) {
+    public Card updateCard(Member member, Long cardId, CardUpdateDto dto) {
         Card card = findOne(member, cardId);
         card.updateCard(dto);
         return card;
     }
 
     @Transactional
-    public CardImage updateCardImage(Card card, CardUpdateDtoProfImg dto) {
+    public CardImage updateCardImage(Card card, CardUpdateDto dto) {
         CardImage cardImage = cardImageRepository.findByCard(card);
-//        String newFrontImgUrl, newBackImgUrl;
-        String newProfImgUrl;
+        String newFrontImgUrl, newBackImgUrl, newProfImgUrl;
 
         deleteCardImage(cardImage);
 
-//        // 명함 이미지 (앞)
-//        if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty()) {
-//            newFrontImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front_image");
-//            cardImage.updateFrontImage(newFrontImgUrl);
-//        }
-//
-//        // 명함 이미지 (뒤)
-//        if (dto.getBackImg()!= null && !dto.getBackImg().isEmpty()) {
-//            newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back_image");
-//            cardImage.updateBackImage(newBackImgUrl);
-//        }
-//
+        // 명함 이미지 (앞)
+        if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty()) {
+            newFrontImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "front_image");
+            cardImage.updateFrontImage(newFrontImgUrl);
+        }
+
+        // 명함 이미지 (뒤)
+        if (dto.getBackImg()!= null && !dto.getBackImg().isEmpty()) {
+            newBackImgUrl = s3FileUploader.uploadFile(dto.getBackImg(), "back_image");
+            cardImage.updateBackImage(newBackImgUrl);
+        }
+
         // 명함 이미지 (프로필)
         if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getProfImg(), "prof_image");
+            newProfImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "prof_image");
             cardImage.updateProfImage(newProfImgUrl);
         }
 

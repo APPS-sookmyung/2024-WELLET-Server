@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Builder
@@ -31,9 +32,9 @@ public class CardUpdateDto {
     @Schema(description = "메모", example = "메모") private String memo;
     @Schema(description = "그룹", example = "비즈니스") private String categoryName;
 
-//    @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile profImg;
-//    @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile frontImg;
-//    @Schema(description = "명함뒤 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile backImg;
+    @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile profImg;
+    @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile frontImg;
+    @Schema(description = "명함뒤 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile backImg;
 
 
     public static CardUpdateDto toCardUpdateDto(Card card, CardImage cardImage) {
