@@ -1,9 +1,7 @@
 package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
-import WELLET.welletServer.card.dto.MyCardResponse;
-import WELLET.welletServer.card.dto.MyCardSaveDto;
-import WELLET.welletServer.card.dto.MyCardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.service.MyCardService;
 import WELLET.welletServer.member.domain.Member;
 import WELLET.welletServer.member.service.MemberService;
@@ -58,9 +56,21 @@ public class MyCardController {
             @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public MyCardResponse updateMyCard(HttpServletRequest request, @Valid @ModelAttribute MyCardUpdateDto dto) {
+    public MyCardResponseContent updateMyCard(HttpServletRequest request, @Valid @ModelAttribute MyCardUpdateDtoContent dto) {
         Member member = memberService.loadMember(request);
-        return myCardService.updateMyCard(member, dto);
+        return myCardService.updateMyCardContent(member, dto);
+    }
+
+    @PutMapping(value = "/images", consumes = "multipart/form-data")
+    @Operation(summary = "내 명함 수정 - 프로필 이미지 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내 명함 수정 - 프로필 이미지 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
+    })
+    public MyCardResponseProfImg updateMyCardWithProfImg(HttpServletRequest request, @Valid @ModelAttribute MyCardUpdateDtoProfImg dto) {
+        Member member = memberService.loadMember(request);
+        return myCardService.updateMyCardProfImg(member, dto);
     }
 
     @DeleteMapping

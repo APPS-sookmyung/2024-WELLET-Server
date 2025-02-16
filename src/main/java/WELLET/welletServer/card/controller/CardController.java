@@ -2,10 +2,7 @@ package WELLET.welletServer.card.controller;
 
 import WELLET.welletServer.card.domain.Card;
 import WELLET.welletServer.card.domain.CardImage;
-import WELLET.welletServer.card.dto.CardCountResponseDto;
-import WELLET.welletServer.card.dto.CardResponse;
-import WELLET.welletServer.card.dto.CardSaveDto;
-import WELLET.welletServer.card.dto.CardUpdateDto;
+import WELLET.welletServer.card.dto.*;
 import WELLET.welletServer.card.exception.CardErrorCode;
 import WELLET.welletServer.card.exception.CardException;
 import WELLET.welletServer.card.service.CardService;
@@ -75,13 +72,43 @@ public class CardController {
             @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
     })
-    public CardResponse updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDto dto) {
+    public CardResponseContent updateCard(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoContent dto) {
         Member member = memberService.loadMember(request);
 
         Card card = cardService.updateCard(member, cardId, dto);
+        return CardResponseContent.toCardDto(card, dto.getCategoryName());
+    }
+    @PutMapping(value = "/{cardId}/prof/images", consumes = "multipart/form-data")
+    @Operation(summary = "명함 프로필 수정")
+    @Parameters({
+            @Parameter(name = "cardId", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
+    })
+    public CardResponseProfile updateCardImageProfile(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoProfImg dto) {
+        Member member = memberService.loadMember(request);
+        Card card = cardService.findOne(member, cardId);
 
-        CardImage cardImage = cardService.updateCardImage(card, dto);
-        return CardResponse.toCardDto(card, dto.getCategoryName(), cardImage);
+        CardImage cardImage = cardService.updateCardImageProfile(member, cardId, dto);
+        return CardResponseProfile.toCardDto(cardImage);
+    }
+
+    @PutMapping(value = "/{cardId}/images", consumes = "multipart/form-data")
+    @Operation(summary = "명함 앞뒤 사진 수정")
+    @Parameters({
+            @Parameter(name = "cardId", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "명함 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "명함을 찾을 수 없습니다."),
+    })
+    public CardBackFrontImageResponse updateCardImagefrontback(HttpServletRequest request, @PathVariable Long cardId, @Valid @ModelAttribute CardUpdateDtoBackFrontImgDto dto) {
+        Member member = memberService.loadMember(request);
+        Card card = cardService.findOne(member, cardId);
+        CardImage cardImage = cardService.updateCardImagefrontback(member, cardId, dto);
+        return CardBackFrontImageResponse.toCardBackFrontImageDto(card, cardImage);
     }
 
     @PatchMapping

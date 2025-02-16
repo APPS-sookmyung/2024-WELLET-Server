@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record CardResponse(
+public record CardContentResponse(
         @Schema(description = "아이디", example = "1") @NotNull Long id,
         @Schema(description = "이름", example = "주아정") @NotBlank String name,
         @Schema(description = "직책", example = "백엔드 개발자/팀장") String position,
@@ -19,14 +19,10 @@ public record CardResponse(
         @Schema(description = "유선전화", example = "02-111-1111") String tel,
         @Schema(description = "주소", example = "서울시 00동 00구") String address,
         @Schema(description = "메모", example = "메모") String memo,
-        @Schema(description = "그룹", example = "비즈니스") String category,
-        @Schema(description = "프로필이미지 URL", example = "profimg/url") String profImgUrl,
-        @Schema(description = "명함앞이미지 URL", example = "frontimg/url") String frontImgUrl,
-        @Schema(description = "명함뒤이미지 URL", example = "backimg/url") String backImgUrl)
-        {
+        @Schema(description = "그룹", example = "비즈니스") String category){
 
-    public static CardResponse toCardDto(Card card, String category, CardImage cardImage) {
-        return CardResponse.builder()
+    public static CardContentResponse toCardContentDto(Card card, String category) {
+        return CardContentResponse.builder()
                 .id(card.getId())
                 .name(card.getName())
                 .position(card.getPosition())
@@ -38,9 +34,7 @@ public record CardResponse(
                 .address(card.getAddress())
                 .memo(card.getMemo())
                 .category(category)
-                .profImgUrl(cardImage != null ? cardImage.getProf_img_url() : null)
-                .frontImgUrl(cardImage != null ? cardImage.getFront_img_url() : null)
-                .backImgUrl(cardImage != null ? cardImage.getBack_img_url() : null)
                 .build();
     }
 }
+
