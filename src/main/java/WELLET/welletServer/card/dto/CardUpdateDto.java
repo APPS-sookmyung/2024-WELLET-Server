@@ -33,9 +33,6 @@ public class CardUpdateDto {
     @Schema(description = "그룹", example = "비즈니스") private String categoryName;
 
     @Schema(description = "프로필 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile profImg;
-    @Schema(description = "명함앞 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile frontImg;
-    @Schema(description = "명함뒤 이미지", example = "https://bucket-name.s3.amazonaws.com")  private MultipartFile backImg;
-
 
     public static CardUpdateDto toCardUpdateDto(Card card, CardImage cardImage) {
         return CardUpdateDto.builder()

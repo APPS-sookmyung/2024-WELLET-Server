@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -95,9 +94,10 @@ public class CardService {
     }
 
     @Transactional
-    public CardImage updateCardImage(Card card, CardUpdateDto dto) {
+    public CardImage updateCardBackFrontImg(Member member, Long cardId, CardUpdateDtoBackFrontImgDto dto) {
+        Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
-        String newFrontImgUrl, newBackImgUrl, newProfImgUrl;
+        String newFrontImgUrl, newBackImgUrl;
 
         deleteCardImage(cardImage);
 
@@ -113,14 +113,9 @@ public class CardService {
             cardImage.updateBackImage(newBackImgUrl);
         }
 
-        // 명함 이미지 (프로필)
-        if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
-            newProfImgUrl = s3FileUploader.uploadFile(dto.getFrontImg(), "prof_image");
-            cardImage.updateProfImage(newProfImgUrl);
-        }
-
         return cardImage;
     }
+
 
     @Transactional
     public void deleteCard(Member member, Long cardId) {
