@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorEntity InvalidTokenException(TokenException e) {
         log.error("Invalid Token Exception({})={}", e.getCode(), e.getMessage());
         return new ErrorEntity(e.getCode().toString(), e.getMessage());

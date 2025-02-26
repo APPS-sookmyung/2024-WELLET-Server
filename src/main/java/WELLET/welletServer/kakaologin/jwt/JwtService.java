@@ -88,7 +88,7 @@ public class JwtService {
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7);
         }
-        throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+        throw new TokenException(TokenErrorCode.NOT_FOUND_JWT);
     }
 
     // 토큰에서 사용자 ID 추출 메소드 추가
