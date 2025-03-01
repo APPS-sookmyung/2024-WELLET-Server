@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -71,8 +70,10 @@ public class CardService {
 
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
 
         return new CardCountResponseDto(cardList.size(), cards);
     }
@@ -164,23 +165,27 @@ public class CardService {
         return card;
     }
 
-    public CardCountResponseDto searchCards(String keyword) {
+    public CardCountResponseDto searchCards(String keyword, Member member) {
 
-        List<Card> cardList = cardRepository.searchCards(keyword)
+        List<Card> cardList = cardRepository.searchCardsAndMember(keyword, member)
                 .stream()
                 .filter(card -> card.getOwnerId() == null)
                 .toList();
 
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
         return new CardCountResponseDto(cards.size(), cards);
     }
     public CardCountResponseDto findByCategory(Member member, Category category) {
         List<Card> cardList = findCategoryReturnCard(member, category);
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
 
         return new CardCountResponseDto(cardList.size(), cards);
     }
