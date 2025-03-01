@@ -70,8 +70,10 @@ public class CardService {
 
         // Entity -> DTO
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
 
         return new CardCountResponseDto(cardList.size(), cards);
     }
@@ -171,15 +173,19 @@ public class CardService {
                 .toList();
 
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
         return new CardCountResponseDto(cards.size(), cards);
     }
     public CardCountResponseDto findByCategory(Member member, Category category) {
         List<Card> cardList = findCategoryReturnCard(member, category);
         List<CardListResponse> cards = cardList.stream()
-                .map(CardListResponse::toCardList)
-                .toList();
+                .map(card -> {
+                    CardImage cardImage = cardImageRepository.findByCard(card);
+                    return CardListResponse.toCardList(card, cardImage);
+                }).toList();
 
         return new CardCountResponseDto(cardList.size(), cards);
     }
