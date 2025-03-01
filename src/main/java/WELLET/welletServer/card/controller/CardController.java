@@ -135,12 +135,11 @@ public class CardController {
     public CardCountResponseDto searchCards (
             HttpServletRequest request, @RequestParam(value = "keyword", required = false) String keyword) {
 
+        Member member = memberService.loadMember(request);
         if (keyword == null || keyword.isEmpty()) {
-            Member member = memberService.loadMember(request);
             return cardService.findAllCard(member);
         } else {
-            memberService.loadMember(request);
-            return cardService.searchCards(keyword);
+            return cardService.searchCards(keyword, member);
     }}
 
 

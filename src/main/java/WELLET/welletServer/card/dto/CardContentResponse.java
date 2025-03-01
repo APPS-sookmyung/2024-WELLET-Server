@@ -19,7 +19,7 @@ public record CardContentResponse(
         @Schema(description = "유선전화", example = "02-111-1111") String tel,
         @Schema(description = "주소", example = "서울시 00동 00구") String address,
         @Schema(description = "메모", example = "메모") String memo,
-        @Schema(description = "그룹", example = "비즈니스") String category){
+        @Schema(description = "그룹", example = "비즈니스") String category) {
 
     public static CardContentResponse toCardContentDto(Card card, String category) {
         return CardContentResponse.builder()
