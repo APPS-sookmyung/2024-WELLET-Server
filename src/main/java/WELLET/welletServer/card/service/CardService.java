@@ -104,7 +104,7 @@ public class CardService {
         CardImage cardImage = cardImageRepository.findByCard(card);
         String newProfImgUrl;
 
-        deleteCardImage(cardImage);
+        deleteProfCardImage(cardImage);
 
         // 명함 이미지 (프로필)
         if (dto.getProfImg() != null && !dto.getProfImg().isEmpty()) {
@@ -124,7 +124,7 @@ public class CardService {
         CardImage cardImage = cardImageRepository.findByCard(card);
         String newFrontImgUrl, newBackImgUrl;
 
-        deleteCardImage(cardImage);
+        deleteFrontBackCardImage(cardImage);
 
         // 명함 이미지 (앞)
         if (dto.getFrontImg() != null && !dto.getFrontImg().isEmpty()) {
@@ -145,7 +145,11 @@ public class CardService {
     public void deleteCard(Member member, Long cardId) {
         Card card = findOne(member, cardId);
         CardImage cardImage = cardImageRepository.findByCard(card);
-        deleteCardImage(cardImage);
+
+        // 카드 이미지 동시 삭제 (프론트, 백, 프로필)
+        deleteFrontBackCardImage(cardImage);
+        deleteProfCardImage(cardImage);
+
         cardImageRepository.delete(cardImage);
         cardRepository.delete(card);
 
@@ -195,7 +199,7 @@ public class CardService {
         return cardRepository.findByCategoryAndMember(category, member);
     }
 
-    private void deleteCardImage(CardImage cardImage) {
+    private void deleteFrontBackCardImage(CardImage cardImage) {
         if (cardImage.getFront_img_url() != null) {
             s3FileUploader.deleteFile(cardImage.getFront_img_url(), "front_image");
             cardImage.updateFrontImage(null);
@@ -205,7 +209,8 @@ public class CardService {
             s3FileUploader.deleteFile(cardImage.getBack_img_url(), "back_image");
             cardImage.updateBackImage(null);
         }
-
+    }
+    private void deleteProfCardImage(CardImage cardImage) {
         if (cardImage.getProf_img_url() != null) {
             s3FileUploader.deleteFile(cardImage.getProf_img_url(), "prof_image");
             cardImage.updateProfImage(null);
